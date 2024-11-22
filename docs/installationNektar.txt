@@ -1,0 +1,1 @@
+- Scotch: install scotch-git instead of scotch, in order to prevent errors from happening

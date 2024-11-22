@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NEKTAR>  
+  <EXPANSIONS>    
+    <E COMPOSITE="C[100,101,102]" NUMMODES="5" FIELDS="u,v,w" TYPE="MODIFIED" />  
+    <E COMPOSITE="C[100,101,102]" NUMMODES="4" FIELDS="p" TYPE="MODIFIEDQUADPLUS1" />
+  </EXPANSIONS>
+  
+  <CONDITIONS>    
+    <SOLVERINFO>
+      <I PROPERTY="SolverType"                           VALUE="VelocityCorrectionScheme"   />
+      <I PROPERTY="EqType"                               VALUE="UnsteadyNavierStokes"       />
+      <I PROPERTY="Projection"                           VALUE="Galerkin"                   /> 
+      <I PROPERTY="EvolutionOperator"                     VALUE="Nonlinear"                  />
+      <I PROPERTY="TimeIntegrationMethod"                 VALUE="IMEXOrder2"                 />
+      <I PROPERTY="SpectralVanishingViscosity"            VALUE="DGKernel"                        />
+      <I PROPERTY="SpectralVanishingViscosityHomo1D"      VALUE="ExpKernel"                       />
+      <I PROPERTY="SPECTRALHPDEALIASING"          VALUE="True"           />
+      <I PROPERTY="DEALIASING"                           VALUE="True"                        />
+      <I PROPERTY="Homogeneous"                          VALUE="1D"                         />
+      <I PROPERTY="UseFFT"                               VALUE="FFTW"                        />
+      <I PROPERTY="GlobalSysSoln"                 VALUE="XxtMultiLevelStaticCond" />
+    </SOLVERINFO>    
+
+    <PARAMETERS>
+      <!--General parameters-->
+      <P> TimeStep        = 0.00001      </P>
+      <p> FinTime         = 100.0        </p>
+      <P> NumSteps        = FinTime/TimeStep     </P>
+      <P> IO_CheckSteps   = NumSteps/50         </P> 
+      <P> IO_InfoSteps    = NumSteps/10000        </P> 
+      <P> IO_CFLSteps     = IO_InfoSteps         </P>
+      <P> Re              = 1500       </P>
+      <P> Kinvis          = 1/Re                 </P>
+      <P> HomModesZ       = 2                       </P>
+      <P> LZ              = 2                     </P> <!-- double of the gaps's width (from ganlin report) !-->
+      <p> sweep           = 30                    </p>
+      <P> sweep_rad       = sweep*PI/180.0         </P> <!-- 26.57 degrees, swept angle -->
+      <P> Ut              = 1.0                    </P>
+      <p> Uinf            = Ut*cos(sweep_rad)                   </p>
+      <P> Winf            = Ut*sin(sweep_rad)              </P>
+      <P> SVVDiffCoeff    = 0.1                    </P>
+      <P> SVVCutoffRatio  = 0.7                    </P>
+
+      <!-- Parameters for the Inflow profile -->
+      <P> etaMax          = 9.0                      </P>
+      <P> y_etaMax        = 1.5             </P> <!-- given from the mesh (boundary layer) !-->
+      <P> y2eta           = etaMax/y_etaMax              </P>
+      <p> c0_u = -1.6550507939698626e-06 </p>
+      <p> c1_u = 5.074286011937435e-05 </p>
+      <p> c2_u = -0.0005332700425595066 </p>
+      <p> c3_u = 0.0014381754413081492 </p>
+      <p> c4_u = 0.012170450406845895 </p>
+      <p> c5_u = -0.08994314767311291 </p>
+      <p> c6_u = 0.1239646585863274 </p>
+      <p> c7_u = 0.4098558813239048 </p>
+      <p> c8_u = 0.0059737116063363575 </p>
+      <p> c0_w = -1.6550507939705566e-06 </p>
+      <p> c1_w = 5.0742860119397794e-05 </p>
+      <p> c2_w = -0.0005332700425598194 </p>
+      <p> c3_w = 0.0014381754413101818 </p>
+      <p> c4_w = 0.01217045040683977 </p>
+      <p> c5_w = -0.08994314767310967 </p>
+      <p> c6_w = 0.12396465858635154 </p>
+      <p> c7_w = 0.4098558813238604 </p>
+      <p> c8_w = 0.005973711606340377 </p>
+    </PARAMETERS>
+    
+    <VARIABLES>
+      <V ID="0"> u </V>
+      <V ID="1"> v </V>  
+      <V ID="2"> w </V>
+      <V ID="3"> p </V>
+    </VARIABLES>
+    
+    <BOUNDARYREGIONS>
+      <B ID="0"> C[1] </B>    <!-- inlet !-->  
+      <B ID="1"> C[2] </B>    <!-- outlet !-->
+      <B ID="2"> C[3] </B>    <!-- top !-->
+      <B ID="3"> C[4] </B>    <!-- bottom + left & right gap walls !-->
+    </BOUNDARYREGIONS>    
+
+    <BOUNDARYCONDITIONS>
+      <REGION REF="0">  <!-- inlet !-->                  
+        <D VAR="u" VALUE="Uinf*((c0_u*(y*y2eta)^8 + c1_u*(y*y2eta)^7 + c2_u*(y*y2eta)^6 + c3_u*(y*y2eta)^5 
+                               + c4_u*(y*y2eta)^4 + c5_u*(y*y2eta)^3 + c6_u*(y*y2eta)^2 + c7_u*(y*y2eta))
+                         *(y<y_etaMax) + (y>=y_etaMax))" />
+        <D VAR="v" VALUE="0" />
+        <D VAR="w" VALUE="Winf*((c0_w*(y*y2eta)^8 + c1_w*(y*y2eta)^7 + c2_w*(y*y2eta)^6 + c3_w*(y*y2eta)^5 
+                               + c4_w*(y*y2eta)^4 + c5_w*(y*y2eta)^3 + c6_w*(y*y2eta)^2 + c7_w*(y*y2eta))
+                         *(y<y_etaMax) + (y>=y_etaMax))" />
+        <N VAR="p" USERDEFINEDTYPE="H" VALUE="0" /> <!-- high-order boundary condition, VALUE is not used !-->
+      </REGION>
+
+      <REGION REF="1">   <!-- outlet !-->
+        <N VAR="u" USERDEFINEDTYPE="HOutflow" VALUE="0" />
+        <N VAR="v" USERDEFINEDTYPE="HOutflow" VALUE="0" />
+        <N VAR="w" USERDEFINEDTYPE="HOutflow" VALUE="0" />
+        <D VAR="p" USERDEFINEDTYPE="HOutflow" VALUE="0" />
+      </REGION>  
+            
+      <REGION REF="2">   <!-- top = far-field !-->
+        <D VAR="u" VALUE="Uinf" />
+        <D VAR="v" VALUE="0" />        
+        <D VAR="w" VALUE="Winf" />
+        <N VAR="p" USERDEFINEDTYPE="H" VALUE="0" />      
+      </REGION>
+
+      <REGION REF="3">  <!-- bottom = wall no slip !-->  
+        <D VAR="u" VALUE="0" />
+        <D VAR="v" VALUE="0" />        
+        <D VAR="w" VALUE="0" />
+        <N VAR="p" USERDEFINEDTYPE="H" VALUE="0" />  
+      </REGION>    
+    </BOUNDARYCONDITIONS>
+    
+    <!-- <FUNCTION NAME="InitialConditions"> -->
+    <!--   <F VAR="u,v,w,p" FILE="mesh_1.chk" /> -->
+    <!-- </FUNCTION> -->
+
+    
+    <FUNCTION NAME="InitialConditions">
+      <E VAR="u" VALUE="0" />
+      <E VAR="v" VALUE="0" />
+      <E VAR="w" VALUE="0.02*awgn(1.0)" /> 
+      <E VAR="p" VALUE="0" />
+   </FUNCTION>
+  </CONDITIONS>
+  <FILTERS>
+
+    <FILTER TYPE="ModalEnergy">
+      <PARAM NAME="OutputFile">EnergyFile</PARAM>
+      <PARAM NAME="OutputFrequency">200</PARAM>
+      <PARAM NAME="SampleFrequency">200</PARAM>
+    </FILTER>
+
+    <!-- <FILTER TYPE="HistoryPoints"> -->
+    <!--   <PARAM NAME="OutputFile">TimeValues_outGap</PARAM> -->
+    <!--   <PARAM NAME="OutputFrequency">1</PARAM> -->
+    <!--   <PARAM NAME="Points"> -->
+    <!--          0.05  0.1   0 -->
+    <!--          0.05  0.2   0 -->
+    <!--          0.05   0.3   0 -->
+    <!--          0.05   0.4   0 -->
+    <!--          0.05   0.5   0 -->
+    <!--          0.05   0.6   0 -->
+    <!--          0.05   0.7   0 -->
+    <!--          0.05   0.8   0 -->
+    <!--          0.05   0.9   0 -->
+    <!--          0.05   1.0   0 -->
+    <!--          0.05   1.1   0 -->
+    <!--          0.05   1.2   0 -->
+    <!--          0.05   1.3   0 -->
+    <!--   </PARAM> -->
+    <!-- </FILTER> -->
+  </FILTERS>
+</NEKTAR>
