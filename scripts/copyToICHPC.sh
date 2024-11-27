@@ -12,7 +12,6 @@ folder=$1
 HPC="login.hpc" # the node actually does not play a role becuase the database are all linked so it's the same for all nodes: typhoon, hurricane, splitfire, blackfriars.
 USER="vb824"
 
-kssh -Y vb824@login.hpc.imperial.ac.uk
 # working directory in supercomputer
 dest="~/Desktop/nektarsim"
 
@@ -23,10 +22,10 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 cd ${DIR}/..
 
-rsync -avz -e ssh ${folder} ${USER}@${HPC}.imperial.ac.uk:${dest}/${folder_prev_dir}
+rsync -avz -e ssh ${folder} ${DIR}/sendMessage.py ${DIR}/run.sh ${USER}@${HPC}.imperial.ac.uk:${dest}/${folder_prev_dir}
 
-rsync -avz -e ssh ${DIR}/sendMessage.py ${USER}@${HPC}.ae.ic.ac.uk:${dest}/${folder}
-rsync -avz -e ssh ${DIR}/run.sh ${USER}@${HPC}.ae.ic.ac.uk:${dest}/${folder}
+rsync -avz -e ssh ${DIR}/sendMessage.py ${DIR}/run.sh ${USER}@${HPC}.imperial.ac.uk:${dest}/${folder}
+rsync -avz -e ssh ${USER}@${HPC}.imperial.ac.uk:${dest}/${folder}
 
 
 # # create a tar file of that folder

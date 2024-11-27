@@ -1,0 +1,2 @@
+- explicar chris problemes scotch i arpack 
+- should we use arpack or modified arnoldi?

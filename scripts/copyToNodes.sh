@@ -1,4 +1,4 @@
-# # copy the files to IDRIS
+#!/bin/bash
 date=$(date +"%Y%m%d") # current date
 
 # prompt a message if there are less or more than 1 argument
@@ -13,7 +13,7 @@ NODE="typhoon" # the node actually does not play a role becuase the database are
 USER="vb824"
 
 # working directory in supercomputer
-dest="/home/${USER}/Desktop/nektarsim"
+dest="/home/${USER}/Desktop/PhD"
 
 folder_prev_dir=$(dirname ${folder})
 
