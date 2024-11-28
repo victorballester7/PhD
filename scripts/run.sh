@@ -12,6 +12,9 @@ session_file=$3
 PYTHON=python3
 # PYTHON=python
 
+# get the path direftory of the script
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
+${PYTHON} ${DIR}/jobStart.py
 mpirun -np $num_cores IncNavierStokesSolver -v $mesh_file $session_file > output.txt 2> log.txt
-python3 sendMessage.py .
+${PYTHON} ${DIR}/jobFinish.py .

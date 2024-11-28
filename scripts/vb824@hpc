@@ -1,0 +1,10 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=4:mem=30gb
+#PBS -l walltime=00:10:00
+#PBS -N gap_evector_modes
+
+# Recall maxiumum is 60 cores per node
+
+PARAVIEW_PATH=$HOME/ParaView-5.13.1
+
+$PARAVIEW_PATH/bin/mpiexec -np 4 $PARAVIEW_PATH/bin/pvserver --force-offscreen-rendering --server-port=11111 
