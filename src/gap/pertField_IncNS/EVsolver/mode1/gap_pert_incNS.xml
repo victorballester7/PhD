@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NEKTAR>  
+  <EXPANSIONS>    
+    <E COMPOSITE="C[100,101,102]" NUMMODES="5" FIELDS="u,v,w" TYPE="MODIFIED" />  
+    <E COMPOSITE="C[100,101,102]" NUMMODES="4" FIELDS="p" TYPE="MODIFIEDQUADPLUS1" />
+  </EXPANSIONS>
+  
+  <CONDITIONS>    
+    <SOLVERINFO>
+      <I PROPERTY="SolverType"                           VALUE="VelocityCorrectionScheme"   />
+      <I PROPERTY="EqType"                               VALUE="UnsteadyNavierStokes"       />
+      <I PROPERTY="Projection"                           VALUE="Galerkin"                   /> 
+      <I PROPERTY="EvolutionOperator"                    VALUE="Direct"                     />
+      <I PROPERTY="TimeIntegrationMethod"                VALUE="IMEXOrder2"                 />
+      <I PROPERTY="SpectralVanishingViscosity"           VALUE="DGKernel"                   />
+      <I PROPERTY="SpectralVanishingViscosityHomo1D"     VALUE="ExpKernel"                  />
+      <I PROPERTY="SPECTRALHPDEALIASING"                 VALUE="True"                       />
+      <I PROPERTY="DEALIASING"                           VALUE="True"                       />
+      <I PROPERTY="Homogeneous"                          VALUE="1D"                         />
+      <I PROPERTY="UseFFT"                               VALUE="FFTW"                       />
+      <I PROPERTY="GlobalSysSoln"                        VALUE="XxtMultiLevelStaticCond"    />
+      <I PROPERTY="Driver"                               VALUE="ModifiedArnoldi"            />
+      <I PROPERTY="ModeType"                             VALUE="SingleMode"              />
+    </SOLVERINFO>    
+
+    <PARAMETERS>
+      <!--General parameters-->
+      <P> TimeStep        = 0.0002                </P>
+      <p> FinTime         = 1.0                 </p>
+      <P> NumSteps        = FinTime/TimeStep      </P>
+      <P> IO_CheckSteps   = NumSteps          </P> <!-- Do not change to somthing like FinTime/200, because there is a problem then (probably related to int float variables) !-->
+      <P> IO_InfoSteps    = NumSteps/100        </P>
+      <P> IO_CFLSteps     = IO_InfoSteps          </P>
+      <P> Re              = 1500                  </P>
+      <P> Kinvis          = 1/Re                  </P>
+      <P> HomModesZ       = 2                    </P>
+      <p> mode_num = 1 </p>
+      <P> domain_zlength  = 2                     </P>
+      <P> LZ              = domain_zlength/mode_num   </P>
+      <p> mode            = 2*PI/LZ               </p>
+      <p> sweep           = 30                    </p>
+      <P> sweep_rad       = sweep*PI/180.0        </P> 
+      <P> Ut              = 1.0                   </P>
+      <p> Uinf            = Ut*cos(sweep_rad)     </p>
+      <P> Winf            = Ut*sin(sweep_rad)     </P>
+      <P> SVVDiffCoeff    = 0.1                   </P>
+      <P> SVVCutoffRatio  = 0.7                   </P>
+      <P> kdim            = 16                   </P>
+      <P> nvec            = 4                   </P>
+      <P> evtol           = 1e-06               </P>
+      <p> nits            = 500                 </p>
+    </PARAMETERS>
+    
+    <VARIABLES>
+      <V ID="0"> u </V>
+      <V ID="1"> v </V>  
+      <V ID="2"> w </V>
+      <V ID="3"> p </V>
+    </VARIABLES>
+    
+    <BOUNDARYREGIONS>
+      <B ID="0"> C[1] </B>    <!-- inlet !-->  
+      <B ID="1"> C[2] </B>    <!-- outlet !-->
+      <B ID="2"> C[3] </B>    <!-- top !-->
+      <B ID="3"> C[4] </B>    <!-- bottom + left & right gap walls !-->
+    </BOUNDARYREGIONS>    
+
+    <BOUNDARYCONDITIONS>
+      <REGION REF="0">  <!-- inlet !-->                  
+        <D VAR="u" VALUE="0" />
+        <D VAR="v" VALUE="0" />
+        <D VAR="w" VALUE="0" />
+        <N VAR="p" USERDEFINEDTYPE="H" VALUE="0" /> <!-- high-order boundary condition, VALUE is not used !-->
+      </REGION>
+
+      <REGION REF="1">   <!-- outlet !-->
+        <N VAR="u" USERDEFINEDTYPE="HOutflow" VALUE="0" />
+        <N VAR="v" USERDEFINEDTYPE="HOutflow" VALUE="0" />
+        <N VAR="w" USERDEFINEDTYPE="HOutflow" VALUE="0" />
+        <D VAR="p" USERDEFINEDTYPE="HOutflow" VALUE="0" />
+      </REGION>  
+            
+      <REGION REF="2">   <!-- top = far-field !-->
+        <D VAR="u" VALUE="0" />
+        <D VAR="v" VALUE="0" />        
+        <D VAR="w" VALUE="0" />
+        <N VAR="p" USERDEFINEDTYPE="H" VALUE="0" />      
+      </REGION>
+
+      <REGION REF="3">  <!-- bottom = wall no slip !-->  
+        <D VAR="u" VALUE="0" />
+        <D VAR="v" VALUE="0" />        
+        <D VAR="w" VALUE="0" />
+        <N VAR="p" USERDEFINEDTYPE="H" VALUE="0" />  
+      </REGION>    
+    </BOUNDARYCONDITIONS>
+    
+    <FUNCTION NAME="BaseFlow">
+      <F VAR="u,v,w,p" FILE="../baseflow.fld"   />
+    </FUNCTION>
+    
+    
+    <FUNCTION NAME="InitialConditions">
+      <F VAR="u,v,w,p" FILE="evector_approx.fld" />
+      <!-- <E VAR="u" VALUE="0" /> -->
+      <!-- <E VAR="v" VALUE="0" /> -->
+      <!-- <E VAR="w" VALUE="0.02*awgn(1.0)" />  -->
+      <!-- <E VAR="p" VALUE="0" /> -->
+   </FUNCTION>
+  </CONDITIONS>
+  <FILTERS>
+    <FILTER TYPE="ModalEnergy">
+      <PARAM NAME="OutputFile">EnergyFile</PARAM>
+      <PARAM NAME="OutputFrequency">200</PARAM>
+      <PARAM NAME="SampleFrequency">200</PARAM>
+    </FILTER>
+
+    <!-- <FILTER TYPE="HistoryPoints"> -->
+    <!--   <PARAM NAME="OutputFile">HistoryPoints</PARAM> -->
+    <!--   <PARAM NAME="OutputFrequency">200</PARAM> -->
+    <!--   <PARAM NAME="Points"> -->
+    <!--     6.0 0.25 0.0 -->
+    <!--     8.0 0.25 0.0 -->
+    <!--     10.0 0.25 0.0 -->
+    <!--     12.0 0.25 0.0 -->
+    <!--     14.0 0.25 0.0 -->
+    <!--     16.0 0.25 0.0 -->
+    <!--     18.0 0.25 0.0 -->
+    <!--     20.0 0.25 0.0 -->
+    <!--   </PARAM> -->
+    <!-- </FILTER> -->
+  </FILTERS>
+</NEKTAR>
