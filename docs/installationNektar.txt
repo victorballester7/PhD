@@ -1,1 +1,8 @@
-- Scotch: install scotch-git instead of scotch, in order to prevent errors from happening
+Scotch: we need to compile iot from source in order to include the -fPIC flag. Otherwise the building of nektar will fail and we will have to enable THIRD_PARTY_SCOTCHm, which also gives problems.
+
+So clone Scotch into .cache/yay/scotch and compile it with the following commands:
+  cd src
+  mkdir build && cd build
+  CFLAGS="-fPIC" CXXFLAGS="-fPIC" cmake -DCMAKE_INSTALL_PREFIX=/usr/local/ -DCMAKE_BUILD_TYPE=Release ..
+  make -j8
+  make install

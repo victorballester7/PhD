@@ -11,17 +11,18 @@ double localToGlobal(double xi, double a, double b);
 
 double integrate(int Q, double a, double b);
 
-
 int main() {
   double a = 0.0;
   double b = M_PI_2;
 
   double sum = 0.0;
 
-  for (int i = 0; i < 8; i++) {
+  for (int i = 2; i < 8; i++) {
     sum = integrate(i, a, b);
 
-    cout << "Sum (" << i << ") = " << sum << endl;
+    // plot with 16 digits of precision
+    cout.precision(16);
+    cout << "Sum (" << i << ") = " << abs(sum - 1) << endl;
   }
 }
 
@@ -35,9 +36,8 @@ double integrate(int Q, double a, double b) {
   w = new double[Q];
   z = new double[Q];
   polylib::zwgll(z, w, Q);
-  for (int j = 0; j < Q; j++){
-    cout << "z[" << j << "] = " << z[j] << " w[" << j << "] = " << w[j] << endl;
-    sum += w[j] * sin(localToGlobal(z[j], a, b));}
+  for (int j = 0; j < Q; j++)
+    sum += w[j] * sin(localToGlobal(z[j], a, b));
   sum *= (b - a) / 2.0;
   delete[] w;
   delete[] z;
