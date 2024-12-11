@@ -28,9 +28,9 @@
       <P> IO_CheckSteps   = NumSteps/200         </P> 
       <P> IO_InfoSteps    = NumSteps/20000        </P> 
       <P> IO_CFLSteps     = IO_InfoSteps         </P>
-      <P> Re              = 7500       </P>
+      <P> Re              = 1500       </P>
       <P> Kinvis          = 1/Re                 </P>
-      <P> HomModesZ       = 2                       </P>
+      <P> HomModesZ       = 16                       </P>
       <P> LZ              = 2                     </P> <!-- double of the gaps's width (from ganlin report) !-->
       <p> sweep           = 30                    </p>
       <P> sweep_rad       = sweep*PI/180.0         </P> 
@@ -112,24 +112,24 @@
       </REGION>    
     </BOUNDARYCONDITIONS>
     
-    <FUNCTION NAME="InitialConditions">
-      <F VAR="u,v,w,p" FILE="mesh_finer_22.chk" />
-    </FUNCTION>
+    <!-- <FUNCTION NAME="InitialConditions"> -->
+    <!--   <F VAR="u,v,w,p" FILE="../initial_cond.chk" /> -->
+    <!-- </FUNCTION> -->
 
     
-   <!--  <FUNCTION NAME="InitialConditions"> -->
-   <!--    <E VAR="u" VALUE="0" /> -->
-   <!--    <E VAR="v" VALUE="0" /> -->
-   <!--    <E VAR="w" VALUE="0.02*awgn(1.0)" />  -->
-   <!--    <E VAR="p" VALUE="0" /> -->
-   <!-- </FUNCTION> -->
+    <FUNCTION NAME="InitialConditions">
+      <E VAR="u" VALUE="0" />
+      <E VAR="v" VALUE="0" />
+      <E VAR="w" VALUE="0.02*awgn(1.0)" /> 
+      <E VAR="p" VALUE="0" />
+   </FUNCTION>
   </CONDITIONS>
   <FILTERS>
 
     <FILTER TYPE="ModalEnergy">
       <PARAM NAME="OutputFile">EnergyFile</PARAM>
-      <PARAM NAME="OutputFrequency">200</PARAM>
-      <PARAM NAME="SampleFrequency">200</PARAM>
+      <PARAM NAME="OutputFrequency">1000</PARAM>
+      <PARAM NAME="SampleFrequency">1000</PARAM>
     </FILTER>
 
     <!-- <FILTER TYPE="HistoryPoints"> -->

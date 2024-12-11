@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -l select=1:ncpus=128:mem=70gb
 #PBS -l walltime=17:59:00
-#PBS -N baseflow7500
+#PBS -N baseflow7500_SS
 #PBS -j oe
 #PBS -o output.txt
 
@@ -39,7 +39,7 @@ python3 $SCRIPTS_DIR/jobStart.py
 
 # Sleep for the calculated time, then kill mpirun if it's still running
 mpirun -np $NP $INC_SOLVER -v mesh_finer.xml gap_incNS.xml > output.txt 2> log.txt
-# timeout $SLEEP_TIME $program &
+# timeout $SLEEP_TIME $program
 
 # # Check if mpirun was killed due to timeout
 # if ps -p $MPIRUN_PID > /dev/null 2>&1; then

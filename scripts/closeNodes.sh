@@ -1,4 +1,4 @@
-WHERETOMOUNT="~/hosts"
+WHERETOMOUNT="$HOME/hosts"
 
 echo "Unmounting nodes..."
 umount ${WHERETOMOUNT}/nodes

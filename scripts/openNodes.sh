@@ -3,7 +3,7 @@ CLUSTER="hpc"
 USER="vb824"
 
 FOLDERTOMOUNT="Desktop/PhD"
-WHERETOMOUNT="~/hosts"
+WHERETOMOUNT="$HOME/hosts"
 
 
 echo "Mounting nodes..."
