@@ -23,8 +23,8 @@
 
     <PARAMETERS>
       <!--General parameters-->
-      <P> TimeStep        = 0.0001      </P>
-      <P> NumSteps        = 2000e4     </P>
+      <P> TimeStep        = 0.0003      </P>
+      <P> NumSteps        = 4000e4     </P>
       <P> IO_CheckSteps   = NumSteps/200         </P> 
       <P> IO_InfoSteps    = NumSteps/20000        </P> 
       <P> IO_CFLSteps     = IO_InfoSteps         </P>
@@ -113,7 +113,7 @@
     </BOUNDARYCONDITIONS>
     
     <FUNCTION NAME="InitialConditions">
-      <F VAR="u,v,w,p" FILE="mesh_finer_22.chk" />
+      <F VAR="u,v,w,p" FILE="mesh_finer_77.chk" />
     </FUNCTION>
 
     

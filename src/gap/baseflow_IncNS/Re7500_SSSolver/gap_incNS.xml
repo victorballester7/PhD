@@ -49,7 +49,7 @@
       <!-- Parameters for the Arnoldi method -->
       <P> kdim            = 512                   </P>
       <P> nvec            = 2                   </P>
-      <P> evtol           = 1e-06               </P>
+      <P> evtol           = 6e-06               </P>
       <p> nits            = 500                 </p>
     
       <!-- Parameters for the Inflow profile -->
@@ -125,7 +125,7 @@
     </BOUNDARYCONDITIONS>
     
     <FUNCTION NAME="InitialConditions">
-      <F VAR="u,v,w,p" FILE="initial_cond.chk" />
+      <F VAR="u,v,w,p" FILE="mesh_finer_5.chk" />
     </FUNCTION>
 
     

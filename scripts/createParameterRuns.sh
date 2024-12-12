@@ -49,12 +49,19 @@ for p in $parameter_values; do
   
   sed "s/<p> ${parameter}[[:space:]]*=.*<\/p>/<p> ${parameter} = ${p} <\/p>/g" "$session_file" > "$output_file"
   
-  # check if there is a .job file in the directory
-  for job_file in *.job; do
-    cp "$job_file" "${dir_name}/${job_file}"
-    sed -i "s/^#PBS -N .*/#PBS -N ${dir_name}/" "${dir_name}/${job_file}"
-  done
+  #!/bin/bash
 
+  # Check if there are any .job files in the current directory
+  if ls *.job 1> /dev/null 2>&1; then
+    for job_file in *.job; do
+      cp "$job_file" "${dir_name}/${job_file}"
+      sed -i "s/^#PBS -N .*/#PBS -N ${dir_name}/" "${dir_name}/${job_file}"
+    done
+  else
+    echo "No .job files found in the current directory."
+  fi
+
+  
   echo "Generated file for ${parameter} $p in $dir_name"
 done
 

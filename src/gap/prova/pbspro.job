@@ -1,7 +1,7 @@
 #!/bin/bash
-#PBS -l select=1:ncpus=128:mem=70gb
-#PBS -l walltime=43:59:00
-#PBS -N fullModesRe1500
+#PBS -l select=1:ncpus=16:mem=70gb
+#PBS -l walltime=00:02:00
+#PBS -N prova
 #PBS -j oe
 #PBS -o output.txt
 
@@ -41,16 +41,16 @@ module load tools/eb-dev cmake/3.18.2 HDF5/1.10.7-gompi-2021a SCOTCH/6.1.0-gompi
 python3 $SCRIPTS_DIR/jobStart.py
 
 # Sleep for the calculated time, then kill mpirun if it's still running
-mpirun -np $NP $INC_SOLVER -v mesh_finer.xml gap_incNS.xml > output.txt 2> log.txt
-# program="mpirun -np $NP $INC_SOLVER --npz ${NPZ} -v mesh_finer.xml gap_incNS.xml > output.txt 2> log.txt"
+# mpirun -np $NP $INC_SOLVER -v mesh_finer.xml gap_incNS.xml > output.txt 2> log.txt
+program="mpirun -np $NP $INC_SOLVER -v mesh_finer.xml gap_incNS.xml > output.txt 2> log.txt"
 # ${program}
-# timeout $SLEEP_TIME $program
+timeout $SLEEP_TIME $program
 
-# Check if mpirun was killed due to timeout
-# if ps -p $MPIRUN_PID > /dev/null 2>&1; then
-#     kill $MPIRUN_PID
-#     echo "Simulation was terminated due to timeout" >> log.txt
-# fi
+Check if mpirun was killed due to timeout
+if ps -p $MPIRUN_PID > /dev/null 2>&1; then
+    kill $MPIRUN_PID
+    echo "Simulation was terminated due to timeout" >> log.txt
+fi
 
 # Run the final Python script
 python3 $SCRIPTS_DIR/jobFinish.py .
