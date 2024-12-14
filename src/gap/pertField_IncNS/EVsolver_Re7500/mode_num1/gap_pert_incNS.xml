@@ -33,7 +33,7 @@
       <P> Re              = 7500                  </P>
       <P> Kinvis          = 1/Re                  </P>
       <P> HomModesZ       = 2                    </P>
-      <p> mode_num = 3 </p>
+      <p> mode_num = 1 </p>
       <P> domain_zlength  = 2                     </P>
       <P> LZ              = domain_zlength/mode_num   </P>
       <p> mode            = 2*PI/LZ               </p>
