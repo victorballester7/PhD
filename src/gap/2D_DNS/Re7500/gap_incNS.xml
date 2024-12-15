@@ -90,16 +90,16 @@
       </REGION>    
     </BOUNDARYCONDITIONS>
     
-    <!-- <FUNCTION NAME="InitialConditions"> -->
-    <!--   <F VAR="u,v,p" FILE="mesh_finer_5.chk" /> -->
-    <!-- </FUNCTION> -->
+    <FUNCTION NAME="InitialConditions">
+      <F VAR="u,v,p" FILE="mesh_finer_10.chk" />
+    </FUNCTION>
 
     
-    <FUNCTION NAME="InitialConditions">
-      <E VAR="u" VALUE="0" />
-      <E VAR="v" VALUE="0" />
-      <E VAR="p" VALUE="0" />
-   </FUNCTION>
+   <!--  <FUNCTION NAME="InitialConditions"> -->
+   <!--    <E VAR="u" VALUE="0" /> -->
+   <!--    <E VAR="v" VALUE="0" /> -->
+   <!--    <E VAR="p" VALUE="0" /> -->
+   <!-- </FUNCTION> -->
   </CONDITIONS>
   <FILTERS>
 
