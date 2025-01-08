@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -l select=1:ncpus=128:mem=70gb
-#PBS -l walltime=50:59:00
+#PBS -l walltime=71:59:00
 #PBS -N baseflow7500_SS
 #PBS -j oe
 #PBS -o output.txt
