@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <NEKTAR>  
   <EXPANSIONS>    
-    <E COMPOSITE="C[100,101,102]" NUMMODES="7" FIELDS="u,v,w" TYPE="MODIFIED" />  
-    <E COMPOSITE="C[100,101,102]" NUMMODES="6" FIELDS="p" TYPE="MODIFIEDQUADPLUS1" />
+    <E COMPOSITE="C[100,101,102]" NUMMODES="5" FIELDS="u,v,w" TYPE="MODIFIED" />  
+    <E COMPOSITE="C[100,101,102]" NUMMODES="4" FIELDS="p" TYPE="MODIFIEDQUADPLUS1" />
   </EXPANSIONS>
   
   <CONDITIONS>    
@@ -26,7 +26,8 @@
     <PARAMETERS>
       <!--General parameters-->
       <P> TimeStep        = 0.0002                </P>
-      <P> NumSteps        = 6e4      </P>
+      <P> FinTime         = 1                    </P>
+      <P> NumSteps        = FinTime/TimeStep      </P> 
       <P> IO_CheckSteps   = NumSteps          </P> <!-- Do not change to somthing like FinTime/200, because there is a problem then (probably related to int float variables) !-->
       <P> IO_InfoSteps    = NumSteps/10        </P>
       <P> IO_CFLSteps     = IO_InfoSteps          </P>
@@ -44,8 +45,8 @@
       <P> Winf            = Ut*sin(sweep_rad)     </P>
       <P> SVVDiffCoeff    = 0.1                   </P>
       <P> SVVCutoffRatio  = 0.7                   </P>
-      <P> kdim            = 1024                   </P>
-      <P> nvec            = 5                   </P>
+      <P> kdim            = 512                   </P>
+      <P> nvec            = 2                   </P>
       <P> evtol           = 1e-05               </P>
       <p> nits            = 500                 </p>
     </PARAMETERS>

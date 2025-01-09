@@ -25,7 +25,7 @@
 
     <PARAMETERS>
       <!--General parameters-->
-      <P> TimeStep        = 0.0002                </P>
+      <P> TimeStep        = 0.00005                </P>
       <P> NumSteps        = 2e4      </P>
       <P> IO_CheckSteps   = NumSteps          </P> <!-- Do not change to somthing like FinTime/200, because there is a problem then (probably related to int float variables) !-->
       <P> IO_InfoSteps    = NumSteps/10        </P>

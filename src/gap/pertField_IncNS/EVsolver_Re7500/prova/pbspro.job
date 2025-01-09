@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -l select=1:ncpus=128:mem=70gb
-#PBS -l walltime=07:59:00
-#PBS -N mode_num3b6
+#PBS -l walltime=00:59:00
+#PBS -N mode_num3.2
 #PBS -j oe
 #PBS -o output.txt
 

@@ -27,7 +27,7 @@ if [[ ! -f "$mesh_file" || ! -f "$session_file" ]]; then
 fi
 
 # check if there exists such a parameter in the session file
-if ! grep -q "<p> ${parameter}[[:space:]]*=.*</p>" "$session_file"; then
+if [[ ! grep -q "<p> ${parameter}[[:space:]]*=.*</p>" "$session_file" || ! grep -q "<P> ${parameter}[[:space:]]*=.*</P>" "$session_file" ]]; then
   echo "Parameter $parameter not found in the session file."
   exit 1
 fi
