@@ -13,11 +13,13 @@ mesh_file=$1
 session_file=$2                 
 parameter=$3
 parameter_values="${@:4}" # all the values after the 3rd argument
+parent_dir=$(basename "$(dirname "$(realpath gap_incNS.xml)")")
 
 echo "Input file: $session_file"
 echo "Mesh file: $mesh_file"
 echo "Parameter to change: $parameter"
 echo "Values: $parameter_values"
+echo "Parent directory: $parent_dir"
 echo ""
 
 # Check if the input files exist (mesh file and session file)
@@ -27,14 +29,14 @@ if [[ ! -f "$mesh_file" || ! -f "$session_file" ]]; then
 fi
 
 # check if there exists such a parameter in the session file
-if [[ ! grep -q "<p> ${parameter}[[:space:]]*=.*</p>" "$session_file" || ! grep -q "<P> ${parameter}[[:space:]]*=.*</P>" "$session_file" ]]; then
+if grep -q "<p> ${parameter}[[:space:]]*=.*</p>" "$session_file"; then
+  pCapital=0
+elif grep -q "<P> ${parameter}[[:space:]]*=.*</P>" "$session_file"; then
+  pCapital=1
+else
   echo "Parameter $parameter not found in the session file."
   exit 1
 fi
-
-
-# get the path direftory of the script
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 
 # Loop over the range of mode numbers
@@ -47,7 +49,11 @@ for p in $parameter_values; do
   # Copy the input file and modify it
   output_file="${dir_name}/${session_file}"
   
-  sed "s/<p> ${parameter}[[:space:]]*=.*<\/p>/<p> ${parameter} = ${p} <\/p>/g" "$session_file" > "$output_file"
+  if [ $pCapital -eq 1 ]; then
+    sed "s/<P> ${parameter}[[:space:]]*=.*<\/P>/<P> ${parameter} = ${p} <\/P>/g" "$session_file" > "$output_file"
+  else
+    sed "s/<p> ${parameter}[[:space:]]*=.*<\/p>/<p> ${parameter} = ${p} <\/p>/g" "$session_file" > "$output_file"
+  fi
   
   #!/bin/bash
 
@@ -55,7 +61,7 @@ for p in $parameter_values; do
   if ls *.job 1> /dev/null 2>&1; then
     for job_file in *.job; do
       cp "$job_file" "${dir_name}/${job_file}"
-      sed -i "s/^#PBS -N .*/#PBS -N ${dir_name}/" "${dir_name}/${job_file}"
+      sed -i "s/^#PBS -N .*/#PBS -N ${parent_dir}_${dir_name}/" "${dir_name}/${job_file}"
     done
   else
     echo "No .job files found in the current directory."

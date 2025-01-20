@@ -1,0 +1,20 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=128:mem=20gb
+#PBS -l walltime=00:01:00
+#PBS -N paraviewServer
+#PBS -j oe
+#PBS -o output2.txt
+
+# Recall maxiumum is 128 cores per node
+
+# Find the number of CPUs
+NP=$(wc -l $PBS_NODEFILE | awk '{print $1}')
+
+echo $NP
+
+PARAVIEW_PATH=$HOME/ParaView-5.13.1
+
+# Run the job start script
+python3 $SCRIPTS_DIR/jobStart.py
+
+$PARAVIEW_PATH/bin/mpiexec -np $NP $PARAVIEW_PATH/bin/pvserver --force-offscreen-rendering --server-port=11111 

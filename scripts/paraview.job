@@ -1,10 +1,18 @@
 #!/bin/bash
-#PBS -l select=1:ncpus=4:mem=30gb
-#PBS -l walltime=00:10:00
-#PBS -N gap_evector_modes
+#PBS -l select=1:ncpus=8:mem=20gb
+#PBS -l walltime=01:00:00
+#PBS -N paraviewServer
+#PBS -j oe
+#PBS -o output.txt
 
-# Recall maxiumum is 60 cores per node
+# Recall maxiumum is 128 cores per node
+
+# Find the number of CPUs
+NP=$(wc -l $PBS_NODEFILE | awk '{print $1}')
 
 PARAVIEW_PATH=$HOME/ParaView-5.13.1
 
-$PARAVIEW_PATH/bin/mpiexec -np 4 $PARAVIEW_PATH/bin/pvserver --force-offscreen-rendering --server-port=11111 
+# Run the job start script
+python3 $SCRIPTS_DIR/jobStart.py
+
+$PARAVIEW_PATH/bin/mpiexec -np $NP $PARAVIEW_PATH/bin/pvserver --force-offscreen-rendering --server-port=11111 

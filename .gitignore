@@ -1,4 +1,5 @@
 runs/
 tutorials/
 nektar*/
-**/sendMessage.py
+**/credentials*.txt
+**/__pycache__/
