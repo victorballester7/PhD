@@ -106,7 +106,7 @@
     </BOUNDARYCONDITIONS>
     
     <FUNCTION NAME="InitialConditions">
-      <F VAR="u,v,p" FILE="mesh_d4_w14_29.chk" />
+      <F VAR="u,v,p" FILE="mesh_d4_w14_30.chk" />
     </FUNCTION>
 
     <FUNCTION NAME="BaseFlow">

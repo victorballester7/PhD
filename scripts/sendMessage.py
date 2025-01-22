@@ -1,12 +1,9 @@
 import http.client
 from urllib.parse import urlencode
+import credentialsTelegram as cT
 
-# read the token and chat_id from the file
-token_file = open("credentialsTelegram.TOKEN.txt", "r")
-TOKEN = token_file.read().strip()
-
-chat_id_file = open("credentialsTelegram.CHAT_ID.txt", "r")
-CHAT_ID = chat_id_file.read().strip()
+TOKEN = cT.TOKEN
+CHAT_ID = cT.CHAT_ID
 
 def send_telegram_message(text):
     print("Sending message to Telegram...")

@@ -60,8 +60,16 @@ for p in $parameter_values; do
   # Check if there are any .job files in the current directory
   if ls *.job 1> /dev/null 2>&1; then
     for job_file in *.job; do
-      cp "$job_file" "${dir_name}/${job_file}"
-      sed -i "s/^#PBS -N .*/#PBS -N ${parent_dir}_${dir_name}/" "${dir_name}/${job_file}"
+      # if the job_file contains the pattern 'pbspro'
+      if grep -q "pbspro" "$job_file"; then
+        # copy the job file to the new directory and change the job name
+        cp "$job_file" "${dir_name}/${job_file}"
+        sed -i "s/^#PBS -N .*/#PBS -N ${parent_dir}_${dir_name}/" "${dir_name}/${job_file}"
+      else 
+        # if the job_file contains the pattern 'slurm'
+        cp "$job_file" "${dir_name}/${job_file}"
+        sed -i "s/^#SBATCH --job-name=.*/#SBATCH --job-name=${parent_dir}_${dir_name}/" "${dir_name}/${job_file}"
+      fi
     done
   else
     echo "No .job files found in the current directory."

@@ -32,7 +32,7 @@
       <!-- <P> CFLEnd         = 2.0                  </P> -->
       <P> NumSteps        = 1000e4     </P>
       <P> IO_CheckSteps   = NumSteps/50         </P> 
-      <P> IO_InfoSteps    = 1        </P> 
+      <P> IO_InfoSteps    = NumSteps/500        </P> 
       <!-- <P> IO_InfoSteps    = NumSteps/500        </P>  -->
       <P> IO_CFLSteps     = IO_InfoSteps         </P>
       <P> SVVDiffCoeff    = 0.1                    </P>

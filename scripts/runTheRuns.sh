@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Prompt the user to select the execution mode: local or cluster
-read -p "Run in nodes or submit to cluster (pbspro)? [n/c]: " mode
+read -p "Run in nodes (n) or submit to cluster (p for pbspro or s for slurm)? [n/p/s]: " mode
 
 # Validate user input
-if [[ "$mode" != "n" && "$mode" != "c" ]]; then
+if [[ "$mode" != "n" && "$mode" != "p" && "$mode" != "s" ]]; then
     echo "Invalid option. Please choose 'n' for nodes or 'c' for cluster."
     exit 1
 fi
@@ -21,7 +21,7 @@ if [[ "$mode" == "n" && "$#" -ne 3 ]]; then
     exit 1
 fi
 
-if [[ "$mode" == "c" && "$#" -ne 1 ]]; then
+if [[ ("$mode" == "p" || "$mode" == "s") && "$#" -ne 1 ]]; then
     echo "Usage: $0 <pattern_folders>"
     echo "Example: $0 NumSteps"
     exit 1
@@ -40,7 +40,7 @@ for folder in ${PATTERN}*/; do
           cd "$folder"
           run.sh $num_cores $mesh_file $session_file & disown
           cd ..
-        else
+        elif [ "$mode" == "p" ]; then
             if [ -f "$folder/pbspro.job" ]; then  # Check if ./pbspro.job exists and is executable
               echo "Submitting run as a PBS job in $folder"
               cd "$folder"
@@ -48,6 +48,15 @@ for folder in ${PATTERN}*/; do
               cd ..
             else
               echo "No file pbspro.job found in $folder"
+            fi
+        else
+            if [ -f "$folder/slurm.job" ]; then  # Check if ./slurm.job exists and is executable
+              echo "Submitting run as a Slurm job in $folder"
+              cd "$folder"
+              sbatch "slurm.job"
+              cd ..
+            else
+              echo "No file slurm.job found in $folder"
             fi
         fi
     else
