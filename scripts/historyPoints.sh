@@ -2,16 +2,18 @@
 # Description: This script inserts history points into a Nektar session .xml file 
 # based on the depth and width of the domain using float division.
 
-if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 sessionFile.xml depth width"
-    echo "Example: $0 sessionFile.xml 4 15"
+if [ "$#" -ne 4 ]; then
+    echo "Usage: $0 sessionFile.xml dist_to_leading_edge_gap depth width"
+    echo "Example: $0 sessionFile.xml 16 4 15"
     exit 1
 fi
 
 sessionFile=$1
-depth=$2
-width=$3
-x0=$(echo "4 * $depth" | bc -l)
+x0=$2
+depth=$3
+width=$4
+
+# x0=$(echo "4 * $depth" | bc -l)
 
 # Validate the existence of the session file
 if [ ! -f "$sessionFile" ]; then
