@@ -2,17 +2,15 @@
 # Description: This script inserts history points into a Nektar session .xml file 
 # based on the depth and width of the domain using float division.
 
-if [ "$#" -ne 4 ]; then
-    echo "Usage: $0 sessionFile.xml dist_to_leading_edge_gap depth width"
-    echo "Example: $0 sessionFile.xml 16 4 15"
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 sessionFile.xml depth width"
+    echo "Example: $0 sessionFile.xml 4 15"
     exit 1
 fi
 
 sessionFile=$1
-x0=$2
-depth=$3
-width=$4
-
+depth=$2
+width=$3
 # x0=$(echo "4 * $depth" | bc -l)
 
 # Validate the existence of the session file
@@ -32,18 +30,18 @@ mv "file.tmp" "$sessionFile"
 
 # Create the list of history points
 historyPoints=(
-    "$(echo "$x0 + $width / 4" | bc -l) $(echo "$depth / 2" | bc -l) 0"
-    "$(echo "$x0 + $width / 4" | bc -l) $(echo "-$depth / 3" | bc -l) 0"
-    "$(echo "$x0 + $width / 4" | bc -l) $(echo "-2 * $depth / 3" | bc -l) 0"
-    "$(echo "$x0 + $width / 2" | bc -l) $(echo "$depth / 2" | bc -l) 0"
-    "$(echo "$x0 + $width / 2" | bc -l) $(echo "-$depth / 3" | bc -l) 0"
-    "$(echo "$x0 + $width / 2" | bc -l) $(echo "-2 * $depth / 3" | bc -l) 0"
-    "$(echo "$x0 + 3 * $width / 4" | bc -l) $(echo "$depth / 2" | bc -l) 0"
-    "$(echo "$x0 + 3 * $width / 4" | bc -l) $(echo "-$depth / 3" | bc -l) 0"
-    "$(echo "$x0 + 3 * $width / 4" | bc -l) $(echo "-2 * $depth / 3" | bc -l) 0"
-    "$(echo "$x0 + $width" | bc -l) $(echo "$depth / 2" | bc -l) 0"
-    "$(echo "$x0 + 3 * $width / 2" | bc -l) $(echo "$depth / 2" | bc -l) 0"
-    "$(echo "$x0 + 2 * $width" | bc -l) $(echo "$depth / 2" | bc -l) 0"
+    "$(echo "$width / 4" | bc -l) $(echo "$depth / 2" | bc -l) 0"
+    "$(echo "$width / 4" | bc -l) $(echo "-$depth / 3" | bc -l) 0"
+    "$(echo "$width / 4" | bc -l) $(echo "-2 * $depth / 3" | bc -l) 0"
+    "$(echo "$width / 2" | bc -l) $(echo "$depth / 2" | bc -l) 0"
+    "$(echo "$width / 2" | bc -l) $(echo "-$depth / 3" | bc -l) 0"
+    "$(echo "$width / 2" | bc -l) $(echo "-2 * $depth / 3" | bc -l) 0"
+    "$(echo "3 * $width / 4" | bc -l) $(echo "$depth / 2" | bc -l) 0"
+    "$(echo "3 * $width / 4" | bc -l) $(echo "-$depth / 3" | bc -l) 0"
+    "$(echo "3 * $width / 4" | bc -l) $(echo "-2 * $depth / 3" | bc -l) 0"
+    "$(echo "$width" | bc -l) $(echo "$depth / 2" | bc -l) 0"
+    "$(echo "3 * $width / 2" | bc -l) $(echo "$depth / 2" | bc -l) 0"
+    "$(echo "2 * $width" | bc -l) $(echo "$depth / 2" | bc -l) 0"
 )
 
 # Insert the history points into the session file
