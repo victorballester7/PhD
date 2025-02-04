@@ -1,18 +1,26 @@
+#!/bin/bash
+
 WHERETOMOUNT="$HOME/hosts"
 
-echo "Unmounting nodes..."
+# Color codes
+GREEN="\033[1;32m"
+RED="\033[1;31m"
+YELLOW="\033[1;33m"
+NC="\033[0m" # No color
+
+echo -e "${YELLOW}Unmounting nodes...${NC}"
 umount ${WHERETOMOUNT}/nodes
 if [ $? -eq 0 ]; then
-    echo "Nodes data unmounted successfully!"
+    echo -e "${GREEN}Nodes data unmounted successfully!${NC}"
 else
-    echo "Nodes data unmount failed!"
+    echo -e "${RED}Nodes data unmount failed!${NC}"
 fi
 
-echo "Unmounting cluster..."
+echo -e "${YELLOW}Unmounting cluster...${NC}"
 umount ${WHERETOMOUNT}/hpc
 if [ $? -eq 0 ]; then
-    echo "Cluster data unmounted successfully!"
+    echo -e "${GREEN}Cluster data unmounted successfully!${NC}"
 else
-    echo "Cluster data unmount failed!"
+    echo -e "${RED}Cluster data unmount failed!${NC}"
 fi
 

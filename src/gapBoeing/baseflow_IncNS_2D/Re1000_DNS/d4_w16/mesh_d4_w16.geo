@@ -2,12 +2,11 @@
 deltaStar = 1;
 D = 4 * deltaStar; // depth of the gap 
 W = 16 * deltaStar; // width of the gap
-BLwidth = 2.85 * deltaStar; // boundary layer thickness, fixed value
-BL = BLwidth * 3; // height of the second layer of quad elements
-x0 = 4 * D; // x distance from inflow to gap
-lengthOutflow = 3 * W; // length after the gap
-x1 = x0 + W + lengthOutflow; // last point of the domain
-triagHeightRegion = 3 * BL; // height of the triangular region
+BL = 8 * deltaStar; // height of the second layer of quad elements
+x0 = 50 * deltaStar; // x distance from inflow to gap
+lengthOutflow = 150 * deltaStar; // length after the gap
+x1 = W + lengthOutflow; // last point of the domain
+triagHeightRegion = 6 * BL; // height of the triangular region
 h = BL + triagHeightRegion; // height of the domain
 
 
@@ -17,10 +16,12 @@ dx = 0.05; // dx of square elements near the leading and trailing edge of the ga
 // All the value below are between 0 and 1. =1  means the elements are all equal in size. Avoid using values very close to 1, because we dividing by log(p) in the formula.
 p_in_v = 0.95; // densitiy concentration of elements inside the gap, vertically.
 p_in_h = 0.95; // densitiy concentration of elements inside the gap, horizontally. 
+
 p_out_h = 0.9; // densitiy concentration of elements outside the gap, horizontally.
-p_out_v_inflow = 0.9; // densitiy concentration of elements outside the gap, vertically, near the inflow.
-p_out_v_outflow = 0.96; // densitiy concentration of elements outside the gap, vertically, near the outflow.
+p_out_v_inflow = 0.97; // densitiy concentration of elements outside the gap, vertically, near the inflow.
+p_out_v_outflow = 0.99; // densitiy concentration of elements outside the gap, vertically, near the outflow.
 p_triag_h = 1.2; // densitiy concentration of elements in the triangular region of the domain, horizontally.
+
 
 // Automated parameters 
 a_in_v = dx / (W / 2);
@@ -45,23 +46,23 @@ a_triag_v = dx_triag_v / (x0 + W + lengthOutflow);
 N_triag_v = Ceil( 1/(a_triag_v) - 1 ); // we assume p_triag_v = 1, otherwise the formula is different
 
 
-Point(1) = {0, 0, 0};
-Point(2) = {x0,0,0};
-Point(3) = {x0,-D,0};
-Point(4) = {x0+W,-D,0};
-Point(5) = {x0+W,0,0};
+Point(1) = {-x0, 0, 0};
+Point(2) = {0,0,0};
+Point(3) = {0,-D,0};
+Point(4) = {W,-D,0};
+Point(5) = {W,0,0};
 Point(6) = {x1,0,0};
 Point(7) = {x1,BL,0};
 Point(8) = {x1,h,0};
-Point(9) = {0,h,0};
-Point(10) = {0,BL,0};
-Point(11) = {x0,BL,0};
-Point(12) = {x0+W,BL,0};
-Point(13) = {x0+W/2,0,0};
-Point(14) = {x0+W/2,BL,0};
-Point(15) = {x0,-D/2,0};
-Point(16) = {x0+W/2,-D,0};
-Point(17) = {x0+W,-D/2,0};
+Point(9) = {-x0,h,0};
+Point(10) = {-x0,BL,0};
+Point(11) = {0,BL,0};
+Point(12) = {W,BL,0};
+Point(13) = {W/2,0,0};
+Point(14) = {W/2,BL,0};
+Point(15) = {0,-D/2,0};
+Point(16) = {W/2,-D,0};
+Point(17) = {W,-D/2,0};
 
 Line(1) = {1,2};
 Line(2) = {2,15};

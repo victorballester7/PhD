@@ -12,7 +12,7 @@
       <I PROPERTY="SolverType"                           VALUE="VelocityCorrectionScheme"   />
       <I PROPERTY="EqType"                               VALUE="UnsteadyNavierStokes"       />
       <I PROPERTY="Projection"                           VALUE="Galerkin"                   /> 
-      <I PROPERTY="EvolutionOperator"                     VALUE="Nonlinear"                  />
+      <I PROPERTY="EvolutionOperator"                     VALUE="Direct"                  />
       <I PROPERTY="TimeIntegrationMethod"                 VALUE="IMEXOrder2"                 />
       <I PROPERTY="SpectralVanishingViscosity"            VALUE="DGKernel"                        />
       <!-- <I PROPERTY="SpectralVanishingViscosityHomo1D"      VALUE="ExpKernel"                       /> -->
@@ -21,17 +21,18 @@
       <!-- <I PROPERTY="Homogeneous"                          VALUE="1D"                         /> -->
       <!-- <I PROPERTY="UseFFT"                               VALUE="FFTW"                        /> -->
       <I PROPERTY="GlobalSysSoln"                 VALUE="XxtMultiLevelStaticCond" />
+      <I PROPERTY="Driver"                      VALUE="ModifiedArnoldi" />
     </SOLVERINFO>    
 
     <PARAMETERS>
       <!--General parameters-->
-      <P> TimeStep        = 0.0005      </P>
+      <P> TimeStep        = 0.002      </P>
       <P> NumSteps        = 2000e4     </P>
-      <P> IO_CheckSteps   = NumSteps/100         </P> 
-      <P> IO_InfoSteps    = NumSteps/2000        </P> 
+      <P> IO_CheckSteps   = NumSteps         </P> 
+      <P> IO_InfoSteps    = NumSteps/50        </P> 
       <P> IO_CFLSteps     = IO_InfoSteps         </P>
-      <P> HistorySteps    = IO_InfoSteps * 10 </P>
-      <P> EnergySteps     = HistorySteps </P>
+      <P> HistorySteps    = IO_InfoSteps * 2 </P>
+      <P> EnergySteps     = IO_InfoSteps * 10</P>
       <P> IO_FiltersInfoSteps = EnergySteps </P>
       <P> SVVDiffCoeff    = 0.1                    </P>
       <P> SVVCutoffRatio  = 0.75                    </P>
@@ -92,20 +93,20 @@
 
     <BOUNDARYCONDITIONS>
       <REGION REF="0">  <!-- inlet !-->                  
-        <D VAR="u" VALUE="Uinf*((c0_u*(y*y2eta)^11 + c1_u*(y*y2eta)^10 + c2_u*(y*y2eta)^9 + c3_u*(y*y2eta)^8 + c4_u*(y*y2eta)^7 + c5_u*(y*y2eta)^6 + c6_u*(y*y2eta)^5 + c7_u*(y*y2eta)^4 + c8_u*(y*y2eta)^3 + c9_u*(y*y2eta)^2 + c10_u*(y*y2eta))*(y<yMax) + (y>=yMax))" />
-        <D VAR="v" VALUE="Vinf*((c0_v*(y*y2eta)^11 + c1_v*(y*y2eta)^10 + c2_v*(y*y2eta)^9 + c3_v*(y*y2eta)^8 + c4_v*(y*y2eta)^7 + c5_v*(y*y2eta)^6 + c6_v*(y*y2eta)^5 + c7_v*(y*y2eta)^4 + c8_v*(y*y2eta)^3 + c9_v*(y*y2eta)^2 + c10_v*(y*y2eta))*(y<yMax) + (y>=yMax))" />
+        <D VAR="u" VALUE="0" />
+        <D VAR="v" VALUE="0" />
         <N VAR="p" USERDEFINEDTYPE="H" VALUE="0" /> <!-- high-order boundary condition, VALUE is not used !-->
       </REGION>
 
       <REGION REF="1">   <!-- outlet !-->
-        <N VAR="u" USERDEFINEDTYPE="HOutflow" VALUE="0" />
-        <N VAR="v" USERDEFINEDTYPE="HOutflow" VALUE="0" />
+        <N VAR="u"  VALUE="0" />
+        <N VAR="v"  VALUE="0" />
         <D VAR="p" USERDEFINEDTYPE="HOutflow" VALUE="0" />
       </REGION>  
             
       <REGION REF="2">   <!-- top = far-field !-->
-        <D VAR="u" VALUE="Uinf" />
-        <D VAR="v" VALUE="Vinf" />        
+        <D VAR="u" VALUE="0" />
+        <D VAR="v" VALUE="0" />        
         <N VAR="p" USERDEFINEDTYPE="H" VALUE="0" />      
       </REGION>
 
@@ -115,14 +116,17 @@
         <N VAR="p" USERDEFINEDTYPE="H" VALUE="0" />  
       </REGION>    
     </BOUNDARYCONDITIONS>
-    
+
+    <FUNCTION NAME="BaseFlow">
+      <F VAR="u,v,w,p" FILE="../baseflow.fld"   />
+    </FUNCTION>
     <!-- <FUNCTION NAME="InitialConditions"> -->
-    <!--   <F VAR="u,v,p" FILE="mesh_d4_w10_6.chk" /> -->
+    <!--   <F VAR="u,v,p" FILE="mesh_d4_w15_83.chk" /> -->
     <!-- </FUNCTION> -->
 
     
     <FUNCTION NAME="InitialConditions">
-      <E VAR="u" VALUE="0" />
+      <E VAR="u" VALUE="0.001*awgn(1.0)" />
       <E VAR="v" VALUE="0" />
       <E VAR="p" VALUE="0" />
    </FUNCTION>
@@ -138,18 +142,18 @@
       <PARAM NAME="OutputFile">HistoryPoints</PARAM>
       <PARAM NAME="OutputFrequency">HistorySteps</PARAM>
       <PARAM NAME="Points">
-    43.75000000000000000000 2.00000000000000000000 0
-    43.75000000000000000000 -1.33333333333333333333 0
-    43.75000000000000000000 -2.66666666666666666666 0
-    47.50000000000000000000 2.00000000000000000000 0
-    47.50000000000000000000 -1.33333333333333333333 0
-    47.50000000000000000000 -2.66666666666666666666 0
-    51.25000000000000000000 2.00000000000000000000 0
-    51.25000000000000000000 -1.33333333333333333333 0
-    51.25000000000000000000 -2.66666666666666666666 0
-    55 2.00000000000000000000 0
-    62.50000000000000000000 2.00000000000000000000 0
-    70 2.00000000000000000000 0
+    3.75000000000000000000 2.00000000000000000000 0
+    3.75000000000000000000 -1.33333333333333333333 0
+    3.75000000000000000000 -2.66666666666666666666 0
+    7.50000000000000000000 2.00000000000000000000 0
+    7.50000000000000000000 -1.33333333333333333333 0
+    7.50000000000000000000 -2.66666666666666666666 0
+    11.25000000000000000000 2.00000000000000000000 0
+    11.25000000000000000000 -1.33333333333333333333 0
+    11.25000000000000000000 -2.66666666666666666666 0
+    15 2.00000000000000000000 0
+    22.50000000000000000000 2.00000000000000000000 0
+    30 2.00000000000000000000 0
       </PARAM>
     </FILTER>
   </FILTERS>

@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -l select=1:ncpus=128:mem=70gb
-#PBS -l walltime=47:59:00
+#PBS -l walltime=17:59:00
 #PBS -N bf_d4_w15_331
 #PBS -j oe
 #PBS -o output.txt

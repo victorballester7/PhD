@@ -35,7 +35,7 @@ def read_history_points(file_path: str) -> Tuple[np.ndarray, np.ndarray]:
     return new_data, np.array(points_locations)
 
 def plot_comparison(
-    folders: List[str], file_name: str = "HistoryPoints.his", point: int = 0, reference: int = 0, time_min: Optional[float] = None
+    folders: List[str], file_name: str = "HistoryPoints.his", point: int = 0, reference: int = 0, time_min: Optional[float] = None, use_relative: bool = False, save: str = ""
 ) -> None:
     """Plot relative errors of non-temporal variables compared to a reference folder.
 
@@ -81,9 +81,9 @@ def plot_comparison(
     ref_time, ref_variables = data_by_folder[ref_folder]
 
     # Truncate variables to the smallest time range
-    time_max = min(len(ref_time), *[len(data[0]) for data in data_by_folder.values()])
-    ref_time = ref_time[:time_max]
-    ref_variables = ref_variables[:time_max]
+    # time_max = min(len(ref_time), *[len(data[0]) for data in data_by_folder.values()])
+    # ref_time = ref_time[:time_max]
+    # ref_variables = ref_variables[:time_max]
 
     if time_min is not None:
         valid_indices = ref_time >= time_min
@@ -91,47 +91,72 @@ def plot_comparison(
         ref_variables = ref_variables[valid_indices]
         for folder in data_by_folder:
             time, variables = data_by_folder[folder]
-            valid_indices = time[:time_max] >= time_min
-            data_by_folder[folder] = (time[:time_max][valid_indices], variables[:time_max][valid_indices])
-
-    fig, axes = plt.subplots(2, 2, figsize=(10, 6), sharex=True)
-    plt.suptitle(f"Relative Errors (Point {point}: x = {points_loc[point, 0]:.2f}, y = {points_loc[point, 1]:.2f}, z = {points_loc[point, 2]:.2f})")
+            valid_indices = time >= time_min
+            data_by_folder[folder] = (time[valid_indices], variables[valid_indices])
 
     num_variables = len(variable_labels)
+    if num_variables == 3:
+        fig, axes = plt.subplots(1, 3, figsize=(15, 5), sharex=True)
+    else:
+        fig, axes = plt.subplots(2, 2, figsize=(10, 6), sharex=True)
+    
+    if use_relative:
+        plt.suptitle(f"Relative Errors (Point {point + 1}: x = {points_loc[point, 0]:.2f}, y = {points_loc[point, 1]:.2f}, z = {points_loc[point, 2]:.2f})")
+    else:
+        plt.suptitle(f"Point {point + 1}: x = {points_loc[point, 0]:.2f}, y = {points_loc[point, 1]:.2f}, z = {points_loc[point, 2]:.2f}")
+
     for i, ax in enumerate(axes.flatten()):
         if i >= num_variables:
             break
 
         for folder, (time, variables) in data_by_folder.items():
-            if folder == ref_folder:
+            if use_relative and folder == ref_folder:
                 continue
 
-            time = time[:time_max]
-            variables = variables[:time_max]
+            # time = time[:time_max]
+            # variables = variables[:time_max]
 
-            rel_error = np.abs((variables[:, i] - ref_variables[:, i]) / ref_variables[:, i])
-            ax.plot(time, rel_error, label=f"{folder} (vs {ref_folder})")
+            if use_relative:
+                plot = np.abs((variables[:, i] - ref_variables[:, i]) / ref_variables[:, i])
+                custom_label = f"{folder} (vs {ref_folder})"
+            else:
+                plot = variables[:, i]
+                custom_label = folder
+            ax.plot(time, plot, label=custom_label)
 
-        ax.set_ylabel(f"Relative Error: {variable_labels[i]}")
+        if use_relative:
+            ax.set_ylabel(f"Relative Error: {variable_labels[i]}")
+        else:
+            ax.set_ylabel(f"{variable_labels[i]}")
         ax.grid()
         ax.legend()
 
-    axes[-1, 0].set_xlabel("Time")
-    axes[-1, 1].set_xlabel("Time")
+    if num_variables == 3:
+        axes[0].set_xlabel("Time")
+        axes[1].set_xlabel("Time")
+        axes[2].set_xlabel("Time")
+    else:
+        axes[-1, 0].set_xlabel("Time")
+        axes[-1, 1].set_xlabel("Time")
     plt.tight_layout()
-    plt.show()
+    if save == "":
+        plt.show()
+    else:
+        plt.savefig(save)
 
 if __name__ == "__main__":
     import argparse
 
+    file_name = "HistoryPoints.his"
+
     parser = argparse.ArgumentParser(
-        description="Compare relative errors in HistoryPoints.his files across folders."
+        description=f"Compare relative errors in {file_name} files across folders."
     )
     parser.add_argument("folders", nargs="+", help="List of folders to compare.")
     parser.add_argument(
         "--file_name",
-        default="HistoryPoints.his",
-        help="Name of the file to read (default: HistoryPoints.his).",
+        default=file_name,
+        help=f"Name of the file to read (default: {file_name}).",
     )
     parser.add_argument(
         "--point", default=0, type=int, help="Point number to compare (default: 0)."
@@ -142,7 +167,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--time_min", default=None, type=float, help="Minimum time value to include in the comparison (default: None)."
     )
+    parser.add_argument(
+            "--use_relative", default=False, type=bool, help="Use relative error instead of absolute error (default: False)."
+    )
+    parser.add_argument(
+            "--save", default="", type=str, help="Save the plot to a file, empty string to not save (default: '')."
+    )
     args = parser.parse_args()
 
-    plot_comparison(args.folders, file_name=args.file_name, point=args.point, reference=args.reference, time_min=args.time_min)
+    plot_comparison(args.folders, file_name=args.file_name, point=args.point, reference=args.reference, time_min=args.time_min, use_relative=args.use_relative, save=args.save)
 

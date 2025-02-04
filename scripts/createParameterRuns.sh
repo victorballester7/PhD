@@ -1,12 +1,18 @@
 #!/bin/bash
 
+# Define colors
+RED="\e[31m"
+GREEN="\e[32m"
+YELLOW="\e[33m"
+CYAN="\e[36m"
+RESET="\e[0m"
+
 # prompt a message if there are less than 4 arguments
 if [ "$#" -lt 4 ]; then 
-    echo "Usage: $0 <mesh_file> <general_session_file> <parameter_to_change> <values>"
-    echo "For example: $0 mesh_finer.xml gap_pert_incNS.xml mode_num 1 2 3 4 5"
+    echo -e "${RED}Usage: $0 <mesh_file> <general_session_file> <parameter_to_change> <values>${RESET}"
+    echo -e "${YELLOW}For example: $0 mesh_finer.xml gap_pert_incNS.xml mode_num 1 2 3 4 5${RESET}"
     exit 1
 fi
-
 
 # Input XML file and maximum mode number
 mesh_file=$1
@@ -15,16 +21,16 @@ parameter=$3
 parameter_values="${@:4}" # all the values after the 3rd argument
 parent_dir=$(basename "$(dirname "$(realpath gap_incNS.xml)")")
 
-echo "Input file: $session_file"
-echo "Mesh file: $mesh_file"
-echo "Parameter to change: $parameter"
-echo "Values: $parameter_values"
-echo "Parent directory: $parent_dir"
+echo -e "${CYAN}Input file: $session_file${RESET}"
+echo -e "${CYAN}Mesh file: $mesh_file${RESET}"
+echo -e "${CYAN}Parameter to change: $parameter${RESET}"
+echo -e "${CYAN}Values: $parameter_values${RESET}"
+echo -e "${CYAN}Parent directory: $parent_dir${RESET}"
 echo ""
 
 # Check if the input files exist (mesh file and session file)
 if [[ ! -f "$mesh_file" || ! -f "$session_file" ]]; then
-  echo "Error opening the input files."
+  echo -e "${RED}Error opening the input files.${RESET}"
   exit 1
 fi
 
@@ -34,10 +40,9 @@ if grep -q "<p> ${parameter}[[:space:]]*=.*</p>" "$session_file"; then
 elif grep -q "<P> ${parameter}[[:space:]]*=.*</P>" "$session_file"; then
   pCapital=1
 else
-  echo "Parameter $parameter not found in the session file."
+  echo -e "${RED}Parameter $parameter not found in the session file.${RESET}"
   exit 1
 fi
-
 
 # Loop over the range of mode numbers
 for p in $parameter_values; do
@@ -55,13 +60,11 @@ for p in $parameter_values; do
     sed "s/<p> ${parameter}[[:space:]]*=.*<\/p>/<p> ${parameter} = ${p} <\/p>/g" "$session_file" > "$output_file"
   fi
   
-  #!/bin/bash
-
   # Check if there are any .job files in the current directory
   if ls *.job 1> /dev/null 2>&1; then
     for job_file in *.job; do
       # if the job_file contains the pattern 'pbspro'
-      if grep -q "pbspro" "$job_file"; then
+      if [[ "$job_file" == *pbspro* ]]; then
         # copy the job file to the new directory and change the job name
         cp "$job_file" "${dir_name}/${job_file}"
         sed -i "s/^#PBS -N .*/#PBS -N ${parent_dir}_${dir_name}/" "${dir_name}/${job_file}"
@@ -72,12 +75,11 @@ for p in $parameter_values; do
       fi
     done
   else
-    echo "No .job files found in the current directory."
+    echo -e "${YELLOW}No .job files found in the current directory.${RESET}"
   fi
 
-  
-  echo "Generated file for ${parameter} $p in $dir_name"
+  echo -e "${GREEN}Generated file for ${parameter} $p in $dir_name${RESET}"
 done
 
-echo "All files have been generated."
+echo -e "${GREEN}All files have been generated.${RESET}"
 

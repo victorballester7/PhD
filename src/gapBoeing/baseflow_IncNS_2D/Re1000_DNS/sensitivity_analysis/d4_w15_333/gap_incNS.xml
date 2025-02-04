@@ -25,7 +25,7 @@
 
     <PARAMETERS>
       <!--General parameters-->
-      <P> TimeStep        = 0.0005      </P>
+      <P> TimeStep        = 0.002      </P>
       <P> NumSteps        = 2000e4     </P>
       <P> IO_CheckSteps   = NumSteps/200         </P> 
       <P> IO_InfoSteps    = NumSteps/4000        </P> 
@@ -117,7 +117,7 @@
     </BOUNDARYCONDITIONS>
     
     <FUNCTION NAME="InitialConditions">
-      <F VAR="u,v,p" FILE="mesh_d4_w15_20.chk" />
+      <F VAR="u,v,p" FILE="mesh_d4_w15_83.chk" />
     </FUNCTION>
 
     

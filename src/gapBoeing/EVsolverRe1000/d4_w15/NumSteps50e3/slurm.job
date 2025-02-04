@@ -1,10 +1,10 @@
 #!/bin/bash
 #SBATCH --nodes=1
-#SBATCH --ntasks=48
-#SBATCH --mem=50GB
-#SBATCH --time=0-23:59:59
-#SBATCH --job-name=d4_w15_fR
-#SBATCH --partition=medium
+#SBATCH --ntasks=56
+#SBATCH --mem=100GB
+#SBATCH --time=1-23:59:59
+#SBATCH --job-name=d4_w15_NumSteps50e3
+#SBATCH --partition=long
 #SBATCH --output=output.txt
 #SBATCH --error=log.txt
 

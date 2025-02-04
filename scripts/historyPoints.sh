@@ -2,22 +2,31 @@
 # Description: This script inserts history points into a Nektar session .xml file 
 # based on the depth and width of the domain using float division.
 
+# Define colors
+RED="\e[31m"
+GREEN="\e[32m"
+YELLOW="\e[33m"
+CYAN="\e[36m"
+RESET="\e[0m"
+
+# Check argument count
 if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 sessionFile.xml depth width"
-    echo "Example: $0 sessionFile.xml 4 15"
+    echo -e "${RED}Usage: $0 sessionFile.xml depth width${RESET}"
+    echo -e "${YELLOW}Example: $0 sessionFile.xml 4 15${RESET}"
     exit 1
 fi
 
 sessionFile=$1
 depth=$2
 width=$3
-# x0=$(echo "4 * $depth" | bc -l)
 
 # Validate the existence of the session file
 if [ ! -f "$sessionFile" ]; then
-    echo "Error: File $sessionFile not found."
+    echo -e "${RED}Error: File $sessionFile not found.${RESET}"
     exit 1
 fi
+
+echo -e "${CYAN}Processing session file: $sessionFile${RESET}"
 
 # Use sed to remove only the lines between <PARAM NAME="Points"> and </PARAM>
 sed '/<PARAM NAME="Points">/,/<\/PARAM>/ {
@@ -27,6 +36,7 @@ sed '/<PARAM NAME="Points">/,/<\/PARAM>/ {
 }' "$sessionFile" > "file.tmp"
 
 mv "file.tmp" "$sessionFile"
+echo -e "${GREEN}Previous history points removed.${RESET}"
 
 # Create the list of history points
 historyPoints=(
@@ -44,6 +54,8 @@ historyPoints=(
     "$(echo "2 * $width" | bc -l) $(echo "$depth / 2" | bc -l) 0"
 )
 
+echo -e "${CYAN}Inserting history points into $sessionFile...${RESET}"
+
 # Insert the history points into the session file
 awk -v points="${historyPoints[*]}" '
     BEGIN { split(points, arr, " ") }
@@ -59,4 +71,5 @@ awk -v points="${historyPoints[*]}" '
     { print }
 ' "$sessionFile" > temp.xml && mv temp.xml "$sessionFile"
 
-echo "History points successfully added to $sessionFile."
+echo -e "${GREEN}History points successfully added to $sessionFile.${RESET}"
+
