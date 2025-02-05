@@ -1,0 +1,8 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=128:mem=70gb
+#PBS -l walltime=07:59:00
+#PBS -N EVd4_w16
+#PBS -j oe
+#PBS -o output.txt
+
+pbspro.sh $PBS_NODEFILE $PBS_JOBID

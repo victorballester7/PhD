@@ -14,7 +14,8 @@ def send_telegram_message(text):
         params = {
             "chat_id": CHAT_ID,
             "text": text,
-            "parse_mode": "Markdown"
+            "parse_mode": "Markdown",
+            "disable_notification": True
         }
 
         # Encode the parameters

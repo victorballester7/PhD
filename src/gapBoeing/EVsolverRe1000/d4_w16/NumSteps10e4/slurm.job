@@ -1,0 +1,12 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=48
+#SBATCH --mem=50GB
+#SBATCH --time=00:00:59
+#SBATCH --job-name=d4w16ev
+#SBATCH --partition=medium
+#SBATCH --output=output.txt
+#SBATCH --error=log.txt
+
+slurm.sh $SLURM_NTASKS $SLURM_JOB_ID $PWD
+

@@ -121,7 +121,12 @@ def plot_comparison(
                 custom_label = f"{folder} (vs {ref_folder})"
             else:
                 plot = variables[:, i]
-                custom_label = folder
+                # truncate the name of folder to last m characters
+                m = 12
+                if len(folder) > m:
+                    custom_label = folder[-m:]
+                else:
+                    custom_label = folder
             ax.plot(time, plot, label=custom_label)
 
         if use_relative:
