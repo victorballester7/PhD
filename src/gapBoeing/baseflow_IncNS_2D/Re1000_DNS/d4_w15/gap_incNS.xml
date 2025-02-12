@@ -24,9 +24,9 @@
     </SOLVERINFO>    
 
     <PARAMETERS>
-      <!--General parameters-->
+            <!--General parameters-->
       <P> TimeStep        = 0.0003      </P>
-      <P> NumSteps        = 2000e4     </P>
+      <P> NumSteps        = 4000e4     </P>
       <P> IO_CheckSteps   = NumSteps/200         </P> 
       <P> IO_InfoSteps    = NumSteps/4000        </P> 
       <P> IO_CFLSteps     = IO_InfoSteps         </P>
@@ -62,7 +62,7 @@
       <p> Re_x_BC                  = (Re_deltaStar_BC/y2eta)^2 </p>
       <p> Vinf                  = 0.5*Uinf/sqrt(Re_x_BC)*y2eta  </p>
       <P> etaMax          = 9.84                      </P>  <!-- based on python plotting script. It fits better than etaMax=10, the endpoint of the simulation, both for u and v !-->
-      <P> yMax        = etaMax/y2eta             </P> <!--[m]-->
+      <P> yMax        = etaMax/y2eta             </P> <!--[m]-->  
       <p> a1_u = 0.33263899291846005 </p>
       <p> a2_u = 8830.512069032215 </p>
       <p> a3_u = 58.97366593890366 </p>
@@ -166,7 +166,6 @@
         <N VAR="p" USERDEFINEDTYPE="H" VALUE="0" />      
       </REGION>
 
-
       <REGION REF="3">  <!-- bottom = wall no slip !-->  
         <D VAR="u" VALUE="0" />
         <D VAR="v" VALUE="0" />        
@@ -175,7 +174,7 @@
     </BOUNDARYCONDITIONS>
     
     <!-- <FUNCTION NAME="InitialConditions"> -->
-    <!--   <F VAR="u,v,p" FILE="mesh_d4_w15_83.chk" /> -->
+    <!--   <F VAR="u,v,p" FILE="mesh_d4_w15_2.chk" /> -->
     <!-- </FUNCTION> -->
 
     

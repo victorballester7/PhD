@@ -133,44 +133,21 @@
     <BOUNDARYCONDITIONS>
       <REGION REF="0">  <!-- inlet !-->                  
         <!-- I do it like that (when y>=yMax) in order to avoid discontinuities in the velocity field at the inflow (I had discontinuities, which affect the presure field and therefore the whole domain), the error is of the order of 10^-7 for u and 10^-10 for v ! -->
-        <D VAR="u" VALUE="Uinf*(
-                   (
-                     (a1_u*(y*y2eta)^1 + a2_u*(y*y2eta)^2 + a3_u*(y*y2eta)^3 + a4_u*(y*y2eta)^4 + a5_u*(y*y2eta)^5 + a6_u*(y*y2eta)^6 + a7_u*(y*y2eta)^7 + a8_u*(y*y2eta)^8 + a9_u*(y*y2eta)^9 + a10_u*(y*y2eta)^10 + a11_u*(y*y2eta)^11) / 
-                     (1 + b1_u*(y*y2eta)^1 + b2_u*(y*y2eta)^2 + b3_u*(y*y2eta)^3 + b4_u*(y*y2eta)^4 + b5_u*(y*y2eta)^5 + b6_u*(y*y2eta)^6 + b7_u*(y*y2eta)^7 + b8_u*(y*y2eta)^8 + b9_u*(y*y2eta)^9 + b10_u*(y*y2eta)^10 + b11_u*(y*y2eta)^11)
-                   ) * (y<yMax) + 
-                   (
-                     (a1_u*(yMax*y2eta)^1 + a2_u*(yMax*y2eta)^2 + a3_u*(yMax*y2eta)^3 + a4_u*(yMax*y2eta)^4 + a5_u*(yMax*y2eta)^5 + a6_u*(yMax*y2eta)^6 + a7_u*(yMax*y2eta)^7 + a8_u*(yMax*y2eta)^8 + a9_u*(yMax*y2eta)^9 + a10_u*(yMax*y2eta)^10 + a11_u*(yMax*y2eta)^11) /
-                     (1 + b1_u*(yMax*y2eta)^1 + b2_u*(yMax*y2eta)^2 + b3_u*(yMax*y2eta)^3 + b4_u*(yMax*y2eta)^4 + b5_u*(yMax*y2eta)^5 + b6_u*(yMax*y2eta)^6 + b7_u*(yMax*y2eta)^7 + b8_u*(yMax*y2eta)^8 + b9_u*(yMax*y2eta)^9 + b10_u*(yMax*y2eta)^10 + b11_u*(yMax*y2eta)^11)
-                   ) * (y>=yMax))" />
-       <D VAR="v" VALUE="Vinf*(
-                   (
-                     (a1_v*(y*y2eta)^1 + a2_v*(y*y2eta)^2 + a3_v*(y*y2eta)^3 + a4_v*(y*y2eta)^4 + a5_v*(y*y2eta)^5 + a6_v*(y*y2eta)^6 + a7_v*(y*y2eta)^7 + a8_v*(y*y2eta)^8 + a9_v*(y*y2eta)^9 + a10_v*(y*y2eta)^10 + a11_v*(y*y2eta)^11) / 
-                     (1 + b1_v*(y*y2eta)^1 + b2_v*(y*y2eta)^2 + b3_v*(y*y2eta)^3 + b4_v*(y*y2eta)^4 + b5_v*(y*y2eta)^5 + b6_v*(y*y2eta)^6 + b7_v*(y*y2eta)^7 + b8_v*(y*y2eta)^8 + b9_v*(y*y2eta)^9 + b10_v*(y*y2eta)^10 + b11_v*(y*y2eta)^11)
-                   ) * (y<yMax) + 
-                   (
-                     (a1_v*(yMax*y2eta)^1 + a2_v*(yMax*y2eta)^2 + a3_v*(yMax*y2eta)^3 + a4_v*(yMax*y2eta)^4 + a5_v*(yMax*y2eta)^5 + a6_v*(yMax*y2eta)^6 + a7_v*(yMax*y2eta)^7 + a8_v*(yMax*y2eta)^8 + a9_v*(yMax*y2eta)^9 + a10_v*(yMax*y2eta)^10 + a11_v*(yMax*y2eta)^11) /
-                     (1 + b1_v*(yMax*y2eta)^1 + b2_v*(yMax*y2eta)^2 + b3_v*(yMax*y2eta)^3 + b4_v*(yMax*y2eta)^4 + b5_v*(yMax*y2eta)^5 + b6_v*(yMax*y2eta)^6 + b7_v*(yMax*y2eta)^7 + b8_v*(yMax*y2eta)^8 + b9_v*(yMax*y2eta)^9 + b10_v*(yMax*y2eta)^10 + b11_v*(yMax*y2eta)^11)
-                   ) * (y>=yMax))" />
+        <D VAR="u" VALUE="0" />
+        <D VAR="v" VALUE="0" />
         <N VAR="p" USERDEFINEDTYPE="H" VALUE="0" /> <!-- high-order boundary condition, VALUE is not used !-->
       </REGION>
 
       <REGION REF="1">   <!-- outlet !-->
-        <N VAR="u" USERDEFINEDTYPE="HOutflow" VALUE="0" />
-        <N VAR="v" USERDEFINEDTYPE="HOutflow" VALUE="0" />
-        <D VAR="p" USERDEFINEDTYPE="HOutflow" VALUE="0" />
+        <N VAR="u" VALUE="0" />
+        <N VAR="v" VALUE="0" />
+        <D VAR="p" VALUE="0" />
       </REGION>  
             
       <REGION REF="2">   <!-- top = far-field !-->
         <!-- I do it like that in order to avoid discontinuities in the velocity field at the top boundary, the error is of the order of 10^-7 for u and 10^-10 for v ! -->
-        <D VAR="u" VALUE="Uinf * (
-                      (a1_u*(yMax*y2eta)^1 + a2_u*(yMax*y2eta)^2 + a3_u*(yMax*y2eta)^3 + a4_u*(yMax*y2eta)^4 + a5_u*(yMax*y2eta)^5 + a6_u*(yMax*y2eta)^6 + a7_u*(yMax*y2eta)^7 + a8_u*(yMax*y2eta)^8 + a9_u*(yMax*y2eta)^9 + a10_u*(yMax*y2eta)^10 + a11_u*(yMax*y2eta)^11) /
-                      (1 + b1_u*(yMax*y2eta)^1 + b2_u*(yMax*y2eta)^2 + b3_u*(yMax*y2eta)^3 + b4_u*(yMax*y2eta)^4 + b5_u*(yMax*y2eta)^5 + b6_u*(yMax*y2eta)^6 + b7_u*(yMax*y2eta)^7 + b8_u*(yMax*y2eta)^8 + b9_u*(yMax*y2eta)^9 + b10_u*(yMax*y2eta)^10 + b11_u*(yMax*y2eta)^11)
-                     )" />
-
-        <D VAR="v" VALUE="Vinf * (
-                      (a1_v*(yMax*y2eta)^1 + a2_v*(yMax*y2eta)^2 + a3_v*(yMax*y2eta)^3 + a4_v*(yMax*y2eta)^4 + a5_v*(yMax*y2eta)^5 + a6_v*(yMax*y2eta)^6 + a7_v*(yMax*y2eta)^7 + a8_v*(yMax*y2eta)^8 + a9_v*(yMax*y2eta)^9 + a10_v*(yMax*y2eta)^10 + a11_v*(yMax*y2eta)^11) /
-                      (1 + b1_v*(yMax*y2eta)^1 + b2_v*(yMax*y2eta)^2 + b3_v*(yMax*y2eta)^3 + b4_v*(yMax*y2eta)^4 + b5_v*(yMax*y2eta)^5 + b6_v*(yMax*y2eta)^6 + b7_v*(yMax*y2eta)^7 + b8_v*(yMax*y2eta)^8 + b9_v*(yMax*y2eta)^9 + b10_v*(yMax*y2eta)^10 + b11_v*(yMax*y2eta)^11)
-                     )     " />
+        <D VAR="u" VALUE="0" />
+        <D VAR="v" VALUE="0" />
         <N VAR="p" USERDEFINEDTYPE="H" VALUE="0" />      
       </REGION>
 

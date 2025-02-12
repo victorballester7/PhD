@@ -71,6 +71,26 @@ function convert_msh2xml {
     done
 }
 
+function editJobs {
+  parent_dir=$(basename "$(dirname "$(realpath gap_incNS.xml)")")  
+
+  # Check if there are any .job files in the current directory
+  if ls *.job 1> /dev/null 2>&1; then
+    for job_file in *.job; do
+      # If the job_file contains the pattern 'pbspro'
+      if [[ "$job_file" == *pbspro* ]]; then
+        sed -i "s/^#PBS -N .*/#PBS -N ${parent_dir}/" "${job_file}"
+      # If the job_file contains the pattern 'slurm'
+      else 
+        sed -i "s/^#SBATCH --job-name=.*/#SBATCH --job-name=${parent_dir}/" "${job_file}"
+      fi
+    done
+  else
+    echo -e "${YELLOW}No .job files found in the current directory.${RESET}"
+  fi   
+}
+
+
 # Check argument count
 if [ "$#" -ne 3 ]; then
     echo -e "${RED}Usage: $0 sessionFile.xml depth width${RESET}"
@@ -98,3 +118,6 @@ convert_geo2msh
 
 # Convert .msh files to .xml
 convert_msh2xml
+
+# Edit the job files
+editJobs

@@ -8,17 +8,17 @@ CYAN="\e[36m"
 RESET="\e[0m"
 
 # prompt a message if there are less than 4 arguments
-if [ "$#" -lt 4 ]; then 
-    echo -e "${RED}Usage: $0 <mesh_file> <general_session_file> <parameter_to_change> <values>${RESET}"
-    echo -e "${YELLOW}For example: $0 mesh_finer.xml gap_pert_incNS.xml mode_num 1 2 3 4 5${RESET}"
+if [ "$#" -lt 2 ]; then 
+    echo -e "${RED}Usage: $0 <parameter_to_change> <values>${RESET}"
+    echo -e "${YELLOW}For example: $0 mode_num 1 2 3 4 5${RESET}"
     exit 1
 fi
 
 # Input XML file and maximum mode number
-mesh_file=$1
-session_file=$2                 
-parameter=$3
-parameter_values="${@:4}" # all the values after the 3rd argument
+mesh_file=$(ls mesh_*.xml 2>/dev/null | head -n 1)
+session_file=$(ls *.xml 2>/dev/null | grep -v "^$mesh_file$" | head -n 1) 
+parameter=$1
+parameter_values="${@:2}" # all the values after the 3rd argument
 parent_dir=$(basename "$(dirname "$(realpath gap_incNS.xml)")")
 
 echo -e "${CYAN}Input file: $session_file${RESET}"

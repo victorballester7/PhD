@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <NEKTAR>  
   <EXPANSIONS>    
-    <E COMPOSITE="C[100,101]" NUMMODES="7" FIELDS="u,v" TYPE="MODIFIED" />  
-    <E COMPOSITE="C[100,101]" NUMMODES="6" FIELDS="p" TYPE="MODIFIEDQUADPLUS1" />
-    <E COMPOSITE="C[102]" NUMMODES="5" FIELDS="u,v" TYPE="MODIFIED" />
-    <E COMPOSITE="C[102]" NUMMODES="4" FIELDS="p" TYPE="MODIFIEDQUADPLUS1" />
+    <E COMPOSITE="C[100,101,102]" NUMMODES="9" FIELDS="u,v" TYPE="MODIFIED" />  
+    <E COMPOSITE="C[100,101,102]" NUMMODES="8" FIELDS="p" TYPE="MODIFIEDQUADPLUS1" />
   </EXPANSIONS>
   
   <CONDITIONS>    
@@ -25,10 +23,10 @@
 
     <PARAMETERS>
             <!--General parameters-->
-      <P> TimeStep        = 0.0003      </P>
-      <P> NumSteps        = 2000e4     </P>
-      <P> IO_CheckSteps   = NumSteps/200         </P> 
-      <P> IO_InfoSteps    = NumSteps/4000        </P> 
+      <P> TimeStep        = 0.0012      </P>
+      <P> NumSteps        = 4000e3     </P>
+      <P> IO_CheckSteps   = NumSteps/100         </P> 
+      <P> IO_InfoSteps    = NumSteps/2000        </P> 
       <P> IO_CFLSteps     = IO_InfoSteps         </P>
       <P> HistorySteps    = IO_InfoSteps * 2 </P>
       <P> EnergySteps     = IO_InfoSteps * 10</P>
@@ -173,16 +171,16 @@
       </REGION>    
     </BOUNDARYCONDITIONS>
     
-    <!-- <FUNCTION NAME="InitialConditions"> -->
-    <!--   <F VAR="u,v,p" FILE="mesh_d4_w15_83.chk" /> -->
-    <!-- </FUNCTION> -->
+    <FUNCTION NAME="InitialConditions">
+      <F VAR="u,v,p" FILE="mesh_d4_w16.25_54.chk" />
+    </FUNCTION>
 
     
-    <FUNCTION NAME="InitialConditions">
-      <E VAR="u" VALUE="0" />
-      <E VAR="v" VALUE="0" />
-      <E VAR="p" VALUE="0" />
-   </FUNCTION>
+   <!--  <FUNCTION NAME="InitialConditions"> -->
+   <!--    <E VAR="u" VALUE="0" /> -->
+   <!--    <E VAR="v" VALUE="0" /> -->
+   <!--    <E VAR="p" VALUE="0" /> -->
+   <!-- </FUNCTION> -->
   </CONDITIONS>
   <FILTERS>
 

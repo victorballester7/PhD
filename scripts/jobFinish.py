@@ -3,44 +3,61 @@ import sendMessage as sm
 import os
 import socket
 
-def check_and_notify(job_id, timeout):
+
+def check_and_notify(job_id):
     NUMLINES = 40
     current_directory = os.getcwd()
-    hostname = socket.gethostname() 
+    hostname = socket.gethostname()
     try:
         with open("log.txt", "r") as log_file:
-            log_content = log_file.read()
+            log_content = log_file.readlines()[-NUMLINES:]  # Last 40 lines of log.txt
 
+        # Check if 'timeout' word is present in log.txt
+        timeout = any("timeout" in line for line in log_content)
 
-        if not log_content and not timeout:  # If log.txt is empty and timeout occurred
-            message = f"✅ Program finished. 🏁 \n\n📂 *Directory*: `{current_directory}`\n💻 *Hostname*: `{hostname}`\n🆔 *Job ID*: `{job_id}`"
+        if not log_content:  # If log.txt is empty
+            message = f"✅ Program finished successfully. 🏁 \n\n📂 *Directory*: `{current_directory}`\n💻 *Hostname*: `{hostname}`\n🆔 *Job ID*: `{job_id}`"
             try:
                 with open("output.txt", "r") as output_file:
-                    output_lines = output_file.readlines()[-NUMLINES:]  # Last 40 lines of output.txt
+                    output_lines = output_file.readlines()[
+                        -NUMLINES:
+                    ]  # Last 40 lines of output.txt
                 details = "\n\n*Output:* \n```\n...\n" + "".join(output_lines) + "\n```"
             except Exception:
                 details = f"\n\n No `output.txt` file found."
-        elif not log_content and timeout:  # If log.txt is empty and timeout occurred
+        elif timeout:  # If log.txt containes timeout message
             message = f"⚠️ Program timed out. ⏳ \n\n📂 *Directory*: `{current_directory}`\n💻 *Hostname*: `{hostname}`\n🆔 *Job ID*: `{job_id}`"
             try:
                 with open("output.txt", "r") as output_file:
-                    output_lines = output_file.readlines()[-NUMLINES:]  # Last 40 lines of output.txt
-                details = "\n\n*Output so far:* \n```\n...\n" + "".join(output_lines) + "\n```"
+                    output_lines = output_file.readlines()[
+                        -NUMLINES:
+                    ]  # Last 40 lines of output.txt
+                details = (
+                    "\n\n*Output so far:* \n```\n...\n"
+                    + "".join(output_lines)
+                    + "\n```"
+                )
             except Exception:
                 details = f"\n\n No `output.txt` file found."
         else:  # If log.txt contains errors
             message = f"❌ Program encountered an error. \n\n📂 *Directory*: `{current_directory}`\n💻 *Hostname*: `{hostname}`\n🆔 *Job ID*: `{job_id}`"
-            details = "\n\n*Error Log:* \n```\n" + log_content + "\n```"
+            details = "\n\n*Error Log:* \n```\n" + "".join(log_content) + "\n```"
 
-        sm.send_telegram_message(message + details)
+        try:
+            sm.send_telegram_message(message + details)
+        except Exception as e:
+            with open("log.txt", "a") as log_file:
+                log_file.write(f"Failed to send notification: {e}")
     except Exception as e:
         error_message = f"⚠️ An error occurred while checking log files. \n\n📂 *Directory*: `{current_directory}`\n💻 *Hostname*: `{hostname}`\n🆔 *Job ID*: `{job_id}` \n\n*Error:* `{e}`"
-        sm.send_telegram_message(error_message)
+        try:
+            sm.send_telegram_message(error_message)
+        except Exception as e:
+            with open("log.txt", "a") as log_file:
+                log_file.write(f"Failed to send notification: {e}")
+
 
 if __name__ == "__main__":
     job_id = sys.argv[1]
-    timeout = bool(sys.argv[2])
     # Check log and output files for success/failure message
-    check_and_notify(job_id, timeout)
-
-
+    check_and_notify(job_id)

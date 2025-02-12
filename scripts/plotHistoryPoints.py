@@ -30,6 +30,9 @@ def read_history_points(file_path: str) -> Tuple[np.ndarray, np.ndarray]:
             if num_points > 0:
                 points_locations.append([float(value) for value in line[1:].split()][1:])
 
+    # for i in range(num_points):
+    #     print(np.array(data[i::num_points]).shape)
+
     new_data = np.array([data[i::num_points] for i in range(num_points)])
     
     return new_data, np.array(points_locations)
@@ -51,6 +54,8 @@ def plot_comparison(
 
     points_loc: np.ndarray = np.array([0, 0, 0])
 
+    oldHistoryPoints = "HistoryPoints.his.old"
+
     for i, folder in enumerate(folders):
         file_path = os.path.join(folder, file_name)
         if os.path.exists(file_path):
@@ -58,6 +63,12 @@ def plot_comparison(
                 data, points_loc = read_history_points(file_path)
             else:
                 data, _ = read_history_points(file_path)
+
+            if os.path.exists(os.path.join(folder, oldHistoryPoints)): 
+                print(f"Warning: File {oldHistoryPoints} exists in folder '{folder}'. Appending data from this file.")
+                old_data, _ = read_history_points(os.path.join(folder, oldHistoryPoints))
+                data = np.append(old_data, data, axis=1)
+
             
             time = data[point, :, 0]
             variables = data[point, :, 1:]
@@ -113,6 +124,8 @@ def plot_comparison(
             if use_relative and folder == ref_folder:
                 continue
 
+            custom_label = folder
+
             # time = time[:time_max]
             # variables = variables[:time_max]
 
@@ -125,9 +138,10 @@ def plot_comparison(
                 m = 12
                 if len(folder) > m:
                     custom_label = folder[-m:]
-                else:
-                    custom_label = folder
+                    while custom_label[0] == "_":
+                        custom_label = custom_label[1:]
             ax.plot(time, plot, label=custom_label)
+            
 
         if use_relative:
             ax.set_ylabel(f"Relative Error: {variable_labels[i]}")

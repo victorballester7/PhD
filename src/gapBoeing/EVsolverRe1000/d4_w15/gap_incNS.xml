@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <NEKTAR>  
   <EXPANSIONS>    
-    <E COMPOSITE="C[100,101]" NUMMODES="7" FIELDS="u,v" TYPE="MODIFIED" />  
-    <E COMPOSITE="C[100,101]" NUMMODES="6" FIELDS="p" TYPE="MODIFIEDQUADPLUS1" />
-    <E COMPOSITE="C[102]" NUMMODES="5" FIELDS="u,v" TYPE="MODIFIED" />
-    <E COMPOSITE="C[102]" NUMMODES="4" FIELDS="p" TYPE="MODIFIEDQUADPLUS1" />
+    <E COMPOSITE="C[100,101,102]" NUMMODES="7" FIELDS="u,v" TYPE="MODIFIED" />  
+    <E COMPOSITE="C[100,101,102]" NUMMODES="6" FIELDS="p" TYPE="MODIFIEDQUADPLUS1" />
   </EXPANSIONS>
   
   <CONDITIONS>    
@@ -26,10 +24,10 @@
 
     <PARAMETERS>
       <!--General parameters-->
-      <P> TimeStep        = 0.002      </P>
-      <P> NumSteps        = 2000e4     </P>
+      <P> TimeStep        = 0.0003      </P>
+      <P> NumSteps        = 5e4     </P>
       <P> IO_CheckSteps   = NumSteps         </P> 
-      <P> IO_InfoSteps    = NumSteps/50        </P> 
+      <P> IO_InfoSteps    = NumSteps/15        </P> 
       <P> IO_CFLSteps     = IO_InfoSteps         </P>
       <P> HistorySteps    = IO_InfoSteps * 2 </P>
       <P> EnergySteps     = IO_InfoSteps * 10</P>
@@ -38,6 +36,12 @@
       <P> SVVCutoffRatio  = 0.75                    </P>
       <!-- <P> HomModesZ       = 2                       </P> -->
       <!-- <P> LZ              = 2                     </P> -->
+
+      <!-- Parameters for the modified Arnoldi method -->
+      <P> kdim            = 512                   </P>
+      <P> nvec            = 2                   </P>
+      <P> evtol           = 1e-05               </P>
+      <p> nits            = 500                 </p>
 
      <!-- Parameters for the simulation -->
       <P> deltaStar       = 1  </P> 

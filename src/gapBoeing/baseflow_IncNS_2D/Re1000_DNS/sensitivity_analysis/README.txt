@@ -6,11 +6,7 @@ The folders are named using the follwing convention: d4_w15_ioh, which means tha
 ------------------------------
 i (length/W)   1     3     5
 o (length/W)   7     14    20
-h (length/D)  
+h (length/D)   6     13.5  24 
 
-for folder in *; do
-    if [ -d "$folder" ]; then  # Check if it's a directory
-        mv "$folder" "${folder}_old"
-    fi
-done
+
 
