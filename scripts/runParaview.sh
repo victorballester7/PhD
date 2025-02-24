@@ -14,7 +14,7 @@ if [[ -z $1 ]]; then
 fi
 
 # Prompt the user to select the execution mode: local or cluster
-read -p "$(echo -e "${CYAN}Run in nodes (n) or cluster (c)? [n/c]: ${RESET}")" mode
+read -n 1 -p "$(echo -e "${CYAN}Run in nodes (n) or cluster (c)? [n/c]: ${RESET}")" mode
 
 # Validate user input
 if [[ "$mode" != "n" && "$mode" != "c" ]]; then

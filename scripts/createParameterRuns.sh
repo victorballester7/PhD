@@ -15,7 +15,7 @@ if [ "$#" -lt 2 ]; then
 fi
 
 # Input XML file and maximum mode number
-mesh_file=$(ls mesh_*.xml 2>/dev/null | head -n 1)
+mesh_file=$(ls mesh*.xml 2>/dev/null | head -n 1)
 session_file=$(ls *.xml 2>/dev/null | grep -v "^$mesh_file$" | head -n 1) 
 parameter=$1
 parameter_values="${@:2}" # all the values after the 3rd argument
@@ -35,9 +35,9 @@ if [[ ! -f "$mesh_file" || ! -f "$session_file" ]]; then
 fi
 
 # check if there exists such a parameter in the session file
-if grep -q "<p> ${parameter}[[:space:]]*=.*</p>" "$session_file"; then
+if grep -q "<p>[[:space:]]*${parameter}[[:space:]]*=.*</p>" "$session_file"; then
   pCapital=0
-elif grep -q "<P> ${parameter}[[:space:]]*=.*</P>" "$session_file"; then
+elif grep -q "<P>[[:space:]]*${parameter}[[:space:]]*=.*</P>" "$session_file"; then
   pCapital=1
 else
   echo -e "${RED}Parameter $parameter not found in the session file.${RESET}"
@@ -55,9 +55,9 @@ for p in $parameter_values; do
   output_file="${dir_name}/${session_file}"
   
   if [ $pCapital -eq 1 ]; then
-    sed "s/<P> ${parameter}[[:space:]]*=.*<\/P>/<P> ${parameter} = ${p} <\/P>/g" "$session_file" > "$output_file"
+    sed "s/<P>[[:space:]]*${parameter}[[:space:]]*=.*<\/P>/<P> ${parameter} = ${p} <\/P>/g" "$session_file" > "$output_file"
   else
-    sed "s/<p> ${parameter}[[:space:]]*=.*<\/p>/<p> ${parameter} = ${p} <\/p>/g" "$session_file" > "$output_file"
+    sed "s/<p>[[:space:]]*${parameter}[[:space:]]*=.*<\/p>/<p> ${parameter} = ${p} <\/p>/g" "$session_file" > "$output_file"
   fi
   
   # Check if there are any .job files in the current directory

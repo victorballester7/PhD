@@ -4,7 +4,7 @@ NODE="typhoon" # the node actually does not play a role because the databases ar
 CLUSTER="hpc"
 USER="vb824"
 
-FOLDERTOMOUNT="Desktop/PhD"
+FOLDERTOMOUNT="Desktop/"
 WHERETOMOUNT="$HOME/hosts"
 
 # Color codes

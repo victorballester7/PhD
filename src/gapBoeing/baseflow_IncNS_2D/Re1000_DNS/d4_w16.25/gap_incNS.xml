@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <NEKTAR>  
   <EXPANSIONS>    
-    <E COMPOSITE="C[100,101,102]" NUMMODES="9" FIELDS="u,v" TYPE="MODIFIED" />  
-    <E COMPOSITE="C[100,101,102]" NUMMODES="8" FIELDS="p" TYPE="MODIFIEDQUADPLUS1" />
+    <E COMPOSITE="C[100,101,102]" NUMMODES="7" FIELDS="u,v" TYPE="MODIFIED" />  
+    <E COMPOSITE="C[100,101,102]" NUMMODES="6" FIELDS="p" TYPE="MODIFIEDQUADPLUS1" />
   </EXPANSIONS>
   
   <CONDITIONS>    
@@ -23,10 +23,10 @@
 
     <PARAMETERS>
             <!--General parameters-->
-      <P> TimeStep        = 0.0012      </P>
-      <P> NumSteps        = 4000e3     </P>
+      <P> TimeStep        = 0.0008      </P>
+      <P> NumSteps        = 1500e4     </P>
       <P> IO_CheckSteps   = NumSteps/100         </P> 
-      <P> IO_InfoSteps    = NumSteps/2000        </P> 
+      <P> IO_InfoSteps    = NumSteps/1000       </P> 
       <P> IO_CFLSteps     = IO_InfoSteps         </P>
       <P> HistorySteps    = IO_InfoSteps * 2 </P>
       <P> EnergySteps     = IO_InfoSteps * 10</P>
@@ -145,9 +145,9 @@
       </REGION>
 
       <REGION REF="1">   <!-- outlet !-->
-        <N VAR="u" USERDEFINEDTYPE="HOutflow" VALUE="0" />
-        <N VAR="v" USERDEFINEDTYPE="HOutflow" VALUE="0" />
-        <D VAR="p" USERDEFINEDTYPE="HOutflow" VALUE="0" />
+        <N VAR="u" VALUE="0" />
+        <N VAR="v" VALUE="0" />
+        <D VAR="p" VALUE="0" />
       </REGION>  
             
       <REGION REF="2">   <!-- top = far-field !-->
@@ -172,13 +172,13 @@
     </BOUNDARYCONDITIONS>
     
     <FUNCTION NAME="InitialConditions">
-      <F VAR="u,v,p" FILE="mesh_d4_w16.25_54.chk" />
+      <F VAR="u,v,p" FILE="mesh_d4_w16.25_40.chk" />
     </FUNCTION>
 
     
    <!--  <FUNCTION NAME="InitialConditions"> -->
-   <!--    <E VAR="u" VALUE="0" /> -->
-   <!--    <E VAR="v" VALUE="0" /> -->
+   <!--    <E VAR="u" VALUE="Uinf" /> -->
+   <!--    <E VAR="v" VALUE="Vinf" /> -->
    <!--    <E VAR="p" VALUE="0" /> -->
    <!-- </FUNCTION> -->
   </CONDITIONS>

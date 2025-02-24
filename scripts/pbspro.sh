@@ -8,6 +8,7 @@ JOB_ID=$PBS_JOBID
 pbsjob="$PBS_O_WORKDIR/pbspro.job"
 history_file="HistoryPoints.his"
 history_file_backup="HistoryPoints.his.old"
+datefile=$(date +"%Y-%m-%d_%H-%M-%S".txt)
 
 # Find the number of CPUs
 NP=$(wc -l $PBS_NODEFILE | awk '{print $1}')
@@ -38,8 +39,8 @@ function getTime {
 }
 
 function getFiles {
-    # Identify the mesh file (first one matching mesh_*.xml)
-    mesh_file=$(ls mesh_*.xml 2>/dev/null | head -n 1)
+    # Identify the mesh file (first one matching mesh*.xml)
+    mesh_file=$(ls mesh*.xml 2>/dev/null | head -n 1)
 
     # Identify the session file (any other .xml file that is not the mesh file)
     session_file=$(ls *.xml 2>/dev/null | grep -v "^$mesh_file$" | head -n 1)
@@ -55,6 +56,9 @@ cd $PBS_O_WORKDIR
 getTime
 
 getFiles
+
+# create a file with the date and time of the job submission
+echo "" > $datefile
 
 cp $history_file $history_file_backup
 

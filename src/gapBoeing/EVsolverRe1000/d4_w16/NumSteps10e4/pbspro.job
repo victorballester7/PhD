@@ -1,8 +1,0 @@
-#!/bin/bash
-#PBS -l select=1:ncpus=128:mem=70gb
-#PBS -l walltime=07:59:00
-#PBS -N d4_w16_NumSteps10e4
-#PBS -j oe
-#PBS -o output.txt
-
-pbspro.sh $PBS_NODEFILE $PBS_JOBID $PBS_O_WORKDIR

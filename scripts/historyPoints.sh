@@ -39,6 +39,21 @@ mv "file.tmp" "$sessionFile"
 echo -e "${GREEN}Previous history points removed.${RESET}"
 
 # Create the list of history points
+# Point 0: (W / 4, D / 2, 0)
+# Point 1: (W / 4, -D / 3, 0)
+# Point 2: (W / 4, -2D / 3, 0)
+# Point 3: (W / 2, D / 2, 0)
+# Point 4: (W / 2, -D / 3, 0)
+# Point 5: (W / 2, -2D / 3, 0)
+# Point 6: (3W / 4, D / 2, 0)
+# Point 7: (3W / 4, -D / 3, 0)
+# Point 8: (3W / 4, -2D / 3, 0)
+# Point 9: (W, D / 2, 0)
+# Point 10: (3W / 2, D / 2, 0)
+# Point 11: (2W, D / 2, 0)
+# Point 12: (-W / 4, D / 2, 0)
+# Point 13: (-W, D / 2, 0)
+# Point 14: (-2W, D / 2, 0)
 historyPoints=(
     "$(echo "$width / 4" | bc -l) $(echo "$depth / 2" | bc -l) 0"
     "$(echo "$width / 4" | bc -l) $(echo "-$depth / 3" | bc -l) 0"
@@ -52,6 +67,9 @@ historyPoints=(
     "$(echo "$width" | bc -l) $(echo "$depth / 2" | bc -l) 0"
     "$(echo "3 * $width / 2" | bc -l) $(echo "$depth / 2" | bc -l) 0"
     "$(echo "2 * $width" | bc -l) $(echo "$depth / 2" | bc -l) 0"
+    "$(echo "-$width / 4" | bc -l) $(echo "$depth / 2" | bc -l) 0"
+    "$(echo "-$width" | bc -l) $(echo "$depth / 2" | bc -l) 0"
+    "$(echo "-2 * $width" | bc -l) $(echo "$depth / 2" | bc -l) 0"
 )
 
 echo -e "${CYAN}Inserting history points into $sessionFile...${RESET}"

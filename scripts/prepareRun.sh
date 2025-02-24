@@ -13,6 +13,24 @@ YELLOW="\e[33m"
 CYAN="\e[36m"
 RESET="\e[0m"
 
+# Function to get the session file .xml
+function getSessionFile {
+    # Identify the session file (any other .xml file that is not the mesh file)
+    session_file=$(ls *.xml 2>/dev/null | head -n 1)
+}
+
+# execute historyPoints.sh
+function hisPoints {
+    # Execute the historyPoints.sh script
+    echo -e "${CYAN}Executing historyPoints.sh...${RESET}"
+    $DIR_SCRIPT/historyPoints.sh $1 $2 $3
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}Error executing historyPoints.sh${RESET}"
+        exit 1
+    fi
+}
+
+
 # Function to convert .geo files to .msh
 function convert_geo2msh {
     # Find .msh files in the directory
@@ -72,7 +90,7 @@ function convert_msh2xml {
 }
 
 function editJobs {
-  parent_dir=$(basename "$(dirname "$(realpath gap_incNS.xml)")")  
+  parent_dir=$(basename "$(dirname "$(realpath $session_file)")")  
 
   # Check if there are any .job files in the current directory
   if ls *.job 1> /dev/null 2>&1; then
@@ -92,23 +110,20 @@ function editJobs {
 
 
 # Check argument count
-if [ "$#" -ne 3 ]; then
-    echo -e "${RED}Usage: $0 sessionFile.xml depth width${RESET}"
-    echo -e "${YELLOW}Example: $0 sessionFile.xml 4 15${RESET}"
+if [ "$#" -ne 2 ]; then
+    echo -e "${RED}Usage: $0 depth width${RESET}"
+    echo -e "${YELLOW}Example: $0 4 15${RESET}"
     exit 1
 fi
 
 # Get the script's directory
 DIR_SCRIPT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
+# Get the session file
+getSessionFile
 
-# Execute the historyPoints.sh script
-echo -e "${CYAN}Executing historyPoints.sh...${RESET}"
-$DIR_SCRIPT/historyPoints.sh "$1" "$2" "$3"
-if [ $? -ne 0 ]; then
-    echo -e "${RED}Error executing historyPoints.sh${RESET}"
-    exit 1
-fi
+# execute historyPoints.sh
+hisPoints $session_file $1 $2
 
 # Directory to search (current directory)
 directory=$(pwd)
