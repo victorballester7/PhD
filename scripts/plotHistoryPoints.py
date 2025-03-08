@@ -80,6 +80,11 @@ def plot_comparison(
         else:
             print(f"Warning: File {file_path} does not exist. Skipping folder '{folder}'.")
 
+    # print points locations for reference
+    print("Points locations:")
+    for i in range(points_loc.shape[0]):
+        print(f"Point {i}: x = {points_loc[i, 0]:.2f}, y = {points_loc[i, 1]:.2f}, z = {points_loc[i, 2]:.2f}")
+
     if not data_by_folder:
         print("No data found in any folder.")
         return

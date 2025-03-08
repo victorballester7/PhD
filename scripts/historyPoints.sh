@@ -39,37 +39,46 @@ mv "file.tmp" "$sessionFile"
 echo -e "${GREEN}Previous history points removed.${RESET}"
 
 # Create the list of history points
-# Point 0: (W / 4, D / 2, 0)
+# Point 0: (W / 4, D / 3, 0)
 # Point 1: (W / 4, -D / 3, 0)
 # Point 2: (W / 4, -2D / 3, 0)
-# Point 3: (W / 2, D / 2, 0)
+# Point 3: (W / 2, D / 3, 0)
 # Point 4: (W / 2, -D / 3, 0)
 # Point 5: (W / 2, -2D / 3, 0)
-# Point 6: (3W / 4, D / 2, 0)
+# Point 6: (3W / 4, D / 3, 0)
 # Point 7: (3W / 4, -D / 3, 0)
 # Point 8: (3W / 4, -2D / 3, 0)
-# Point 9: (W, D / 2, 0)
-# Point 10: (3W / 2, D / 2, 0)
-# Point 11: (2W, D / 2, 0)
-# Point 12: (-W / 4, D / 2, 0)
-# Point 13: (-W, D / 2, 0)
-# Point 14: (-2W, D / 2, 0)
+# Point 9: (W, D / 3, 0)
+# Point 10: (3W / 2, D / 3, 0)
+# Point 11: (2W, D / 3, 0)
+# Point 12: (4W, D / 3, 0)
+# Point 13: (8W, D / 3, 0)
+# Point 14: (16W, D / 3, 0)
+# Point 15: (24W, D / 3, 0)
+# Point 16: (-W / 4, D / 3, 0)
+# Point 17: (-W, D / 3, 0)
+# Point 18: (-2W, D / 3, 0)
+
 historyPoints=(
-    "$(echo "$width / 4" | bc -l) $(echo "$depth / 2" | bc -l) 0"
+    "$(echo "$width / 4" | bc -l) $(echo "$depth / 3" | bc -l) 0"
     "$(echo "$width / 4" | bc -l) $(echo "-$depth / 3" | bc -l) 0"
     "$(echo "$width / 4" | bc -l) $(echo "-2 * $depth / 3" | bc -l) 0"
-    "$(echo "$width / 2" | bc -l) $(echo "$depth / 2" | bc -l) 0"
+    "$(echo "$width / 2" | bc -l) $(echo "$depth / 3" | bc -l) 0"
     "$(echo "$width / 2" | bc -l) $(echo "-$depth / 3" | bc -l) 0"
     "$(echo "$width / 2" | bc -l) $(echo "-2 * $depth / 3" | bc -l) 0"
-    "$(echo "3 * $width / 4" | bc -l) $(echo "$depth / 2" | bc -l) 0"
+    "$(echo "3 * $width / 4" | bc -l) $(echo "$depth / 3" | bc -l) 0"
     "$(echo "3 * $width / 4" | bc -l) $(echo "-$depth / 3" | bc -l) 0"
     "$(echo "3 * $width / 4" | bc -l) $(echo "-2 * $depth / 3" | bc -l) 0"
-    "$(echo "$width" | bc -l) $(echo "$depth / 2" | bc -l) 0"
-    "$(echo "3 * $width / 2" | bc -l) $(echo "$depth / 2" | bc -l) 0"
-    "$(echo "2 * $width" | bc -l) $(echo "$depth / 2" | bc -l) 0"
-    "$(echo "-$width / 4" | bc -l) $(echo "$depth / 2" | bc -l) 0"
-    "$(echo "-$width" | bc -l) $(echo "$depth / 2" | bc -l) 0"
-    "$(echo "-2 * $width" | bc -l) $(echo "$depth / 2" | bc -l) 0"
+    "$(echo "$width" | bc -l) $(echo "$depth / 3" | bc -l) 0"
+    "$(echo "3 * $width / 2" | bc -l) $(echo "$depth / 3" | bc -l) 0"
+    "$(echo "2 * $width" | bc -l) $(echo "$depth / 3" | bc -l) 0"
+    "$(echo "4 * $width" | bc -l) $(echo "$depth / 3" | bc -l) 0"
+    "$(echo "8 * $width" | bc -l) $(echo "$depth / 3" | bc -l) 0"
+    "$(echo "16 * $width" | bc -l) $(echo "$depth / 3" | bc -l) 0"
+    "$(echo "24 * $width" | bc -l) $(echo "$depth / 3" | bc -l) 0"
+    "$(echo "-$width / 4" | bc -l) $(echo "$depth / 3" | bc -l) 0"
+    "$(echo "-$width" | bc -l) $(echo "$depth / 3" | bc -l) 0"
+    "$(echo "-2 * $width" | bc -l) $(echo "$depth / 3" | bc -l) 0"
 )
 
 echo -e "${CYAN}Inserting history points into $sessionFile...${RESET}"
@@ -88,6 +97,10 @@ awk -v points="${historyPoints[*]}" '
     }
     { print }
 ' "$sessionFile" > temp.xml && mv temp.xml "$sessionFile"
+if [ $? -ne 0 ]; then
+    echo -e "${RED}Error inserting history points into $sessionFile.${RESET}"
+    exit 1
+fi
 
 echo -e "${GREEN}History points successfully added to $sessionFile.${RESET}"
 

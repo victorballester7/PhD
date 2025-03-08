@@ -8,7 +8,7 @@ JOB_ID=$SLURM_JOB_ID
 slurmjob="$SLURM_SUBMIT_DIR/slurm.job"
 history_file="HistoryPoints.his"
 history_file_backup="HistoryPoints.his.old"
-datefile=$(date +"%Y-%m-%d_%H-%M-%S".txt)
+datefile=$(date +"%Y%m%d_%H%M%S".date)
 
 function getTime {
     # Extract the time line
@@ -43,25 +43,28 @@ function getTime {
 
 }
 
-function getFiles {
-    # Identify the mesh file (first one matching mesh*.xml)
-    mesh_file=$(ls mesh*.xml 2>/dev/null | head -n 1)
 
-    # Identify the session file (any other .xml file that is not the mesh file)
-    session_file=$(ls *.xml 2>/dev/null | grep -v "^$mesh_file$" | head -n 1)
-
+function getOutputFiles {
     # Extract log and output file names from slurm.job
     log_file=$(grep "^#SBATCH --error=" "$slurmjob" | awk '{print $2}' | cut -d= -f2)
     output_file=$(grep "^#SBATCH --output=" "$slurmjob" | awk '{print $2}' | cut -d= -f2)
 }
 
+# create a file with the date and time of the job submission
+function uploadDateFile {
+    rm -f *.date
+    echo "" > $datefile
+}
+
+source $SCRIPTS_DIR/bashFunctions/getMeshSessionFiles.sh
 
 getTime
 
-getFiles
+getMeshSessionFiles
 
-# create a file with the date and time of the job submission
-echo "" > $datefile
+getOutputFiles
+
+uploadDateFile
 
 cp $history_file $history_file_backup
 

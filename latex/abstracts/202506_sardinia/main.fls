@@ -66,9 +66,14 @@ INPUT /opt/texlive/2024/texmf-dist/fonts/tfm/public/cm/cmr9.tfm
 INPUT /opt/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map
 INPUT main.aux
 INPUT /opt/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
+INPUT /opt/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
+INPUT /opt/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb
 INPUT /opt/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
 INPUT /opt/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb
 INPUT /opt/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb
 INPUT /opt/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb
+INPUT /opt/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
+INPUT /opt/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb
+INPUT /opt/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb
 INPUT /opt/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb
 INPUT /opt/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmti8.pfb

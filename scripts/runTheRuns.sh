@@ -7,11 +7,27 @@ YELLOW='\033[1;33m'
 CYAN='\033[0;36m'
 NC='\033[0m'  # No Color
 
+function determineJobType() {
+    if command -v qstat &> /dev/null; then
+        echo 'p'  # PBS Pro detected
+    elif command -v scontrol &> /dev/null; then
+        echo 's'  # Slurm detected
+    else
+        echo 'n'  # Neither detected
+    fi
+}
+
+
+# Function to read user input
 function inputRead() {
     # Prompt the user to select the execution mode: local or cluster
-    echo -e "${CYAN}Select execution mode: Local (n), PBS (p), or Slurm (s):${NC}"
-    read -n 1 -p "Run in nodes (n) or submit to cluster (p for pbspro or s for slurm)? [n/p/s]: " mode
-    echo -e " " # New line
+    # echo -e "${CYAN}Select execution mode: Local (n), PBS (p), or Slurm (s):${NC}"
+    # read -n 1 -p "Run in nodes (n) or submit to cluster (p for pbspro or s for slurm)? [n/p/s]: " mode
+    # echo -e " " # New line
+    
+    mode=$(determineJobType)
+
+    echo -e "${CYAN}Execution mode: $mode${NC}"
 
     # Validate user input
     if [[ "$mode" != "n" && "$mode" != "p" && "$mode" != "s" ]]; then
@@ -31,6 +47,8 @@ function inputRead() {
 
         mesh_file=$1
         session_file=$2
+        echo -e "${CYAN}Mesh file: $mesh_file${NC}"
+        echo -e "${CYAN}Session file: $session_file${NC}"
         shift 2  # Remove first two arguments
     else
         # Cluster mode (PBS/Slurm) should not expect mesh/session files, just folders

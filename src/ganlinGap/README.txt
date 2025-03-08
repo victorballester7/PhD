@@ -1,0 +1,3 @@
+- Some simulations I did during my first months of the PhD to get used to the nektar environment.
+- i detected the TS waves, you can found it on the cluster inside the pertField_IncNS.
+- At the end we changed the domain to satisfy Boeing needs. Ganlin's one was too deep compared to the boundary layer thickness.

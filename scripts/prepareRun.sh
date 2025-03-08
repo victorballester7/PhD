@@ -13,12 +13,6 @@ YELLOW="\e[33m"
 CYAN="\e[36m"
 RESET="\e[0m"
 
-# Function to get the session file .xml
-function getSessionFile {
-    # Identify the session file (any other .xml file that is not the mesh file)
-    session_file=$(ls *.xml 2>/dev/null | head -n 1)
-}
-
 # execute historyPoints.sh
 function hisPoints {
     # Execute the historyPoints.sh script
@@ -43,7 +37,7 @@ function convert_geo2msh {
     fi
 
     # Loop through the files and convert them
-for file in "${files[@]}"; do
+    for file in "${files[@]}"; do
         # Extract the basename of the file
         name=$(basename "${file}" .msh)
 
@@ -108,22 +102,18 @@ function editJobs {
   fi   
 }
 
-
-# Check argument count
-if [ "$#" -ne 2 ]; then
-    echo -e "${RED}Usage: $0 depth width${RESET}"
-    echo -e "${YELLOW}Example: $0 4 15${RESET}"
-    exit 1
-fi
-
 # Get the script's directory
 DIR_SCRIPT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-# Get the session file
-getSessionFile
+source $DIR_SCRIPT/bashFunctions/getMeshSessionFiles.sh
+source $DIR_SCRIPT/bashFunctions/getDepthANDWidth.sh
 
-# execute historyPoints.sh
-hisPoints $session_file $1 $2
+# Check argument count
+# if [ "$#" -ne 2 ]; then
+#     echo -e "${RED}Usage: $0 depth width${RESET}"
+#     echo -e "${YELLOW}Example: $0 4 15${RESET}"
+#     exit 1
+# fi
 
 # Directory to search (current directory)
 directory=$(pwd)
@@ -133,6 +123,19 @@ convert_geo2msh
 
 # Convert .msh files to .xml
 convert_msh2xml
+
+# Get the session file
+getMeshSessionFiles > /dev/null
+
+depthANDwidth=$(getDepthANDWidth $mesh_file)
+depth=$(echo $depthANDwidth | awk '{print $1}')
+width=$(echo $depthANDwidth | awk '{print $2}')
+
+echo -e "${CYAN}Depth: $depth${RESET}"
+echo -e "${CYAN}Width: $width${RESET}"
+
+# execute historyPoints.sh
+hisPoints $session_file $depth $width
 
 # Edit the job files
 editJobs
