@@ -23,10 +23,10 @@
 
     <PARAMETERS>
             <!--General parameters-->
-      <P> TimeStep        = 0.0004      </P>
-      <P> NumSteps        = 5000e4     </P>
+      <P> TimeStep        = 0.001      </P>
+      <P> NumSteps        = 20000e3     </P>
       <P> IO_CheckSteps   = NumSteps/100         </P> 
-      <P> IO_InfoSteps    = NumSteps/1000       </P> 
+      <P> IO_InfoSteps    = NumSteps/10000       </P> 
       <P> IO_CFLSteps     = IO_InfoSteps         </P>
       <P> HistorySteps    = IO_InfoSteps * 2 </P>
       <P> EnergySteps     = IO_InfoSteps * 10</P>
@@ -172,7 +172,7 @@
     </BOUNDARYCONDITIONS>
     
     <FUNCTION NAME="InitialConditions">
-      <F VAR="u,v,p" FILE="mesh_d4_w16.5_100.chk" />
+      <F VAR="u,v,p" FILE="initialCond.fld" />
     </FUNCTION>
 
     

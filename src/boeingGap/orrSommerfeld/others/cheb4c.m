@@ -43,6 +43,8 @@ beta3 = 24*x./alpha;
 beta4 = 24./alpha;
     B = [beta1'; beta2'; beta3'; beta4'];
 
+    disp(B)
+
     T = repmat(th/2,1,N-2);                
    DX = 2*sin(T'+T).*sin(T'-T);     % Trigonometric identity 
    DX = [DX(1:n1,:); -flipud(fliplr(DX(1:n2,:)))];   % Flipping trick. 
@@ -51,6 +53,7 @@ DX(L) = ones(N-2,1);                % Put 1's on the main diagonal of DX.
    ss = s.^2.*(-1).^k;              % Compute the matrix with entries
     S = ss(:,ones(1,N-2));          % c(k)/c(j)
     C = S./S';                      
+    % disp(C)
 
     Z = 1./DX;                      % Z contains entries 1/(x(k)-x(j)).
  Z(L) = zeros(size(x));             % with zeros on the diagonal.
@@ -68,6 +71,9 @@ for ell = 1:4
        D(L) = Y(N-2,:);                              % Correct the diagonal
 DM(:,:,ell) = D;                                     % Store D in DM
 end
+
+   disp(DM)
+
 
    D4 = DM(:,:,4);                  % Extract fourth derivative matrix
 end

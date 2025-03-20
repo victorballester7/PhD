@@ -7,7 +7,9 @@ NP=$SLURM_NTASKS
 JOB_ID=$SLURM_JOB_ID
 slurmjob="$SLURM_SUBMIT_DIR/slurm.job"
 history_file="HistoryPoints.his"
-history_file_backup="HistoryPoints.his.old"
+history_file_backup="${history_file}.old"
+energy_file="EnergyFile.mdl"
+energy_file_backup="${energy_file}.old"
 datefile=$(date +"%Y%m%d_%H%M%S".date)
 
 function getTime {
@@ -67,8 +69,9 @@ getOutputFiles
 uploadDateFile
 
 cp $history_file $history_file_backup
+cp $energy_file $energy_file_backup
 
-rm -f $output_file $log_file $history_file
+rm -f $output_file $log_file $history_file $energy_file
 
 # Run the job start script
 python3 $SCRIPTS_DIR/jobStart.py $JOB_ID

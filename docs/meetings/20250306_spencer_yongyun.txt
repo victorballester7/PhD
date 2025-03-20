@@ -1,4 +1,4 @@
-- How do they compute the eigenvalues alpha_r, alpha_i fixing the frequency omega?
+- How do they compute the eigenvalues alpha_r, alpha_i fixing the frequency omega? Looks like there is another equation (constructed in the same way, mut compuitatinally more expensive, becasue in OrrSommerfeld alpha appears to power 4 whereas omega only to first power)
 
 
 

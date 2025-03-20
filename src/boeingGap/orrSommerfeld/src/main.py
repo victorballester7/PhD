@@ -1,86 +1,87 @@
+from config import Config, ProblemType, Branch
+import os
+from methods import runUFromFile, runPoiseuille
 import numpy as np
 import matplotlib.pyplot as plt
-import time
-import EVproblem as evp
-import postprocessing as pp
-import readData as rd
+from OS import Orr_Sommerfeld_Espacial, Orr_Sommerfeld_Temporal
 
 
-def runFixedAlpha(N, Re, alpha, D, D2, D4, y_cheb, U, U_yy, Doprint=True):
-    start = time.time()
-    L, M = evp.getOSMatrices(N, Re, alpha, D, D2, D4, U, U_yy)
-    if Doprint:
-        print("Time to construct matrices: ", time.time() - start)
+def main():
+    # read data
+    CONFIG_FILE = "data/input.toml"
+    DIR_SCRIPT = os.path.dirname(os.path.realpath(__file__))
+    CONFIG_FILE = os.path.join(DIR_SCRIPT, "../", CONFIG_FILE)
 
-    start = time.time()
-    omega, c, vv =evp.solveEVproblem(L, M, alpha)
-    if Doprint:
-        print("Time to solve eigenvalue problem: ", time.time() - start)
+    config = Config.from_toml(CONFIG_FILE)
 
-    EVvariable = c
-    max, vv = pp.getMostUnstableEV(EVvariable, vv)
-    EVlabel = r"\omega" if EVvariable is omega else "c"
-    if Doprint:
-        print(f"Leading eigenvalue {EVlabel} = ", max)
+    if config.run_multiple:
+        max_eigs = []
+        for i, var_i in enumerate(config.vars_range_i):
+            aux = []
+            for j, var_r in enumerate(config.vars_range_r):
+                print(
+                    f"real {j + 1}/{len(config.vars_range_r)} imag {i + 1}/{len(config.vars_range_i)}"
+                )
+                maxeig = 0
+                if config.branch == Branch.Temporal:
+                    config.alpha = complex(var_r, var_i)
+                else:
+                    config.omega = complex(var_r, var_i)
 
-    if Doprint:
-        pp.printEVSorted(EVvariable)
-        pp.printSpectrum(EVvariable, EVlabel)
-        pp.printEVector(y_cheb, vv)
-    return max, EVlabel
+                if config.problem == ProblemType.Poiseuille:
+                    maxeig = runPoiseuille(config)
+                else:
+                    maxeig = runUFromFile(config)
+                aux.append(maxeig)
+            max_eigs.append(aux)
 
-def runMultipleAplha(N, Re, alphas, D, D2, D4, y_cheb, U, U_yy):
-    maxEVs = np.zeros(len(alphas))
-    label = ""
-    for i, alpha in enumerate(alphas):
-       # for theta in range(100):
-           # alpha = alpha * np.exp(1j * theta)
-       if i % 10 == 0:
-           print(f"Running {i} of {len(alphas)}")
-       maxEV, label = runFixedAlpha(N, Re, alpha, D, D2, D4, y_cheb, U, U_yy, False)
-       maxEVs = np.append(maxEVs, maxEV)
-    pp.printSpectrum(maxEVs, label)
+        # plot curves of points (real and imag part of the points) of the same color for same alpha_i/different alpha_r
+        max_eigs = np.array(max_eigs)
 
+        for i, vars_i in enumerate(config.vars_range_i):
+            eigs = max_eigs[i]  # Eigenvalues corresponding to the same imaginary part
+            real_parts = np.real(eigs)
+            imag_parts = np.imag(eigs)
+            plt.scatter(
+                real_parts,
+                imag_parts,
+                label=f"Im(α) = {np.round(vars_i[i], 2)}",
+                alpha=0.7,
+            )
+
+        print("alphas_r", config.vars_range_r)
+        print("alphas_i", config.vars_range_i)
+        plt.xlabel(config.plot_label + "_r")
+        plt.ylabel(config.plot_label + "_i")
+        plt.legend()
+        plt.grid()
+        plt.show()
+    else:
+        if config.problem == ProblemType.Poiseuille:
+            runPoiseuille(config)
+            if config.debug:
+                print("Reference code:")
+                if config.branch == Branch.Temporal:
+                    Orr_Sommerfeld_Temporal(
+                        config.n - 1, config.re, config.alpha, config.beta, 0, 0
+                    )
+                else:
+                    Orr_Sommerfeld_Espacial(
+                        config.n - 1, config.re, config.omega, config.beta, 0, 0
+                    )
+        else:
+            runUFromFile(config)
+            if config.debug:
+                print("Reference code:")
+                if config.branch == Branch.Temporal:
+                    Orr_Sommerfeld_Temporal(
+                        config.n - 1, config.re, config.alpha, config.beta, 0, 2
+                    )
+                else:
+                    Orr_Sommerfeld_Espacial(
+                        config.n - 1, config.re, config.omega, config.beta, 0, 2
+                    )
 
 
 if __name__ == "__main__":
-    deltaStar = 1
-    re_deltaStar = 800
-    # alpha = np.linspace(1, 20, 100)
-    alpha = 1
-    # filename = "data/points_x254.dat"
-    filename = "../data/blasius.dat"
-    
-    eta_max = 40
-    N = 1000
-    x = np.linspace(0, eta_max, N)
-    uinf = 1.0
-   
-    rd.blasius_profile(x, filename, uinf, re_deltaStar)
-
-    # must be even to avoid errors
-    N = 100
-
-    # y = np.linspace(-1, 1, 2000)
-    # U = poiseuille_flow(y)
-    y, U, V = rd.read_baseflow(filename)
-
-    # plt.plot(U, y, label="U")
-    # plt.plot(V, y, label="V")
-    # plt.legend()
-    # plt.show()
-
-    U_yy = np.gradient(np.gradient(U, y), y)
-
-    y_cheb, D, D2, D4 = evp.getChebMatrices(N)
-    y_cheb, D, D2, D4 = evp.adjustCoordinates(y_cheb, D, D2, D4, y[0], y[-1])
-    
-    U, U_yy = evp.interpolateCheb(y, y_cheb, U, U_yy)
-
-    # plt.plot(U, y_cheb)
-    # plt.show()
-
-    runFixedAlpha(N, re_deltaStar, alpha, D, D2, D4, y_cheb, U, U_yy)
-
-    # alphas = np.linspace(1, 15, 100)
-    # runMultipleAplha(N, re_deltaStar, alphas, D, D2, D4, y_cheb, U, U_yy)
+    main()

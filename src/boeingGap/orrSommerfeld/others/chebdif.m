@@ -46,6 +46,9 @@ function [x, DM] = chebdif(N, M)
 C(1,:) = C(1,:)*2; C(N,:) = C(N,:)*2;     % entries c(k)/c(j)
 C(:,1) = C(:,1)/2; C(:,N) = C(:,N)/2;
 
+      % print C
+      disp(C)
+
      Z = 1./DX;                           % Z contains entries 1/(x(k)-x(j))  
   Z(L) = zeros(N,1);                      % with zeros on the diagonal.
 

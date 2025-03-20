@@ -30,3 +30,13 @@ _Remark_: Usually the modes $\alpha$ and $\beta$ that generate the instability a
 - If there is a transient amplification, it is due to the non-orthogonality of the eigenvectors. This non-orthogonal eigenfunctions are the typical nature of the non-normal linear operator (due to the advection term). 
 
 _Definition_: A normal operator $L$ satisfies $L L^* = L^* L$, where $L^*$ is the complex-conjugate transpose of $L$. Linearized NS with non-zero advection term is a non-normal linear operator.
+
+
+## Relation between absolute and global stability
+
+- Intuitively in parallel flows, fixed x, we take the U profile in y and we seek for the saddle point that gives us the maximum growth rate. Depending where this point is located (hemisphere north in complex plane or south) we have convective or absolute instability. Now we vary x. If the region we have absolute instability is large enough, then we have global instability.
+
+
+## Transient growth and Local convective instability
+
+- Since we are simulating a finite domain, the total growth of the energy will increase within a short interval of time until the vortex governing the instability is advected out of the domain. This is the transient growth.

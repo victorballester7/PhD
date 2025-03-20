@@ -57,7 +57,7 @@
       <p> Uinf                  = 1                   </p>
       <p> deltaStar_le          = 1  </p> 
       <P> Re_deltaStar_le       = 1000       </P> <!-- Reynolds number based on deltaStar_leadingEdge !-->
-      <P> Kinvis                = Uinf*deltaStar_le/Re_deltaStar_le                 </P>
+      <P> Kinvis                = Uinf*deltaStar_le/Re_deltaStar_le                 </P>  
       <p> deltaStar_BC          = sqrt(1 - lengthBeforeGap * a^2/Re_deltaStar_le) </p> <!-- deltaStar at the boundary condition !-->
       <P> Re_deltaStar_BC       = Uinf * deltaStar_BC / Kinvis </P> <!-- Reynolds number based on deltaStar_BC !-->
       <P> eta_99                = 4.910009398349851 </P> <!-- 99% of the free stream velocity is reached at this eta value (taken from python script solve_bvp.py) !-->

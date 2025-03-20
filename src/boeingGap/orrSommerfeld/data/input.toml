@@ -1,0 +1,24 @@
+[general]
+n = 200
+re = 500
+alpha = {r = 0.2, i = 0.0}
+beta = {r = 0.0, i = 0.0}
+omega = {r = 0.3, i = 0.0}
+filenameUprofile = "data/blasius.dat"
+
+[flags]
+branch = "temporal" # Options are: "temporal", "spatial"
+problem = "BL" # Options are: "BL", "Poiseuille", "Gap"
+doPlot = true
+use_c = true # When temporal branch is used, plot in terms of c instead of omega (omega = alpha * c)
+run_multiple = false
+
+[vars]
+vars_r = {min = 0.0, max = 1.0, num = 10}
+vars_i = {min = 0.0, max = 1.0, num = 10}
+
+[plot]
+# plot_lims = {xmin = 0.0, xmax = 1.0, ymin = -1.0, ymax = 1.0}
+
+[debug]
+debug = false # Solve problem with reference code as well
