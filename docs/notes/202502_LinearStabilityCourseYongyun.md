@@ -28,6 +28,7 @@ _Remark_: Usually the modes $\alpha$ and $\beta$ that generate the instability a
 
 - Eigenvalues alone thus fail to capture transient effects.
 - If there is a transient amplification, it is due to the non-orthogonality of the eigenvectors. This non-orthogonal eigenfunctions are the typical nature of the non-normal linear operator (due to the advection term). 
+- *Convective instabilities are associated with this linear transient growth*.
 
 _Definition_: A normal operator $L$ satisfies $L L^* = L^* L$, where $L^*$ is the complex-conjugate transpose of $L$. Linearized NS with non-zero advection term is a non-normal linear operator.
 

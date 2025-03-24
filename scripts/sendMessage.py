@@ -1,9 +1,9 @@
 import http.client
 from urllib.parse import urlencode
-import credentialsTelegram as cT
+import credentialsTelegram as ct
 
-TOKEN = cT.TOKEN
-CHAT_ID = cT.CHAT_ID
+TOKEN = ct.TOKEN
+CHAT_ID = ct.CHAT_ID
 
 def send_telegram_message(text):
     print("Sending message to Telegram...")
@@ -35,3 +35,4 @@ def send_telegram_message(text):
             print(f"Response: {response.read().decode()}")
     except Exception as e:
         print(f"An error occurred while sending the message: {e}")
+

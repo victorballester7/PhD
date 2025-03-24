@@ -75,9 +75,7 @@ def plot_comparison(
 
     fig, ax = plt.subplots(1, 1, figsize=(10, 6))
 
-    
     mytime = np.array([])
-
 
     for folder, (time, energy) in data_by_folder.items():
         mytime = time
@@ -92,18 +90,27 @@ def plot_comparison(
             custom_label = folder[-m:]
             while custom_label[0] == "_":
                 custom_label = custom_label[1:]
+        energy = np.log(energy)
         ax.plot(time, energy, label=custom_label)
 
     # global mode comparison
-    lamb = -0.00258415
-    reftime = 13200
-    refE = 2.06e4
-    C = refE * np.exp(-lamb * reftime)
-    energy_mode = 0.5 * np.exp(lamb * mytime) + data_by_folder[folders[0]][1][-1]
+    lamb = -0.00258415 
+    Emode_u = 0.0252569
+    Emode_v = 0.00912989
+    E0 = Emode_u
+    energy_mode = (
+        E0 * np.exp(lamb * (mytime - mytime[0]))  
+    )
+
+    # print(data_by_folder[folders[0]][1][-1])
+
+    energy_mode = np.log(energy_mode)
     ax.plot(mytime, energy_mode, label="Global Mode")
 
     ax.grid()
     ax.legend()
+
+    # set x-axis to log scale
 
     ax.set_xlabel("Time")
     ax.set_ylabel("Energy")

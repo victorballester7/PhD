@@ -53,29 +53,25 @@ function getOutputFiles {
 }
 
 # create a file with the date and time of the job submission
-function uploadDateFile {
-    rm -f *.date
-    echo "" > $datefile
+function setup {
+    getTime
+    getMeshSessionFiles
+    getOutputFiles
+    uploadDateFile
+
+    cp $history_file $history_file_backup
+    cp $energy_file $energy_file_backup
+
+    rm -f $output_file $log_file $history_file $energy_file
 }
 
+# source necessary functions
 source $SCRIPTS_DIR/bashFunctions/getMeshSessionFiles.sh
+source $SCRIPTS_DIR/bashFunctions/runIncNS.sh
+source $SCRIPTS_DIR/bashFunctions/uploadDateFile.sh
+source $SCRIPTS_DIR/bashFunctions/onCancel.sh
 
-getTime
 
-getMeshSessionFiles
+setup
 
-getOutputFiles
-
-uploadDateFile
-
-cp $history_file $history_file_backup
-cp $energy_file $energy_file_backup
-
-rm -f $output_file $log_file $history_file $energy_file
-
-# Run the job start script
-python3 $SCRIPTS_DIR/jobStart.py $JOB_ID
-
-mpirun --timeout $TIMEMAX -np $NP $INC_SOLVER -v $mesh_file $session_file > $output_file 2> $log_file
-
-python3 $SCRIPTS_DIR/jobFinish.py $JOB_ID
+runIncNS

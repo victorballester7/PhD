@@ -1,26 +1,26 @@
 # Compiler and flags
 CC := gcc
-CFLAGS := -Wall -Wextra -pedantic -std=c17 -fPIC
+CXX := g++
+CXXFLAGS := -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference -g3 -Ofast -std=c++11
+CFLAGS := -Wall -Wextra -pedantic -Ofast -std=c11
 
 # Libraries
 LIBS := -lopenblas -lm
 
 # Folders
-SRC := src_c
+SRC := src
 INCLUDE := include
 BIN := bin
 
 # Executable name
 TARGET := main
 
-# We create a list of all the sources by looking for all the .c files
-SOURCES := $(wildcard $(SRC)/*.c)
+# Sources and objects
+SOURCES := $(wildcard $(SRC)/*.c) $(wildcard $(SRC)/*.cpp)
+OBJECTS := $(patsubst $(SRC)/%.cpp, $(BIN)/%.o, $(filter %.cpp, $(SOURCES))) $(patsubst $(SRC)/%.c, $(BIN)/%.o, $(filter %.c, $(SOURCES))) 
 
-# We create a list of object files by replacing the .c extension with .o in the list of sources
-OBJECTS := $(patsubst $(SRC)/%.c,$(BIN)/%.o,$(SOURCES))
-
-# We need to tell the compiler where to find the headers
-HEADERS := $(wildcard $(INCLUDE)/*.h)
+# Headers
+HEADERS := $(wildcard $(INCLUDE)/*.h) $(wildcard $(INCLUDE)/*.hpp)
 
 # .PHONY target specifies that all and clean are not real files, but are just targets that don't produce output files.
 .PHONY: all clean
@@ -28,13 +28,14 @@ HEADERS := $(wildcard $(INCLUDE)/*.h)
 # Default target
 all: $(BIN)/$(TARGET)
 
-# We compile the .c files into object files
-$(BIN)/%.o: $(SRC)/%.c | $(BIN)
-	@$(CC) $(CFLAGS) -I$(INCLUDE) -c $< -o $@
-
-# We link the object files to create the executable
 $(BIN)/$(TARGET): $(OBJECTS)
-	@$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
+	@$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
+
+$(BIN)/%.o: $(SRC)/%.cpp $(HEADERS)
+	@$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+$(BIN)/%.o: $(SRC)/%.c $(HEADERS)
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 # Ensure the bin directory exists
 $(BIN):
