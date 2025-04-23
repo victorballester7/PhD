@@ -6,3 +6,10 @@ So clone Scotch into .cache/yay/scotch and compile it with the following command
   CFLAGS="-fPIC" CXXFLAGS="-fPIC" cmake -DCMAKE_INSTALL_PREFIX=/usr/local/ -DCMAKE_BUILD_TYPE=Release ..
   make -j8
   make install
+
+
+Problems with Cmake version fro gsmpi. Add 
+
+  -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+
+to the files /home/victor/Desktop/nektar++/build/CMakeFiles/gsmpi-1.2.1_2.dir/build.make (precisely under the ThirdParty/stamp/gsmpi-1.2.1_2-configure: ThirdParty/stamp/gsmpi-1.2.1_2-patch section), where all the other flags are located (search for -DCMAKE). This solved the problem with the CMake version.

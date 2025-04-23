@@ -9,7 +9,7 @@ YELLOW="\033[1;33m"
 NC="\033[0m" # No color
 
 echo -e "${YELLOW}Unmounting nodes...${NC}"
-umount ${WHERETOMOUNT}/nodes
+sudo umount -l ${WHERETOMOUNT}/nodes
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}Nodes data unmounted successfully!${NC}"
 else
@@ -17,7 +17,7 @@ else
 fi
 
 echo -e "${YELLOW}Unmounting cluster...${NC}"
-umount ${WHERETOMOUNT}/hpc
+sudo umount -l ${WHERETOMOUNT}/hpc
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}Cluster data unmounted successfully!${NC}"
 else

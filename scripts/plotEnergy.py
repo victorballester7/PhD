@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from typing import List, Dict, Tuple, Optional
 
 
+
 def read_history_points(file_path: str) -> Tuple[np.ndarray, np.ndarray]:
     """Read EnergyFile.mdl file and extract time and non-temporal variables.
 
@@ -75,8 +76,7 @@ def plot_comparison(
 
     fig, ax = plt.subplots(1, 1, figsize=(10, 6))
 
-    mytime = np.array([])
-
+    use_log = False
     for folder, (time, energy) in data_by_folder.items():
         mytime = time
         custom_label = folder
@@ -90,22 +90,10 @@ def plot_comparison(
             custom_label = folder[-m:]
             while custom_label[0] == "_":
                 custom_label = custom_label[1:]
-        energy = np.log(energy)
+        if use_log:
+            energy = np.log(energy)
         ax.plot(time, energy, label=custom_label)
 
-    # global mode comparison
-    lamb = -0.00258415 
-    Emode_u = 0.0252569
-    Emode_v = 0.00912989
-    E0 = Emode_u
-    energy_mode = (
-        E0 * np.exp(lamb * (mytime - mytime[0]))  
-    )
-
-    # print(data_by_folder[folders[0]][1][-1])
-
-    energy_mode = np.log(energy_mode)
-    ax.plot(mytime, energy_mode, label="Global Mode")
 
     ax.grid()
     ax.legend()
@@ -151,6 +139,7 @@ if __name__ == "__main__":
         type=str,
         help="Save the plot to a file, empty string to not save (default: '').",
     )
+
     args = parser.parse_args()
 
     plot_comparison(

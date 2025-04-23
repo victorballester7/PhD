@@ -77,7 +77,7 @@ function runJobs() {
             if [[ "$mode" == "n" ]]; then
                 echo -e "${GREEN}Executing run.sh locally in $folder${NC}"
                 cd "$folder"
-                run.sh "$num_cores" "$mesh_file" "$session_file" & disown
+                runLocally.sh "$num_cores" "$mesh_file" "$session_file" & disown
                 cd ..
             elif [[ "$mode" == "p" ]]; then
                 if [[ -f "$folder/pbspro.job" ]]; then

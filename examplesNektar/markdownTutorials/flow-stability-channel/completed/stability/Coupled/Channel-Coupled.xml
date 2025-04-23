@@ -6,7 +6,7 @@
             <I PROPERTY="Projection"            VALUE="Galerkin"           />
             <I PROPERTY="GlobalSysSoln"         VALUE="DirectStaticCond"   />
             <I PROPERTY="SolverType"            VALUE="CoupledLinearisedNS"/>
-            <I PROPERTY="EQTYPE"                VALUE="SteadyLinearisedNS" />
+            <I PROPERTY="EQTYPE"                VALUE="UnsteadyNavierStokes" />
             <I PROPERTY="Driver"                VALUE="Arpack"             />
             <I PROPERTY="InitialVector"         VALUE="Random"             />
             <I PROPERTY="ArpackProblemType"     VALUE="LargestImag"        />
@@ -46,6 +46,9 @@
             </REGION>
         </BOUNDARYCONDITIONS>
 
+        <FUNCTION NAME="Baseflow">
+            <F VAR="u,v" FILE="Channel-Coupled.bse" />
+        </FUNCTION>
         <FUNCTION NAME="AdvectionVelocity">
             <E VAR="u" VALUE="1-y*y" />
             <E VAR="v" VALUE="0"     />

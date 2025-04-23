@@ -68,7 +68,7 @@ def plot_comparison(
                 print(f"Warning: File {oldHistoryPoints} exists in folder '{folder}'. Appending data from this file.")
                 old_data, _ = read_history_points(os.path.join(folder, oldHistoryPoints))
                 data = np.append(old_data, data, axis=1)
-
+            
             
             time = data[point, :, 0]
             variables = data[point, :, 1:]
@@ -80,8 +80,10 @@ def plot_comparison(
         else:
             print(f"Warning: File {file_path} does not exist. Skipping folder '{folder}'.")
 
+    if points_loc.shape[0] == 0:
+        print("No points locations found. Probably the file is empty or does not exist.")
+        return
     # print points locations for reference
-    print("Points locations:")
     for i in range(points_loc.shape[0]):
         print(f"Point {i}: x = {points_loc[i, 0]:.2f}, y = {points_loc[i, 1]:.2f}, z = {points_loc[i, 2]:.2f}")
 

@@ -91,6 +91,8 @@ directory=$(pwd)
 overwrite_all=false  # flag to overwrite all files
 
 getMeshSessionFiles
+echo -e "${CYAN}Mesh file: ${mesh_file}${NC}"
+echo -e "${CYAN}Session file: ${session_file}${NC}"
 
 # get the files to convert
 getFiles "$@"

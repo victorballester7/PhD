@@ -7,8 +7,8 @@
             <I PROPERTY="Projection"            VALUE="Continuous"              />
             <I PROPERTY="TimeIntegrationMethod" VALUE="IMEXOrder3"              />
             <I PROPERTY="EvolutionOperator"     VALUE="Direct"                  />
-            <I PROPERTY="Driver"                VALUE="ModifiedArnoldi"                  />
-            <!-- <I PROPERTY="ArpackProblemType"     VALUE="LargestMag"              /> -->
+            <I PROPERTY="Driver"                VALUE="Arpack"                  />
+            <I PROPERTY="ArpackProblemType"     VALUE="LargestMag"              />
         </SOLVERINFO>
 
         <PARAMETERS>
