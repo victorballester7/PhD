@@ -19,7 +19,7 @@ function readInput {
 
   parameter=$1
   parameter_values="${@:2}" # all the values after the 3rd argument
-  parent_dir=$(basename "$(dirname "$(realpath gap_incNS.xml)")")
+  parent_dir=$(basename "$(dirname "$(realpath $session_file)")")
 
   echo -e "${CYAN}Input file: $session_file${RESET}"
   echo -e "${CYAN}Mesh file: $mesh_file${RESET}"

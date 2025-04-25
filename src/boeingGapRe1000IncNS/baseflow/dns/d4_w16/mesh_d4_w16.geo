@@ -2,10 +2,10 @@
 deltaStar = 1;
 D = 4 * deltaStar; // depth of the gap 
 W = 16 * deltaStar; // width of the gap
-r = W/2; // length of non-constant quads upstream and downstream of the gap
+r = 8; // length of non-constant quads upstream and downstream of the gap
 BL = 0.25 * deltaStar; // height of the second layer of quad elements
 BL_upper = 3.5 * deltaStar; // height of the third layer of quad elements
-x0 = 50 * deltaStar; // x distance from inflow to gap
+x0 = 100 * deltaStar; // x distance from inflow to gap
 lengthOutflow = 1000 * deltaStar; // length after the gap
 x3 = W + lengthOutflow; // last point of the domain
 height = 75 * deltaStar; // height of the triangular region

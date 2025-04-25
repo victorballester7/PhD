@@ -16,7 +16,7 @@ run_multiple = true
 # fill only when problem = "Custom"
 [customProblemFlags]
 # filenameUprofile = "/home/victor/Desktop/PhD/src/flatSurfaceRe1000IncNS/dns/oldSetups/08_changedformula_newUpperBC/data/points_x660_n2800.dat"
-filenameUprofile = "/home/victor/Desktop/PhD/src/boeingGapRe1000IncNS/baseflow/dns/d4_w16/data/points_x15_n200.dat"
+filenameUprofile = "/home/victor/Desktop/PhD/src/boeingGapRe1000IncNS/baseflow/dns/d4_w15/data/points_x900_n400.dat"
 plotUprofile = false
 colX = 1
 colY = 2

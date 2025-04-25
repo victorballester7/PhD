@@ -4,5 +4,7 @@ function getMeshSessionFiles {
 
     # Identify the session file (any other .xml file that is not the mesh file and does not contain "old")
     session_file=$(ls *.xml 2>/dev/null | grep -v "old" | grep -v "^$mesh_file$" | head -n 1)
+
+    geo_file=$(ls mesh*.geo 2>/dev/null | grep -v "old" | head -n 1)
 }
 

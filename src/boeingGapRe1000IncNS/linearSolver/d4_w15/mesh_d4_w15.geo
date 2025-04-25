@@ -4,9 +4,9 @@ D = 4 * deltaStar; // depth of the gap
 W = 15 * deltaStar; // width of the gap
 r = W/2; // length of non-constant quads upstream and downstream of the gap
 BL = 0.25 * deltaStar; // height of the second layer of quad elements
-BL_upper = 2.5 * deltaStar; // height of the third layer of quad elements
+BL_upper = 3.5 * deltaStar; // height of the third layer of quad elements
 x0 = 50 * deltaStar; // x distance from inflow to gap
-lengthOutflow = 500 * deltaStar; // length after the gap
+lengthOutflow = 1000 * deltaStar; // length after the gap
 x3 = W + lengthOutflow; // last point of the domain
 height = 75 * deltaStar; // height of the triangular region
 triagHeightRegion_inflow = height - BL - BL_upper; // height of the triangular region
@@ -22,7 +22,7 @@ p_in_v_left = 0.8; // densitiy concentration of elements inside the gap, vertica
 p_in_h = 0.9; // densitiy concentration of elements inside the gap, horizontally. 
 
 p_out_h = 0.5; // densitiy concentration of elements outside the gap, horizontally.
-p_out_h_upper = 0.5; // densitiy concentration of elements outside the gap, horizontally on the upper layer of quads
+p_out_h_upper = 0.4; // densitiy concentration of elements outside the gap, horizontally on the upper layer of quads
 p_out_v_inflow_dense = 0.8; // densitiy concentration of elements outside the gap, vertically, near the inflow and the gap
 p_out_v_inflow_sparse = 0.99; // densitiy concentration of elements outside the gap, vertically, near the inflow and far from the gap
 p_out_v_outflow_dense = 0.9; // densitiy concentration of elements outside the gap, vertically, near the outflow and the gap
@@ -61,9 +61,6 @@ N_out_v_outflow_sparse = Ceil( Log(a_out_v_outflow_sparse / (1 - p_out_v_outflow
 // second layer of quads
 a_out_h_upper = (BL) / (BL_upper) * (1 - p_out_h) / (1 - p_out_h^(N_out_h + 1));
 N_out_h_upper = Ceil( Log(a_out_h_upper / (1 - p_out_h_upper + a_out_h_upper * p_out_h_upper)) / Log(p_out_h_upper) );
-
-Printf("a_out_h_upper = %f\n", a_out_h_upper);
-Printf("N_out_h_upper = %f\n", N_out_h_upper);
 
 // ---------------------------
 // for triangular region
