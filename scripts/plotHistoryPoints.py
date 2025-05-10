@@ -1,7 +1,8 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from typing import List, Dict, Tuple, Optional
+from typing import List, Dict, Tuple, Optional, Union
+import sys
 
 
 def read_history_points(file_path: str) -> Tuple[np.ndarray, np.ndarray]:
@@ -40,39 +41,18 @@ def read_history_points(file_path: str) -> Tuple[np.ndarray, np.ndarray]:
 
     return new_data, np.array(points_locations)
 
-
-def plot_comparison(
-    folders: List[str],
-    file_name: str = "HistoryPoints.his",
-    points: List[int] = [0],
-    reference: int = 0,
-    time_min: Optional[float] = None,
-    use_relative: bool = False,
-    save: str = "",
-) -> None:
-    """Plot relative errors of non-temporal variables compared to a reference folder.
-
-    Args:
-        folders: List of folder paths to compare.
-        file_name: Name of the file to read in each folder (default: "HistoryPoints.his").
-        point: Index of the point to compare (default: 0).
-        reference: Index of the folder to use as reference (default: 0).
-        time_min: Minimum time value to include in the comparison (default: None).
-    """
-    data_by_folder: Dict[str, Tuple[np.ndarray, np.ndarray]] = {}
+def read_all_folders(folders: List[str], file_name: str, points: Union[List[int], slice]) -> Tuple[Dict[str, Tuple[np.ndarray, np.ndarray, np.ndarray]], List[str]]:
+    data_by_folder: Dict[str, Tuple[np.ndarray, np.ndarray, np.ndarray]] = {}
     variable_labels: Optional[List[str]] = ["u", "v", "p"]
 
     points_loc: np.ndarray = np.array([0, 0, 0])
 
-    oldHistoryPoints = "HistoryPoints.his.old"
+    oldHistoryPoints = file_name + ".old"
 
     for i, folder in enumerate(folders):
         file_path = os.path.join(folder, file_name)
         if os.path.exists(file_path):
-            if i == 0:
-                data, points_loc = read_history_points(file_path)
-            else:
-                data, _ = read_history_points(file_path)
+            data, points_loc = read_history_points(file_path)
 
             if os.path.exists(os.path.join(folder, oldHistoryPoints)):
                 print(
@@ -89,7 +69,7 @@ def plot_comparison(
             if i == 0 and variables.shape[-1] > 3:
                 variable_labels = ["u", "v", "w", "p"]
 
-            data_by_folder[folder] = (time, variables)
+            data_by_folder[folder] = (points_loc, time, variables)
         else:
             print(
                 f"Warning: File {file_path} does not exist. Skipping folder '{folder}'."
@@ -99,18 +79,55 @@ def plot_comparison(
         print(
             "No points locations found. Probably the file is empty or does not exist."
         )
-        return
+        sys.exit()
+
+    return data_by_folder, variable_labels
+
+def reduceLengthFolder(foldername:str, length:int) -> str:
+    """Reduce the length of the folder name to the last `length` characters."""
+    foldername = foldername.split("/")[-1]
+    if len(foldername) > length:
+        foldername = foldername[-length:]
+        while foldername[0] == "_":
+            foldername = foldername[1:]
+    return foldername
+
+def plot_comparison(
+    folders: List[str],
+    file_name: str = "HistoryPoints.his",
+    points: List[int] = [0],
+    reference: int = 0,
+    time_min: Optional[float] = None,
+    time_max: Optional[float] = None,
+    use_relative: bool = False,
+    save: str = "",
+) -> None:
+    """Plot relative errors of non-temporal variables compared to a reference folder.
+
+    Args:
+        folders: List of folder paths to compare.
+        file_name: Name of the file to read in each folder (default: "HistoryPoints.his").
+        point: Index of the point to compare (default: 0).
+        reference: Index of the folder to use as reference (default: 0).
+        time_min: Minimum time value to include in the comparison (default: None).
+    """
+    data_by_folder, variable_labels = read_all_folders(
+        folders, file_name, points
+    )
+
     # print points locations for reference
     num_variables = len(variable_labels)
-    for i in range(points_loc.shape[0]):
-        if "w" in variable_labels:
-            print(
-                f"Point {i}: x = {points_loc[i, 0]:.2f}, y = {points_loc[i, 1]:.2f}, z = {points_loc[i, 2]:.2f}"
-            )
-        else:
-            print(
-                f"Point {i}: x = {points_loc[i, 0]:.2f}, y = {points_loc[i, 1]:.2f}"
-            )
+    for folder, (points_loc, time, variables) in data_by_folder.items():
+        print(f"Folder: {folder}")
+        for i in range(points_loc.shape[0]):
+            if "w" in variable_labels:
+                print(
+                    f"Point {i}: x = {points_loc[i, 0]:.2f}, y = {points_loc[i, 1]:.2f}, z = {points_loc[i, 2]:.2f}"
+                )
+            else:
+                print(
+                    f"Point {i}: x = {points_loc[i, 0]:.2f}, y = {points_loc[i, 1]:.2f}"
+                )
 
     if not data_by_folder:
         print("No data found in any folder.")
@@ -121,7 +138,7 @@ def plot_comparison(
         print(f"Reference folder '{ref_folder}' does not contain valid data.")
         return
 
-    ref_time, ref_variables = data_by_folder[ref_folder]
+    ref_points, ref_time, ref_variables = data_by_folder[ref_folder]
 
     # Truncate variables to the smallest time range
     # time_max = min(len(ref_time), *[len(data[0]) for data in data_by_folder.values()])
@@ -129,13 +146,27 @@ def plot_comparison(
     # ref_variables = ref_variables[:time_max]
 
     if time_min is not None:
-        valid_indices = ref_time[0] >= time_min
+        valid_indices = ref_time[0, :] >= time_min
         ref_time = ref_time[0, valid_indices]
         ref_variables = ref_variables[0, valid_indices]
         for folder in data_by_folder:
-            time, variables = data_by_folder[folder]
-            valid_indices = time >= time_min
+            points_loc, time, variables = data_by_folder[folder]
+            valid_indices = time[0,:] >= time_min
             data_by_folder[folder] = (
+                points_loc,
+                time[:, valid_indices],
+                variables[:, valid_indices],
+            )
+
+    if time_max is not None:
+        valid_indices = ref_time[0] <= time_max
+        ref_time = ref_time[0, valid_indices]
+        ref_variables = ref_variables[0, valid_indices]
+        for folder in data_by_folder:
+            points_loc, time, variables = data_by_folder[folder]
+            valid_indices = time[0,:] <= time_max
+            data_by_folder[folder] = (
+                points_loc,
                 time[:, valid_indices],
                 variables[:, valid_indices],
             )
@@ -149,7 +180,7 @@ def plot_comparison(
         if i >= num_variables:
             break
 
-        for folder, (time, variables) in data_by_folder.items():
+        for folder, (points_loc, time, variables) in data_by_folder.items():
             if use_relative and folder == ref_folder:
                 continue
 
@@ -168,10 +199,7 @@ def plot_comparison(
                     plot = variables[j, :, i]
                     # truncate the name of folder to last m characters
                     m = 10
-                    if len(folder) > m:
-                        custom_label = folder[-m:]
-                        while custom_label[0] == "_":
-                            custom_label = custom_label[1:]
+                    custom_label = reduceLengthFolder(folder, m)
                     if "w" in variable_labels:
                         custom_label = (
                             custom_label
@@ -235,6 +263,12 @@ if __name__ == "__main__":
         help="Minimum time value to include in the comparison (default: None).",
     )
     parser.add_argument(
+        "--time_max",
+        default=None,
+        type=float,
+        help="Maximum time value to include in the comparison (default: None).",
+    )
+    parser.add_argument(
         "--use_relative",
         default=False,
         type=bool,
@@ -254,6 +288,7 @@ if __name__ == "__main__":
         points=args.points,
         reference=args.reference,
         time_min=args.time_min,
+        time_max=args.time_max,
         use_relative=args.use_relative,
         save=args.save,
     )

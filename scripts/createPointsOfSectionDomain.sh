@@ -13,11 +13,12 @@ CYAN="\e[36m"
 RESET="\e[0m"
 
 # Get user input
-X=(15 20 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 1000)
+# X=(15 20 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 1000)
 # X=(20 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 1000)
+X=(10 11 13 14)
 ymin=0
-ymax=75
-N=400
+ymax=150
+N=800
 datadir="data"
 
 # For remote access
@@ -27,11 +28,13 @@ HOST="hpc"
 # DIR="flatSurfaceRe1000IncNS/dns/oldSetups/08_changedformula_newUpperBC"
 # MESH_REMOTE="mesh_flat.xml"
 # FLD_REMOTE="mesh_flat_57.chk"
-DIR="boeingGapRe1000IncNS/baseflow/dns/d4_w15"
-MESH_REMOTE="mesh_d4_w15.xml"
-FLD_REMOTE="mesh_d4_w15_73.chk"
+CASE="d4_w15"
+# DIR="boeingGapRe1000IncNS/baseflow/dns/${CASE}"
+DIR="boeingGapRe1000IncNS/linearSolver_blowingSuction/${CASE}/sinBC"
+MESH_REMOTE="mesh_${CASE}.xml"
+FLD_REMOTE="baseflow.fld"
+# FLD_REMOTE="mesh_${CASE}_117.chk"
 
-DIR_REMOTE="Desktop/PhD/runs/${DIR}"
 
 # do not edit
 USER="vb824"
@@ -40,6 +43,7 @@ if [ "$HOST" = "typhoon" ]; then
 else
     DIR_REMOTE_PRE="/rds/general/user/${USER}/home"
 fi
+DIR_REMOTE="Desktop/PhD/runs/${DIR}"
 DIR_REMOTE="${DIR_REMOTE_PRE}/${DIR_REMOTE}"
 DIR_LOCAL="${HOME}/Desktop/PhD/src/${DIR}"
 overwrite_all=false

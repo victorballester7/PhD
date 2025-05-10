@@ -22,9 +22,9 @@
       <P> TimeStep        = 0.0005      </P>
       <P> NumSteps        = 1000e4     </P>
       <P> IO_CheckSteps   = NumSteps/100         </P> 
-      <P> IO_InfoSteps    = NumSteps/1000       </P> 
+      <P> IO_InfoSteps    = NumSteps/2000       </P> 
       <P> IO_CFLSteps     = IO_InfoSteps         </P>
-      <P> HistorySteps    = IO_InfoSteps * 2 </P>
+      <P> HistorySteps    = IO_InfoSteps </P>
       <P> EnergySteps     = IO_InfoSteps * 10</P>
       <P> IO_FiltersInfoSteps = EnergySteps </P>
       <P> D0              = 1                   </P> <!-- the value to 1/D0 is the velocity convection scale on the outflow !-->

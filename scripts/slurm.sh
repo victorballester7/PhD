@@ -6,10 +6,6 @@ SCRIPTS_DIR=$HOME/Desktop/PhD/scripts
 NP=$SLURM_NTASKS
 JOB_ID=$SLURM_JOB_ID
 slurmjob="$SLURM_SUBMIT_DIR/slurm.job"
-history_file="HistoryPoints.his"
-history_file_backup="${history_file}.old"
-energy_file="EnergyFile.mdl"
-energy_file_backup="${energy_file}.old"
 datefile=$(date +"%Y%m%d_%H%M%S".date)
 
 function getTime {
@@ -58,11 +54,9 @@ function setup {
     getMeshSessionFiles
     getOutputFiles
     uploadDateFile
+    updateHistoryEnergyFiles
 
-    cp $history_file $history_file_backup
-    cp $energy_file $energy_file_backup
-
-    rm -f $output_file $log_file $history_file $energy_file
+    rm -f $output_file $log_file 
 }
 
 # source necessary functions
@@ -70,6 +64,7 @@ source $SCRIPTS_DIR/bashFunctions/getMeshSessionFiles.sh
 source $SCRIPTS_DIR/bashFunctions/runIncNS.sh
 source $SCRIPTS_DIR/bashFunctions/uploadDateFile.sh
 source $SCRIPTS_DIR/bashFunctions/onCancel.sh
+source $SCRIPTS_DIR/bashFunctions/updateHistoryEnergyFiles.sh
 
 
 setup

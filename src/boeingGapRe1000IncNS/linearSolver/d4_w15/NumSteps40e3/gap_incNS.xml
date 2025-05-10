@@ -152,7 +152,7 @@
       <F VAR="u,v,p" FILE="../baseflow.fld"   />
     </FUNCTION>
     <FUNCTION NAME="InitialConditions">
-      <F VAR="u,v,p" FILE="mesh_d4_w15_35.chk" />
+      <F VAR="u,v,p" FILE="mesh_d4_w15_134.chk" />
     </FUNCTION>
   <!-- <FUNCTION NAME="InitialConditions"> -->
   <!--     <E VAR="u" VALUE="0" /> -->

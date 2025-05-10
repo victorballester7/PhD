@@ -14,5 +14,5 @@ function getDepthANDWidth() {
     fi
 
     # removes trailing zeros, if they exist
-    echo "${depth%.*} ${width%.*}"
+    echo "${depth} ${width}"
 }
