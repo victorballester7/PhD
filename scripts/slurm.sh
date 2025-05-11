@@ -28,17 +28,7 @@ function getTime {
         exit 1
     fi
 
-    # Remove leading zeros from hours, minutes, and seconds; like 01 -> 1
-    hours=$(echo $hours | sed 's/^0*//')
-    minutes=$(echo $minutes | sed 's/^0*//')
-    seconds=$(echo $seconds | sed 's/^0*//')
-
-    # Convert days, hours, minutes, seconds to total seconds
-    TIMEMAX=$((days * 86400 + hours * 3600 + minutes * 60 + seconds))
-
-    # substract 30 seconds for safe termination
-    TIMEMAX=$((TIMEMAX - 30))
-
+    computeTimeMax
 }
 
 
@@ -65,6 +55,7 @@ source $SCRIPTS_DIR/bashFunctions/runIncNS.sh
 source $SCRIPTS_DIR/bashFunctions/uploadDateFile.sh
 source $SCRIPTS_DIR/bashFunctions/onCancel.sh
 source $SCRIPTS_DIR/bashFunctions/updateHistoryEnergyFiles.sh
+source $SCRIPTS_DIR/bashFunctions/computeTimeMax.sh
 
 
 setup
