@@ -15,15 +15,48 @@ def filter_out(x, y, ufit, vfit, x_limit):
     return x, y, ufit, vfit
 
 
+def writeSol2File(x, y, filename, re_deltaStar, uinf, deltaStar, max_x):
+    re_x = pq.getRe_x(re_deltaStar, deltaStar)
+
+    # normalize x so that delta* = 1
+    x_norm = x / deltaStar
+    with open(filename, "w") as f:
+        f.write(
+            "# Blasius solution at Re_deltaStar = "
+            + str(re_deltaStar)
+            + " and using deltaStar = 1\n"
+        )
+        f.write("# y u v u_y u_yy\n")
+        for i in range(len(x)):
+            if x[i] > max_x:
+                break
+
+            u = y[1][i]
+            u_y = y[2][i]
+            u_yy = -y[0][i] * y[2][i] / 2
+            v = 0.5 * uinf / np.sqrt(re_x) * (x[i] * y[1][i] - y[0][i])
+            f.write(f"{x_norm[i]} {u} {v} {u_y} {u_yy}\n")
+
+        if x[-1] < max_x:
+            dx = x[-1] - x[-2]
+            xnew = x[-1]
+            u = y[1][-1]
+            u_y = y[2][-1]
+            u_yy = -y[0][-1] * y[2][-1] / 2
+            v = 0.5 * uinf / np.sqrt(re_x) * (x[-1] * y[1][-1] - y[0][-1])
+            while xnew < max_x:
+                xnew += dx
+                f.write(f"{xnew} {u} {v} {u_y} {u_yy}\n")
+
+
 def main():
-    u_inf = 1.0
+    uinf = 1.0
     re_deltaStar = 1000
 
     # Numerical parameters
     dim_system = 3
     eta_max = 15
     p = 11  # order of the polynomial for the interpolation
-    q = 1
     # Initial mesh and guess
     N = 501  # discretization
     x = np.linspace(0, eta_max, N)  # Initial mesh
@@ -37,13 +70,12 @@ def main():
     theta = pq.computeTheta(y[1], x)
     shapeFactor = deltaStar / theta
 
-    limit_u = u_inf
+    limit_u = uinf
     limit_v = deltaStar
 
     ufit1, vfit1 = ft.fitting(
         x, y, ft.u_fit, ft.v_fit, p, 2 * p - 1, limit_u, limit_v
     )  # fitting
-
 
     # ufit2, vfit2 = ft.fitting(
     #     x, y, ft.u_fit_exp, ft.v_fit_exp, p, 2 * p + q, limit_u, limit_v
@@ -62,15 +94,22 @@ def main():
     print("delta/delta* = ", delta / deltaStar)
     print("H            = ", shapeFactor)
 
-    re_x = pq.getRe_x(re_deltaStar, deltaStar)
+    max_x = 75
+    writeSol2File(
+        x,
+        y,
+        "/home/victor/Desktop/orrSommerfeld/data/blasius.dat.normalized",
+        re_deltaStar,
+        uinf,
+        deltaStar,
+        max_x,
+    )
 
-    # writeSol2File(x, y, "../orrSommerfeldSquire/data/blasius.dat", Re_x)
-    
     # filter out x >= 15
     x_limit = 15
     # x, y, ufit, vfit = filter_out(x, y, ufit, vfit, x_limit)
 
-    pt.plot(x, y, ufit, vfit, u_inf, re_x, deltaStar)
+    pt.plot(x, y, ufit, vfit, uinf, re_deltaStar, deltaStar)
 
 
 if __name__ == "__main__":  # Physical parameters

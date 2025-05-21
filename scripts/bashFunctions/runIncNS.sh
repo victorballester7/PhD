@@ -12,8 +12,14 @@ function runIncNS {
         SOLVER="mpirun --timeout $TIMEMAX -np $NP $INC_SOLVER -v"
     fi
 
+    # echo "Running solver: $SOLVER" > "prova.log"
+
     # Run the solver
     $SOLVER $mesh_file $session_file > $output_file 2> $log_file
+    
+    # echo "Solver finished with exit code $?" >> "prova.log"
 
     python3 $SCRIPTS_DIR/jobFinish.py $JOB_ID
+
+    # echo "Job finished with exit code $?" >> "prova.log"
 }

@@ -31,6 +31,9 @@ data = np.array(
         [1.25, 90, -1, True],
         [1.25, 110, -1, True],
         [1.25, 130, -1, True],
+        [1.5, 10, -1, True],
+        [1.5, 20, -1, True],
+        [1.5, 30, -1, True],
         [1.5, 45, -1, True],
         [1.5, 50, -1, True],
         [1.5, 55, -1, True],  # I think it starts absolute instability but very slightly
@@ -42,6 +45,9 @@ data = np.array(
         [1.5, 80, 0.75, False],
         [1.5, 100, 0.75, False],
         [1.5, 120, 0.75, False],
+        [1.75, 10, -1, True],
+        [1.75, 20, -1, True],
+        [1.75, 30, -1, True],
         [1.75, 40, -1, True],
         [1.75, 43, -1, True],
         [1.75, 45, -1, True],
@@ -74,6 +80,8 @@ data = np.array(
         [2, 65, 1, False],
         [2, 70, 1, False],
         [2, 80, 1, False],
+        [2.25, 10, -1, True],
+        [2.25, 16, -1, True],
         [2.25, 25, -1, True],
         [2.25, 30, -1, True],
         [2.25, 35, 0.5, True],
@@ -82,6 +90,7 @@ data = np.array(
         [2.25, 50, 0.75, True],
         [2.25, 55, 1, False],
         [2.25, 60, 1, False],
+        [2.5, 10, -1, True],
         [2.5, 20, -1, True],
         [2.5, 21, 1, False],
         [2.5, 22, 1, True],
@@ -92,6 +101,7 @@ data = np.array(
         [2.5, 35, 1, True],
         [2.5, 40, 1, True],
         [2.5, 45, 1, True],
+        [2.75, 10, -1, True],
         [2.75, 15, -1, True],
         [2.75, 15.5, 1, True],
         [2.75, 16, 1, True],
@@ -100,6 +110,7 @@ data = np.array(
         [2.75, 18, 1, True],
         [2.75, 19, 1, True],
         [2.75, 20, 1, True],
+        [3, 10, -1, True],
         [3, 15, -1, True],
         [3, 15.5, 1, True],
         [3, 16, 1, True],
@@ -107,17 +118,21 @@ data = np.array(
         [3, 18, 1, True],
         [3, 22, 1, True],
         [3, 26, 1, True],
+        [3.25, 10, -1, True],
         [3.25, 15, -1, True],
         [3.25, 15.5, 1, True],
         [3.25, 16, 1, True],
         [3.25, 16.5, 1, True],
+        [3.5, 10, -1, True],
         [3.5, 15, -1, True],
         [3.5, 15.5, 1, True],
         [3.5, 16, 1, True],
+        [3.75, 10, -1, True],
         [3.75, 15, -1, True],
         [3.75, 15.5, -1, True],
         [3.75, 16, 1, True],
         [3.75, 16.5, 1, True],
+        [4, 10, -1, True],
         [4, 14, -1, True],
         [4, 15, -1, True],
         [4, 16, -1, True],
@@ -265,7 +280,7 @@ def plot_scattered():
         ax.plot(x[:, 1], x[:, 0], "o", color=color, markersize=8, label=label)
 
     # Add images
-    addAllimages(ax)
+    # addAllimages(ax)
 
     ax.set_xlim(-40, 140)
     ax.set_ylim(-1, 5)
@@ -308,26 +323,26 @@ def addAllimages(ax):
         zoom=0.15,
     )
     addImageToPlot(
-        80,
-        0,
-        "Images/d2_w40.png",
+        40,
+        0.5,
+        "Images/d1.5_w80.png",
         True,
         ax,
-        x_plot=40,
-        y_plot=2,
+        x_plot=80,
+        y_plot=1.5,
         color=plotargs_array[3, 1],
-        zoom=0.4,
+        zoom=0.5,
     )
     addImageToPlot(
-        105,
-        2.5,
+        85,
+        3.75,
         "Images/d2.25_w55.png",
         True,
         ax,
         x_plot=55,
         y_plot=2.25,
         color=plotargs_array[5, 1],
-        zoom=0.15,
+        zoom=0.3,
     )
 
 def addImageToPlot(

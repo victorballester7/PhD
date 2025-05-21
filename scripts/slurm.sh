@@ -8,6 +8,13 @@ JOB_ID=$SLURM_JOB_ID
 slurmjob="$SLURM_SUBMIT_DIR/slurm.job"
 datefile=$(date +"%Y%m%d_%H%M%S".date)
 
+# source necessary functions
+source $SCRIPTS_DIR/bashFunctions/computeTimeMax.sh
+source $SCRIPTS_DIR/bashFunctions/getMeshSessionFiles.sh
+source $SCRIPTS_DIR/bashFunctions/uploadDateFile.sh
+source $SCRIPTS_DIR/bashFunctions/updateHistoryEnergyFiles.sh
+source $SCRIPTS_DIR/bashFunctions/runIncNS.sh
+
 function getTime {
     # Extract the time line
     time_str=$(grep "^#SBATCH --time=" "$slurmjob" | awk '{print $2}')
@@ -28,7 +35,6 @@ function getTime {
         exit 1
     fi
 
-    computeTimeMax
 }
 
 
@@ -41,6 +47,7 @@ function getOutputFiles {
 # create a file with the date and time of the job submission
 function setup {
     getTime
+    computeTimeMax
     getMeshSessionFiles
     getOutputFiles
     uploadDateFile
@@ -49,15 +56,5 @@ function setup {
     rm -f $output_file $log_file 
 }
 
-# source necessary functions
-source $SCRIPTS_DIR/bashFunctions/getMeshSessionFiles.sh
-source $SCRIPTS_DIR/bashFunctions/runIncNS.sh
-source $SCRIPTS_DIR/bashFunctions/uploadDateFile.sh
-source $SCRIPTS_DIR/bashFunctions/onCancel.sh
-source $SCRIPTS_DIR/bashFunctions/updateHistoryEnergyFiles.sh
-source $SCRIPTS_DIR/bashFunctions/computeTimeMax.sh
-
-
 setup
-
 runIncNS

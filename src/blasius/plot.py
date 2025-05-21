@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.linalg as la
-from physicalQuantities import toEta, getRe_x
+import physicalQuantities as pq
 
 
 def read_data(filename):
@@ -14,9 +14,10 @@ def read_data(filename):
     return y, u, v
 
 
-def plot(x, y, ufit, vfit, uinf, re_x, C):
+def plot(x, y, ufit, vfit, uinf, re_deltaStar, C):
     # plot the solutions
 
+    re_x = pq.getRe_x(re_deltaStar, C)
     u_approx = []
     v_approx = []
     for uft, vft in zip(ufit, vfit):
@@ -55,31 +56,29 @@ def plot(x, y, ufit, vfit, uinf, re_x, C):
         ax2.plot(v_apx, x, label=f"v fit_{i}")
 
     # data from dns
-    length = 0
+    x_eq_L = -100
 
     x_dns, u_dns, v_dns = read_data(
-        "../flatSurfaceRe1000IncNS/dns/changedformula_withHighOrderBC/data/points_x" + str(length) + ".dat"
+        "../flatSurfaceRe1000IncNS/linearSolver_blowingSuction/data/points_x" + str(x_eq_L) + "_n800.dat"
     )
 
-    Re_deltaStar = 1000
-    deltaStar_lenght = np.sqrt(1 + length * C**2 / Re_deltaStar)
-    Re_deltaStar_length = uinf * deltaStar_lenght / (1. / Re_deltaStar)
+    deltaStar_at_x_eq_L= np.sqrt(1 + x_eq_L * C**2 / re_deltaStar)
+    Re_deltaStar_at_x_eq_L = uinf * deltaStar_at_x_eq_L / (1. / re_deltaStar)
 
-    Re_x_length = getRe_x(Re_deltaStar_length, C)
-    print("Re_x_BC = ", Re_x_length)
-    print("deltaStar_BC = ", deltaStar_lenght)
-    factor = np.sqrt(Re_x_length) / np.sqrt(re_x)
+    Re_x_at_x_eq_L = pq.getRe_x(Re_deltaStar_at_x_eq_L, C)
+    print("Re_x_BC = ", Re_x_at_x_eq_L)
+    print("deltaStar_BC = ", deltaStar_at_x_eq_L)
+    factor = np.sqrt(Re_x_at_x_eq_L) / np.sqrt(re_x)
 
     # interpolate to x
-    x_dns = toEta(x_dns, C, deltaStar_lenght)
+    x_dns = pq.toEta(x_dns, C, deltaStar_at_x_eq_L)
 
-    aux =np.dstack((x_dns, u_dns))
-    # print full array
-    np.set_printoptions(threshold=np.inf)
-    print(aux)
+    # aux =np.dstack((x_dns, u_dns))
+    # # print full array
+    # np.set_printoptions(threshold=np.inf)
+    # print(aux)
     u_dns = np.interp(x, x_dns, u_dns)
     v_dns = np.interp(x, x_dns, v_dns * factor)
-    # x = x_dns
 
     # Plot the DNS data
     ax1.plot(u_dns, x, label="u DNS", color="red")

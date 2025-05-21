@@ -28,7 +28,6 @@ def check_and_notify(job_id):
         log_content = get_last_lines(log_file)
         timeout = any("timeout" in line for line in log_content)
         cancelled = any("killed intentionally" in line for line in log_content)
-
         if not log_content:
             message = (
                 "✅ <b>Program finished successfully</b> 🏁\n\n"
@@ -87,7 +86,7 @@ def check_and_notify(job_id):
             details = "\n\n<b>Error Log:</b>\n<blockquote expandable>" + "".join(log_content) + "</blockquote>"
 
         try:
-            sm.send_telegram_message(message + details)
+            sm.send_telegram_message(message, details)
         except Exception as e:
             with open("log.txt", "a") as log_file:
                 log_file.write(f"Failed to send notification: {e}")
