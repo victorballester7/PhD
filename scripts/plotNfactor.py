@@ -15,8 +15,8 @@ def extract_width(filenameFolder: str) -> float:
     """
 
     match = re.search(r"d(\d+(?:\.\d+)?)_w(\d+(?:\.\d+)?)", filenameFolder)
-    depth = 4
-    width = 15
+    depth = 0
+    width = 0
     if match:
         depth = float(match.group(1))
         width = float(match.group(2))
@@ -66,8 +66,29 @@ def getAmplitudes(
     var_interpolated = np.interp(times_max, time, var)
     return var_interpolated
 
+def get_amplitude_wave_packet(indices: np.ndarray, t: np.ndarray, data: np.ndarray) -> float:
+    """
+    Get the amplitude of the wave packet based on the indices of the maxima.
+    Args:
+        indices: Indices of the maxima.
+        t: Time array.
+        data: Data array (U or V velocity).
+    Returns:
+        Amplitude value.
+    """
+    times_max = t[indices]
+    data_max = data[indices]
 
-def get_amplitude(t: np.ndarray, u: np.ndarray, v: np.ndarray, use_u: bool) -> float:
+    # get interpolation of the maxima based on 2nd order polynomial
+    coeffs = np.polyfit(times_max, data_max, 2)
+    # get the vertex of the parabola (the maximum)
+    vertex_time = -coeffs[1] / (2 * coeffs[0])
+    # get the maximum value at the vertex time
+    A_critical = np.polyval(coeffs, vertex_time)
+
+    return A_critical
+
+def get_amplitude(t: np.ndarray, u: np.ndarray, v: np.ndarray, use_u: bool, is_wave_packet: bool) -> float:
     """
     Get the amplitude of the signal (after it stabilizes) from the time and variable arrays.
     Args:
@@ -78,17 +99,29 @@ def get_amplitude(t: np.ndarray, u: np.ndarray, v: np.ndarray, use_u: bool) -> f
     Returns:
         Amplitude value.
     """
+    if is_wave_packet:
+        # data = u if use_u else v
 
-    times_max = getTimesMaxima(t, v)
+        # get x, y corresponding to the 3 greatest maxima
+        A_max_u = get_amplitude_wave_packet(np.argsort(u)[-3:], t, u)
+        A_max_v = get_amplitude_wave_packet(np.argsort(v)[-3:], t, v)
+        A_min_u = get_amplitude_wave_packet(np.argsort(u)[:3], t, u)
+        A_min_v = get_amplitude_wave_packet(np.argsort(v)[:3], t, v)
 
-    A = getAmplitudes(times_max, t, u if use_u else v)
+        A = np.mean([A_max_u, A_max_v, -A_min_u, -A_min_v]).astype(np.float64)
 
-    # separate the maxima and minima
-    A_plus = A[A > A.mean()]
-    A_minus = A[A < A.mean()]
 
-    num_peaks2average = 3
-    A = (0.5 * (np.mean(A_plus[-num_peaks2average:]) - np.mean(A_minus[-num_peaks2average:]))).astype(np.float64)
+    else:
+        times_max = getTimesMaxima(t, v)
+
+        A = getAmplitudes(times_max, t, u if use_u else v)
+
+        # separate the maxima and minima
+        A_plus = A[A > A.mean()]
+        A_minus = A[A < A.mean()]
+
+        num_peaks2average = 3
+        A = (0.5 * (np.mean(A_plus[-num_peaks2average:]) - np.mean(A_minus[-num_peaks2average:]))).astype(np.float64)
 
     return A
 
@@ -110,8 +143,9 @@ def plot_nFactor(
     data_by_folder, variables = read_all_folders(folders, file_name, slice(None))
 
     heightBL = 1
-    XafterGap = 20
+    XafterGap = -35
     use_u = False  # otherwise use v
+    is_wave_packet = True  # if True, use wave packet amplitude calculation
 
     fig, ax = plt.subplots(figsize=(8, 5))
 
@@ -130,7 +164,7 @@ def plot_nFactor(
                     f"    Point {p}: x = {points_loc[p, 0]:.2f}, y = {points_loc[p, 1]:.2f}, z = {points_loc[p, 2]:.2f}"
                 )
             # if p % 100 == 0:
-            A = get_amplitude(t, variables[p, :, 0], variables[p, :, 1], use_u)
+            A = get_amplitude(t, variables[p, :, 0], variables[p, :, 1], use_u, is_wave_packet)
 
             if not baseAmplitudeSet:
                 baseAmplitude = A

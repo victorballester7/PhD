@@ -60,8 +60,18 @@ def main():
     # Initial mesh and guess
     N = 501  # discretization
     x = np.linspace(0, eta_max, N)  # Initial mesh
+    incNS = False
 
-    solution = sbvp.solve_BVP(dim_system, x)
+    if incNS:
+        solution = sbvp.solve_BVP_incNS(dim_system, x)
+    else:
+        Pr = 0.72
+        rhoInf = 1
+        deltaStar_comNS = 1
+        muInf = rhoInf * uinf * deltaStar_comNS / re_deltaStar 
+        TInf = 1 
+
+        solution = sbvp.solve_BVP_comNS(dim_system, x)
     # Take the results
     y = solution.sol(x)
 

@@ -11,9 +11,11 @@ SCRIPTS_DIR=$HOME/Desktop/PhD/scripts
 
 function readInput {
   # prompt a message if there are less than 2 arguments
-  if [ "$#" -ne 2 ]; then 
+  if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
     echo -e "${RED}Usage: $0 <depth> <width>${RESET}"
+    echo -e "${RED}   or: $0 <depth> <width> <name_folder>${RESET}" 
     echo -e "${YELLOW}For example: $0 4 16.5 ${RESET}"
+    echo -e "${YELLOW}         or: $0 4 16.5 d4_w16.5_custom${RESET}"
     exit 1
   fi
 
@@ -21,10 +23,15 @@ function readInput {
   width=$2
   parent_dir=$(basename "$(dirname "$(realpath $session_file)")")
   codename="d${depth}_w${width}"
+  folder_name=${codename}
+  if [ "$#" -eq 3 ]; then
+    folder_name=$3
+  fi
 
   echo -e "${CYAN}Input file: $session_file${RESET}"
   echo -e "${CYAN}Geo file: $geo_file${RESET}"
-  echo -e "${CYAN}Folder: $codename${RESET}"
+  echo -e "${CYAN}Codename: $codename${RESET}"
+  echo -e "${CYAN}Folder: $folder_name${RESET}"
   echo -e "${CYAN}Parent directory: $parent_dir${RESET}"
   echo ""
 
@@ -38,17 +45,17 @@ function readInput {
 function generateFolders {
   pbspro_file="pbspro.job"
   slurm_file="slurm.job"
-  mkdir -p "$codename"
+  mkdir -p "$folder_name"
 
-  cp $session_file "$codename/$session_file"
-  cp $pbspro_file "$codename/$pbspro_file"
-  cp $slurm_file "$codename/$slurm_file"
+  cp $session_file "$folder_name/$session_file"
+  cp $pbspro_file "$folder_name/$pbspro_file"
+  cp $slurm_file "$folder_name/$slurm_file"
   
   # update the depth and width in the new geo file
   sed -e "s/^D = .*deltaStar;/D = ${depth} * deltaStar;/" \
-    -e "s/^W = .*deltaStar;/W = ${width} * deltaStar;/" "$geo_file" > "$codename/mesh_${codename}.geo"
+    -e "s/^W = .*deltaStar;/W = ${width} * deltaStar;/" "$geo_file" > "${folder_name}/mesh_${codename}.geo"
 
-  cd "$codename"
+  cd "$folder_name"
   prepareRun.sh
   cd ..
 

@@ -41,85 +41,78 @@ echo -e "${GREEN}Previous history points removed.${RESET}"
 # Create the list of history points
 
 # Point 0: (-100, 1, 0)
-# Point 1: (-50, 1, 0)
-# Point 2: (-30, 1, 0)
-# Point 3: (-10, 1, 0)
-# Point 4: (0, 1, 0)
-# Point 5: (W / 4, 1, 0)
-# Point 6: (W / 4, -D / 3, 0)
-# Point 7: (W / 4, -2D / 3, 0)
-# Point 8: (W / 2, 1, 0)
-# Point 9: (W / 2, -D / 3, 0)
-# Point 10: (W / 2, -2D / 3, 0)
-# Point 11: (3W / 4, 1, 0)
-# Point 12: (3W / 4, -D / 3, 0)
-# Point 13: (3W / 4, -2D / 3, 0)
-# Point 14: (W, 1, 0)
-# Point 15: (W + 25, 1, 0)
-# Point 17: (W + 50, 1, 0)
-# Point 18: (W + 75, 1, 0)
-# Point 19: (W + 100, 1, 0)
-# Point 20: (W + 125, 1, 0)
-# Point 21: (W + 150, 1, 0)
-# Point 22: (W + 175, 1, 0)
-# Point 23: (W + 200, 1, 0)
-# Point 24: (W + 250, 1, 0)
-# Point 25: (W + 300, 1, 0)
-# Point 26: (W + 350, 1, 0)
-# Point 27: (W + 400, 1, 0)
-# Point 28: (W + 450, 1, 0)
-# Point 29: (W + 500, 1, 0)
-# Point 30: (W + 550, 1, 0)
-# Point 31: (W + 600, 1, 0)
-# Point 32: (W + 650, 1, 0)
-# Point 33: (W + 700, 1, 0)
-# Point 34: (W + 750, 1, 0)
-# Point 35: (W + 800, 1, 0)
-# Point 36: (W + 850, 1, 0)
-# Point 37: (W + 900, 1, 0)
-# Point 38: (W + 950, 1, 0)
+# Point 1: (-75, 1, 0)
+# Point 2: (-50, 1, 0)
+# Point 3: (-35, 1, 0)
+# Point 4: (-25, 1, 0)
+# Point 5: (-15, 1, 0)
+# Point 6: (-10, 1, 0)
+# Point 7: (-5, 1, 0)
+# Point 8: (0, 1, 0)
+# Point 9: (1, 1, 0)
+# Point 10: (1, -D / 3, 0)
+# Point 11: (1, -2D / 3, 0)
+# Point 12: (5, 1, 0)
+# Point 13: (5, -D / 3, 0)
+# Point 14: (5, -2D / 3, 0)
+# Point 15: (10, 1, 0)
+# Point 16: (10, -D / 3, 0)
+# Point 17: (10, -2D / 3, 0)
+# ...
+# Point 18: (W, 1, 0)
+# Point 19: (W + 5, 1, 0)
+# Point 20: (W + 10, 1, 0)
+# Point 21: (W + 15, 1, 0)
+# Point 22: (W + 25, 1, 0)
+# Point 23: (W + 35, 1, 0)
+# Point 24: (W + 50, 1, 0)
+# Point 25: (W + 75, 1, 0)
+# Point 26: (W + 100, 1, 0)
+# Point 27: (W + 125, 1, 0)
+# Point 28: (W + 150, 1, 0)
+# Point 29: (W + 175, 1, 0)
+# Point 30: (W + 200, 1, 0)
+# Point 31: (W + 250, 1, 0)
+# Point 32: (W + 300, 1, 0)
+# Point 33: (W + 350, 1, 0)
+# Point 34: (W + 400, 1, 0)
+# Point 35: (W + 450, 1, 0)
+# Point 36: (W + 500, 1, 0)
+# Point 37: (W + 550, 1, 0)
+# Point 38: (W + 600, 1, 0)
+# Point 39: (W + 650, 1, 0)
+# Point 40: (W + 700, 1, 0)
+# Point 41: (W + 750, 1, 0)
+# Point 42: (W + 800, 1, 0)
+# Point 43: (W + 850, 1, 0)
+# Point 44: (W + 900, 1, 0)
+# Point 45: (W + 950, 1, 0)
+# Point 46: (W + 1000, 1, 0)
 
+historyPoints=()
 
-historyPoints=(
-    "-100 1 0"
-    "-50 1 0"
-    "-30 1 0"
-    "-10 1 0"
-    "0 1 0"
-    "$(echo "$width / 4" | bc -l) 1 0"
-    "$(echo "$width / 4" | bc -l) $(echo "-$depth / 3" | bc -l) 0"
-    "$(echo "$width / 4" | bc -l) $(echo "-2 * $depth / 3" | bc -l) 0"
-    "$(echo "$width / 2" | bc -l) 1 0"
-    "$(echo "$width / 2" | bc -l) $(echo "-$depth / 3" | bc -l) 0"
-    "$(echo "$width / 2" | bc -l) $(echo "-2 * $depth / 3" | bc -l) 0"
-    "$(echo "3 * $width / 4" | bc -l) 1 0"
-    "$(echo "3 * $width / 4" | bc -l) $(echo "-$depth / 3" | bc -l) 0"
-    "$(echo "3 * $width / 4" | bc -l) $(echo "-2 * $depth / 3" | bc -l) 0"
-    "$(echo "$width" | bc -l) 1 0"
-    "$(echo "$width + 25" | bc -l) 1 0"
-    "$(echo "$width + 50" | bc -l) 1 0"
-    "$(echo "$width + 75" | bc -l) 1 0"
-    "$(echo "$width + 100" | bc -l) 1 0"
-    "$(echo "$width + 125" | bc -l) 1 0"
-    "$(echo "$width + 150" | bc -l) 1 0"
-    "$(echo "$width + 175" | bc -l) 1 0"
-    "$(echo "$width + 200" | bc -l) 1 0"
-    "$(echo "$width + 250" | bc -l) 1 0"
-    "$(echo "$width + 300" | bc -l) 1 0"
-    "$(echo "$width + 350" | bc -l) 1 0"
-    "$(echo "$width + 400" | bc -l) 1 0"
-    "$(echo "$width + 450" | bc -l) 1 0"
-    "$(echo "$width + 500" | bc -l) 1 0"
-    "$(echo "$width + 550" | bc -l) 1 0"
-    "$(echo "$width + 600" | bc -l) 1 0"
-    "$(echo "$width + 650" | bc -l) 1 0"
-    "$(echo "$width + 700" | bc -l) 1 0"
-    "$(echo "$width + 750" | bc -l) 1 0"
-    "$(echo "$width + 800" | bc -l) 1 0"
-    "$(echo "$width + 850" | bc -l) 1 0"
-    "$(echo "$width + 900" | bc -l) 1 0"
-    "$(echo "$width + 950" | bc -l) 1 0"
-)
+# upstream points
+for offset in 100 75 50 35 25 15 10 5; do
+    historyPoints+=("-$offset 1 0")
+done
+
+historyPoints+=("0 1 0")
+
+# points inside the gap
+x=5
+step=5
+while (( $(echo "$x <= $width" | bc -l) )); do
+    historyPoints+=("$x 1 0")
+    historyPoints+=("$x $(echo "-$depth / 2" | bc -l) 0")
+    x=$(echo "$x + $step" | bc -l)
+done
+
+# downstream points
+for offset in 5 10 15 25 35 50 75 100 125 150 175 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 1000; do
+    x=$(echo "$width + $offset" | bc -l)
+    historyPoints+=("$x 1 0")
+done
+
 
 echo -e "${CYAN}Inserting history points into $sessionFile...${RESET}"
 

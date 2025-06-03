@@ -162,8 +162,9 @@
 
     
     <FUNCTION NAME="InitialConditions">
-      <F VAR="u,v,p" FILE="mesh_flat_eig_0.fld" />
-    </FUNCTION>
+      <F VAR="u,v" FILE="mesh_flat_61.chk" />
+      <E VAR="p" VALUE="0" />
+    </FUNCTION> 
 
     
    <!--  <FUNCTION NAME="InitialConditions"> -->

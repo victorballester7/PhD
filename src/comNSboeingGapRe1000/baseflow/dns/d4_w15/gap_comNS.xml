@@ -1,31 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <NEKTAR>  
   <EXPANSIONS>    
-    <E COMPOSITE="C[100,101,102]" NUMMODES="9" FIELDS="u,v" TYPE="MODIFIED" />  
-    <E COMPOSITE="C[100,101,102]" NUMMODES="8" FIELDS="p" TYPE="MODIFIEDQUADPLUS1" />
+    <E COMPOSITE="C[100,101]" NUMMODES="3" FIELDS="rho,rhou,rhov,E" TYPE="MODIFIED" />  
   </EXPANSIONS>
   
   <CONDITIONS>    
     <SOLVERINFO>
-      <I PROPERTY="SolverType"                            VALUE="VelocityCorrectionScheme"   />
-      <I PROPERTY="EqType"                                VALUE="UnsteadyNavierStokes"       />
-      <I PROPERTY="Projection"                            VALUE="Galerkin"                   /> 
-      <I PROPERTY="EvolutionOperator"                     VALUE="Nonlinear"                  />
-      <I PROPERTY="TimeIntegrationMethod"                 VALUE="IMEXOrder2"                 />
-      <I PROPERTY="SPECTRALHPDEALIASING"                  VALUE="True"           />
-      <I PROPERTY="GlobalSysSoln"                         VALUE="XxtMultiLevelStaticCond" />
+      <I PROPERTY="EQType"                VALUE="LinearNavierStokesImplicitCFE"/>  
+      <I PROPERTY="Projection"            VALUE="DisContinuous"          />
+      <I PROPERTY="AdvectionType"         VALUE="WeakDG"                 />
+      <I PROPERTY="DiffusionType"         VALUE="InteriorPenalty"        />
+      <I PROPERTY="AdvectionAdvancement"  VALUE="Implicit"               />
+      <I PROPERTY="DiffusionAdvancement"  VALUE="Implicit"               />
+      <I PROPERTY="TimeIntegrationMethod" VALUE="DIRKOrder2"             />
+      <I PROPERTY="UpwindType"            VALUE="Roe"                    />
+      <I PROPERTY="ProblemType"           VALUE="General"                />
+      <I PROPERTY="ViscosityType"         VALUE="Variable"               />
+      <!--
+      <I PROPERTY="ShockCaptureType"      VALUE="Physical"               />
+      <I PROPERTY="Smoothing"             VALUE="C0"                     />
+      -->
+      <!--To avoid additional field output for now-->
+      <I PROPERTY="OutputExtraFields"     VALUE="False"               />
     </SOLVERINFO>    
 
     <PARAMETERS>
      <!--General parameters-->
-      <P> TimeStep = .001708593750 </P>
-      <P> NumSteps        = 3000e3      </P>
+      <P> TimeStep = 0.001 </P>
+      <P> NumSteps        = 1e3      </P>
       <P> IO_CheckSteps   = NumSteps/100         </P> 
       <P> IO_InfoSteps    = NumSteps/2000       </P> 
       <P> IO_CFLSteps     = IO_InfoSteps         </P>
       <P> HistorySteps    = IO_InfoSteps </P>
       <P> EnergySteps     = IO_InfoSteps * 10</P>
-      <P> D0              = 1.0                   </P>
+
+    <!-- Iteration parameters-->
+      <P> PreconMatFreezNumb        = 100               </P>
+      <P> NonlinIterTolRelativeL2   = 1.0e-2            </P>
+      <P> LinSysRelativeTolInNonlin = 1.0e-2            </P>  
+      <P> NewtonAbsoluteIteTol      = 1.0e-10           </P>    
+      <P> PreconItsStep             = 7                 </P>
+      <P> NekLinSysMaxIterations    = 100                </P>
+    
+
 
       <!-- Parameters for the simulation -->
       <!-- To understand the formulas in the parameters, please refer to the file docs/20250414_Blasius_formulas.md -->
@@ -39,12 +56,23 @@
       <!-- ........................................... -->
       <!-- ........................................... -->
       <p> C                     = 1.7207876575205 </p> <!-- number from wiki !-->
-      <p> Uinf                  = 1                   </p>
+      <p> uInf                  = 1                   </p>
       <p> deltaStar_le          = 1  </p> 
       <P> Re_deltaStar_le       = 1000       </P> <!-- Reynolds number based on deltaStar_leadingEdge !-->
       <P> deltaStar_BC          = sqrt(1+lengthBeforeGap*C^2/Re_deltaStar_le) </P> 
-      <P> Kinvis                = Uinf*deltaStar_le/Re_deltaStar_le                 </P>
-      <p> Vinf                  = 0.5*Uinf*C/(Re_deltaStar_le * deltaStar_BC) </p> 
+      <p> vInf                  = 0.5*uInf*C/(Re_deltaStar_le * deltaStar_BC) </p> 
+      <!-- Flow parameters -->  
+      <P> Ma                    = 0.8                       </P>
+      <P> Pr                    = 0.72                     </P> <!-- around 0.71 and 0.72 for air !-->
+      <P> Gamma                 = 1.4                       </P>     
+      <P> rhoInf                = 1.0                       </P>
+      <P> TInf                  = 1.0                       </P> 
+      <P> cInf                  = uInf/Ma                   </P>
+      <P> GasConstant           = cInf^2/(Gamma * TInf)     </P>
+      <P> pInf                  = rhoInf*GasConstant*TInf   </P>
+      <P> mu                    = rhoInf*uInf*deltaStar_le/Re_deltaStar_le </P>
+      <P> Twall                 = TInf                      </P>
+
       <P> etaMax                = 9.84                      </P>  <!-- based on python plotting script. It fits better than etaMax=10, the endpoint of the simulation, both for u and v !-->
       <P> y2eta                 = C/deltaStar_BC   </P> 
       <P> yMax        = etaMax/y2eta             </P> <!--[m]-->  
@@ -95,9 +123,10 @@
     </PARAMETERS>
     
     <VARIABLES>
-      <V ID="0"> u </V>
-      <V ID="1"> v </V>  
-      <V ID="2"> p </V>
+      <V ID="0"> rho  </V>
+      <V ID="1"> rhou </V>
+      <V ID="2"> rhov </V>
+      <V ID="3"> E    </V>
     </VARIABLES>
     
     <BOUNDARYREGIONS>
@@ -131,35 +160,39 @@
         <N VAR="p" USERDEFINEDTYPE="H" VALUE="0" /> <!-- high-order boundary condition, VALUE is not used !-->
       </REGION>
 
-      <REGION REF="1">   <!-- outlet !-->
-        <!-- <R VAR="u" USERDEFINEDTYPE="HOutflow" VALUE="0" PRIMCOEFF="D0/TimeStep"/> -->
-        <!-- <R VAR="v" USERDEFINEDTYPE="HOutflow" VALUE="0" PRIMCOEFF="D0/TimeStep"/> -->
-        <!-- <R VAR="p" USERDEFINEDTYPE="HOutflow" VALUE="0" PRIMCOEFF="1.0/(D0*Kinvis)"/> -->
-        <!-- <N VAR="u" USERDEFINEDTYPE="HOutflow" VALUE="0" /> -->
-        <!-- <N VAR="v" USERDEFINEDTYPE="HOutflow" VALUE="0" /> -->
-        <!-- <D VAR="p" USERDEFINEDTYPE="HOutflow" VALUE="0" /> -->
-        <N VAR="u" VALUE="0" />
-        <N VAR="v" VALUE="0" />
-        <D VAR="p" VALUE="0" />
-      </REGION>  
+      <REGION REF="1">             
+        <D VAR="rho"  USERDEFINEDTYPE="PressureOutflow" VALUE="0" />
+        <D VAR="rhou" USERDEFINEDTYPE="PressureOutflow" VALUE="0" />
+        <D VAR="rhov" USERDEFINEDTYPE="PressureOutflow" VALUE="0" />
+        <D VAR="E"    USERDEFINEDTYPE="PressureOutflow" VALUE="pInf" />
+      </REGION>
             
       <REGION REF="2">   <!-- top = far-field !-->
         <!-- I do it like that in order to avoid discontinuities in the velocity field at the top boundary, the error is of the order of 10^-7 for u and 10^-10 for v ! -->
-        <D VAR="u" VALUE="Uinf" />
-        <D VAR="v" VALUE="0.5*Uinf*C^2/(Re_deltaStar_le * sqrt(1+x*C^2/Re_deltaStar_le))" />
-        <N VAR="p" USERDEFINEDTYPE="H" VALUE="0" />      
+        <D VAR="rho" VALUE="rhoInf" />
+        <D VAR="rhou" VALUE="rhoInf*Uinf" />
+        <D VAR="rhov" VALUE="rhoInf*0.5*Uinf*C^2/(Re_deltaStar_le * sqrt(1+x*C^2/Re_deltaStar_le))" />
+        <!-- <D VAR="E" VALUE="pInf/(Gamma-1) + 0.5*rhoInf*Uinf^2 -->
       </REGION>
 
       <REGION REF="3">  <!-- bottom = wall no slip !-->  
-        <D VAR="u" VALUE="0" />
-        <D VAR="v" VALUE="0" />        
-        <N VAR="p" USERDEFINEDTYPE="H" VALUE="0" />  
+        <D VAR="rho"  USERDEFINEDTYPE="WallViscous" VALUE="0" />
+        <D VAR="rhou" USERDEFINEDTYPE="WallViscous" VALUE="0" />
+        <D VAR="rhov" USERDEFINEDTYPE="WallViscous" VALUE="0" />        
+        <D VAR="E"    USERDEFINEDTYPE="WallViscous" VALUE="0" />
       </REGION>    
     </BOUNDARYCONDITIONS>
-    
+
     <FUNCTION NAME="InitialConditions">
-      <F VAR="u,v,p" FILE="mesh_d4_w15_100.chk" />
-    </FUNCTION>
+      <E VAR="rho"  VALUE="0.0"   />
+      <E VAR="rhou" VALUE="0.0"   />
+      <E VAR="rhov" VALUE="0.0"   />
+      <E VAR="E"    VALUE="0.0"   />
+    </FUNCTION> 
+
+    <!-- <FUNCTION NAME="InitialConditions"> -->
+    <!--   <F VAR="u,v,p" FILE="mesh_d4_w15_100.chk" /> -->
+    <!-- </FUNCTION> -->
 
     
    <!--  <FUNCTION NAME="InitialConditions"> -->

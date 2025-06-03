@@ -161,16 +161,16 @@
     </FUNCTION>
 
     
-    <FUNCTION NAME="InitialConditions">
-      <F VAR="u,v,p" FILE="mesh_flat_eig_0.fld" />
-    </FUNCTION>
+    <!-- <FUNCTION NAME="InitialConditions"> -->
+    <!--   <F VAR="u,v,p" FILE="mesh_flat_eig_0.fld" /> -->
+    <!-- </FUNCTION> -->
 
     
-   <!--  <FUNCTION NAME="InitialConditions"> -->
-   <!--    <E VAR="u" VALUE="0" /> -->
-   <!--    <E VAR="v" VALUE="0" /> -->
-   <!--    <E VAR="p" VALUE="0.02*awgn(1.0)" /> -->
-   <!-- </FUNCTION> -->
+    <FUNCTION NAME="InitialConditions">
+      <E VAR="u" VALUE="0" />
+      <E VAR="v" VALUE="0" />
+      <E VAR="p" VALUE="0.02*awgn(1.0)" />
+   </FUNCTION>
   </CONDITIONS>
   <!-- <FILTERS> -->
 

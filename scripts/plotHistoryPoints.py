@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from typing import List, Dict, Tuple, Optional, Union
 import sys
+from scipy.fft import rfft, irfft, rfftfreq
+from scipy.optimize import curve_fit
 
 
 def read_history_points(file_path: str) -> Tuple[np.ndarray, np.ndarray]:
@@ -41,7 +43,10 @@ def read_history_points(file_path: str) -> Tuple[np.ndarray, np.ndarray]:
 
     return new_data, np.array(points_locations)
 
-def read_all_folders(folders: List[str], file_name: str, points: Union[List[int], slice]) -> Tuple[Dict[str, Tuple[np.ndarray, np.ndarray, np.ndarray]], List[str]]:
+
+def read_all_folders(
+    folders: List[str], file_name: str, points: Union[List[int], slice]
+) -> Tuple[Dict[str, Tuple[np.ndarray, np.ndarray, np.ndarray]], List[str]]:
     data_by_folder: Dict[str, Tuple[np.ndarray, np.ndarray, np.ndarray]] = {}
     variable_labels: Optional[List[str]] = ["u", "v", "p"]
 
@@ -83,7 +88,8 @@ def read_all_folders(folders: List[str], file_name: str, points: Union[List[int]
 
     return data_by_folder, variable_labels
 
-def reduceLengthFolder(foldername:str, length:int) -> str:
+
+def reduceLengthFolder(foldername: str, length: int) -> str:
     """Reduce the length of the folder name to the last `length` characters."""
     foldername = foldername.split("/")[-1]
     if len(foldername) > length:
@@ -91,6 +97,65 @@ def reduceLengthFolder(foldername:str, length:int) -> str:
         while foldername[0] == "_":
             foldername = foldername[1:]
     return foldername
+
+
+def getTimeFrequency(
+    time: np.ndarray, signal: np.ndarray, ax, variable_label: str
+) -> None:
+    # use fft to get the frequency
+    fft_data = rfft(signal)
+
+    freq = rfftfreq(len(signal), d=(time[1] - time[0]))
+    omega = 2 * np.pi * freq
+
+    eps = 0.4
+    threshold = eps * np.max(
+        np.abs(fft_data[1:])
+    )  # we skip the mean value (fft_data[0])
+    print("Threshold:", threshold)
+    # fft_data[np.abs(fft_data) < threshold] = 0
+
+    print("Frequencies with significant amplitude for variable:", variable_label)
+    for i in range(len(fft_data)):
+        if np.abs(fft_data[i]) > threshold:
+            print(
+                f"ω (2 π f): {2 * np.pi * freq[i]:.8f}, Amplitude: {np.abs(fft_data[i]):.8f}"
+            )
+
+    # reconstruct the signal from the highest frequencies
+    signal_reconstructed = irfft(fft_data, n=len(signal))
+    # rescale the reconstructed signal
+
+    ax.plot(time, signal_reconstructed, label="ifft signal", linestyle="--")
+
+
+def fitting(x, y, ax):
+    # p0 = np.ones(4)   # initial guess for the coefficients
+    p0 = np.array([np.max(np.abs(y)), x[np.argmax(np.abs(y))], 1.0, 1.0])  # initial guess for the coefficients
+
+    print("Initial guess for v wave packet coefficients:", p0)
+    def fit_v_wavePacket(eta, *params):
+        return v_fit(eta, *params)  # Add return here
+
+    vfit_coeffs, _ = curve_fit(fit_v_wavePacket, x, y, p0=p0)
+
+    vfit = v_fit(x, *vfit_coeffs)
+
+    print("Fitted coefficients for v with wave packet A * exp(-((eta - x0) / sigma) ** 2) * cos(k * (eta - x0)):")
+    print("  A:", vfit_coeffs[0])
+    print("  x0:", vfit_coeffs[1])
+    print("  sigma:", vfit_coeffs[2])
+    print("  k:", vfit_coeffs[3])
+
+    # Plot the fitted wave packet
+    ax.plot(x, vfit, label="Fitted Wave Packet", linestyle="--")
+
+
+def v_fit(x, *params):
+    """Wave packet of the form v = A * exp(-((x - x0) / sigma) ** 2) * cos(k * (x - x0))"""
+    A, x0, sigma, k = params
+    return A * np.exp(-((x - x0) / sigma) ** 2) * np.cos(k * (x - x0))
+    
 
 def plot_comparison(
     folders: List[str],
@@ -100,6 +165,8 @@ def plot_comparison(
     time_min: Optional[float] = None,
     time_max: Optional[float] = None,
     use_relative: bool = False,
+    use_fft: bool = False,
+    do_wave_packet: bool = False,
     save: str = "",
 ) -> None:
     """Plot relative errors of non-temporal variables compared to a reference folder.
@@ -111,9 +178,7 @@ def plot_comparison(
         reference: Index of the folder to use as reference (default: 0).
         time_min: Minimum time value to include in the comparison (default: None).
     """
-    data_by_folder, variable_labels = read_all_folders(
-        folders, file_name, points
-    )
+    data_by_folder, variable_labels = read_all_folders(folders, file_name, points)
 
     # print points locations for reference
     num_variables = len(variable_labels)
@@ -151,7 +216,7 @@ def plot_comparison(
         ref_variables = ref_variables[0, valid_indices]
         for folder in data_by_folder:
             points_loc, time, variables = data_by_folder[folder]
-            valid_indices = time[0,:] >= time_min
+            valid_indices = time[0, :] >= time_min
             data_by_folder[folder] = (
                 points_loc,
                 time[:, valid_indices],
@@ -164,7 +229,7 @@ def plot_comparison(
         ref_variables = ref_variables[0, valid_indices]
         for folder in data_by_folder:
             points_loc, time, variables = data_by_folder[folder]
-            valid_indices = time[0,:] <= time_max
+            valid_indices = time[0, :] <= time_max
             data_by_folder[folder] = (
                 points_loc,
                 time[:, valid_indices],
@@ -192,7 +257,8 @@ def plot_comparison(
             for j, p in enumerate(points):
                 if use_relative:
                     plot = np.abs(
-                        (variables[j, :, i] - ref_variables[j, :, i]) / ref_variables[j, :, i]
+                        (variables[j, :, i] - ref_variables[j, :, i])
+                        / ref_variables[j, :, i]
                     )
                     custom_label = f"{folder} (vs {ref_folder})"
                 else:
@@ -211,6 +277,11 @@ def plot_comparison(
                             + f" point {p}: ({points_loc[p, 0]:.2f}, {points_loc[p, 1]:.2f})"
                         )
                 ax.plot(time[j], plot, label=custom_label)
+                if use_fft and variable_labels[i] != "p":
+                    getTimeFrequency(time[j], plot, ax, variable_labels[i])
+                if do_wave_packet and variable_labels[i] == "v":
+                    fitting(time[j], plot, ax)
+                    
 
         if use_relative:
             ax.set_ylabel(f"Relative Error: {variable_labels[i]}")
@@ -248,7 +319,12 @@ if __name__ == "__main__":
         help=f"Name of the file to read (default: {file_name}).",
     )
     parser.add_argument(
-        "--points", metavar='int', nargs='+', type=int, default=[0], help="Point number to compare (default: [0]).",
+        "--points",
+        metavar="int",
+        nargs="+",
+        type=int,
+        default=[0],
+        help="Point number to compare (default: [0]).",
     )
     parser.add_argument(
         "--reference",
@@ -275,6 +351,18 @@ if __name__ == "__main__":
         help="Use relative error instead of absolute error (default: False).",
     )
     parser.add_argument(
+        "--fft",
+        action="store_true",
+        help="Use FFT to get frequency data (default: False).",
+    )
+
+    parser.add_argument(
+        "--wave_packet",
+        action="store_true",
+        help="Use wave packet fitting for the v variable (default: False).",
+    )
+
+    parser.add_argument(
         "--save",
         default="",
         type=str,
@@ -290,5 +378,7 @@ if __name__ == "__main__":
         time_min=args.time_min,
         time_max=args.time_max,
         use_relative=args.use_relative,
+        use_fft=args.fft,
+        do_wave_packet=args.wave_packet,
         save=args.save,
     )

@@ -124,13 +124,20 @@ def getomega_rNeutralCurve(omega_r: np.ndarray, omega_i: np.ndarray) -> np.ndarr
 #     return nfactor_b
 
 
-def plot(reynolds: np.ndarray, omegas_r: np.ndarray) -> None:
-    fig, ax = plt.subplots()
+def plot(reynolds: np.ndarray, omegas_r: np.ndarray, xpositions: np.ndarray) -> None:
+    fig, ax1 = plt.subplots()
 
-    ax.plot(reynolds, omegas_r, "o")
-    ax.set_xlabel("Re_delta*")
-    ax.set_ylabel("ω_r")
-    ax.grid()
+    ax1.plot(reynolds, omegas_r, "o")
+    ax1.set_xlabel("Re_delta*")
+    ax1.set_ylabel("ω_r")
+    ax1.grid()
+
+    if xpositions.size > 0:
+        ax2 = ax1.twiny()
+        # make invisible plot xpositions vs omegas_r
+        ax2.plot(xpositions, omegas_r, "o", markersize=0)
+        ax2.set_xlabel("x")
+
     plt.title("Neutral curve ω_i = 0")
     plt.show()
 
@@ -146,9 +153,11 @@ def runAnalyticalBlasius(
     omegas_r = np.array([])
 
     reynolds = np.array([])
+    xpositions = np.array([])
 
     if re_vary_bacause_of_deltaStar:
-        xpositions = np.arange(0, 1001, 50)
+        # don't go beyond -150, because the tip of the neutral curve is around there
+        xpositions = np.arange(-150, 1001, 50)
 
         C = 1.7207876573
         alpha_r_min = alpha_r_min / 2
@@ -212,10 +221,11 @@ def runAnalyticalBlasius(
             omegas_r = np.append(omegas_r, o_r)
 
     reynolds = np.repeat(reynolds, 2)  # there are two values of omega_r for each Re
+    xpositions = np.repeat(xpositions, 2)  # there are two values of omega_r for each Re
     print(reynolds)
     print(omegas_r)
     omegas_r = omegas_r.flatten()
-    plot(reynolds, omegas_r)
+    plot(reynolds, omegas_r,xpositions=xpositions)
 
 
 def runSectionsBaseflowDNS(tomlFile: Path, filename_ev: Path) -> None:
@@ -254,13 +264,13 @@ def runSectionsBaseflowDNS(tomlFile: Path, filename_ev: Path) -> None:
 
     reynolds = 1000 * np.sqrt(1 + xpositions * C**2 / 1000)
 
-    plot(reynolds, omegas_r)
+    plot(reynolds, omegas_r,xpositions=xpositions)
 
 
 def main():
     # PARAMETERS TO CHANGE
-    alpha_r_min = 0.03
-    alpha_r_max = 0.4
+    alpha_r_min = 0.01
+    alpha_r_max = 0.5
     alpha_r_num = 50
 
     analyticalBlasius = True
