@@ -72,19 +72,20 @@ function getFolders() {
 
 function runJobs() {
     # Iterate through folders
+    folder0="$(pwd)"
     for folder in "${folders[@]}"; do
         if [ -d "$folder" ]; then
             if [[ "$mode" == "n" ]]; then
                 echo -e "${GREEN}Executing run.sh locally in $folder${NC}"
                 cd "$folder"
                 runLocally.sh "$num_cores" "$mesh_file" "$session_file" & disown
-                cd ..
+                cd "$folder0"
             elif [[ "$mode" == "p" ]]; then
                 if [[ -f "$folder/pbspro.job" ]]; then
                     echo -e "${GREEN}Submitting PBS job in $folder${NC}"
                     cd "$folder"
                     qsub $PBSJOB
-                    cd ..
+                    cd "$folder0"
                 else
                     echo -e "${RED}No file pbspro.job found in $folder${NC}"
                 fi
@@ -93,7 +94,7 @@ function runJobs() {
                     echo -e "${GREEN}Submitting Slurm job in $folder${NC}"
                     cd "$folder"
                     sbatch $SLURMJOB
-                    cd ..
+                    cd "$folder0"
                 else
                     echo -e "${RED}No file slurm.job found in $folder${NC}"
                 fi

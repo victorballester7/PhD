@@ -12,17 +12,17 @@
       <I PROPERTY="Projection"                            VALUE="Galerkin"                   /> 
       <I PROPERTY="EvolutionOperator"                     VALUE="Nonlinear"                  />
       <I PROPERTY="TimeIntegrationMethod"                 VALUE="IMEXOrder2"                 />
-      <!-- <I PROPERTY="SpectralVanishingViscosity"            VALUE="DGKernel"                        /> -->
+      <I PROPERTY="SpectralVanishingViscosity"            VALUE="DGKernel"                        />
       <I PROPERTY="SPECTRALHPDEALIASING"                  VALUE="True"           />
       <I PROPERTY="GlobalSysSoln"                         VALUE="XxtMultiLevelStaticCond" />
     </SOLVERINFO>    
 
     <PARAMETERS>
      <!--General parameters-->
-      <P> TimeStep        = 0.0015      </P>
+      <P> TimeStep        = 0.004      </P>
       <P> NumSteps        = 1000e4     </P>
       <P> IO_CheckSteps   = NumSteps/100         </P> 
-      <P> IO_InfoSteps    = NumSteps/1000       </P> 
+      <P> IO_InfoSteps    = NumSteps/8000       </P> 
       <P> IO_CFLSteps     = IO_InfoSteps         </P>
       <P> HistorySteps    = NumSteps/15000 </P>
       <P> EnergySteps     = IO_InfoSteps * 10</P>
@@ -39,7 +39,7 @@
       <!-- ........................................... -->
       <!-- ........................................... -->
       <!-- ........................................... -->
-      <p> lengthBeforeGap       = -300 </p> <!-- in terms of deltaStar_leadingEdge !-->
+      <p> lengthBeforeGap       = -100 </p> <!-- in terms of deltaStar_leadingEdge !-->
       <!-- ........................................... -->
       <!-- ........................................... -->
       <!-- ........................................... -->
@@ -167,7 +167,7 @@
     <!-- </FUNCTION> -->
 
     <FUNCTION NAME="InitialConditions">
-       <E VAR="u" VALUE="Uinf* (y>0) * (
+       <E VAR="u" VALUE="Uinf * (
                     (
                       (a1_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^1 + a2_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^2 + a3_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^3 + a4_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^4 + a5_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^5 + a6_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^6 + a7_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^7 + a8_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^8 + a9_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^9 + a10_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^10 + a11_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^11) / 
                       (1 + b1_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^1 + b2_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^2 + b3_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^3 + b4_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^4 + b5_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^5 + b6_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^6 + b7_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^7 + b8_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^8 + b9_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^9 + b10_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^10 + b11_u*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^11)
@@ -198,7 +198,7 @@
                          b10_u*(etaMax)^10 +
                          b11_u*(etaMax)^11)
                     ) * (y>=etaMax *  sqrt(1+x*C^2/Re_deltaStar_le) / C))" />
-       <E VAR="v" VALUE="0.5*Uinf*C/(Re_deltaStar_le * sqrt(1+x*C^2/Re_deltaStar_le))*(y>0) * (
+       <E VAR="v" VALUE="0.5*Uinf*C/(Re_deltaStar_le * sqrt(1+x*C^2/Re_deltaStar_le))* (
                     (
                       (a1_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^1 + a2_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^2 + a3_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^3 + a4_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^4 + a5_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^5 + a6_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^6 + a7_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^7 + a8_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^8 + a9_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^9 + a10_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^10 + a11_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^11) / 
                       (1 + b1_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^1 + b2_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^2 + b3_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^3 + b4_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^4 + b5_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^5 + b6_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^6 + b7_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^7 + b8_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^8 + b9_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^9 + b10_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^10 + b11_v*(y*C/sqrt(1+x*C^2/Re_deltaStar_le))^11)

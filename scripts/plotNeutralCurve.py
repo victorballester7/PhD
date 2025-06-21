@@ -127,18 +127,29 @@ def getomega_rNeutralCurve(omega_r: np.ndarray, omega_i: np.ndarray) -> np.ndarr
 def plot(reynolds: np.ndarray, omegas_r: np.ndarray, xpositions: np.ndarray) -> None:
     fig, ax1 = plt.subplots()
 
+    # Plot the main data
     ax1.plot(reynolds, omegas_r, "o")
-    ax1.set_xlabel("Re_delta*")
+    ax1.set_xlabel("Re_δ*")
     ax1.set_ylabel("ω_r")
     ax1.grid()
 
+    # Create the secondary x-axis (top), sharing the y-axis
     if xpositions.size > 0:
         ax2 = ax1.twiny()
-        # make invisible plot xpositions vs omegas_r
-        ax2.plot(xpositions, omegas_r, "o", markersize=0)
+        
+        # Match x-axis limits of the bottom axis
+        ax2.set_xlim(ax1.get_xlim())
+
+        # Choose ticks (can be customized: e.g. np.linspace, or just use all values)
+        tick_locs = reynolds
+        tick_labels = [f"{x}" for x in xpositions]
+
+        ax2.set_xticks(tick_locs)
+        ax2.set_xticklabels(tick_labels)
         ax2.set_xlabel("x")
 
     plt.title("Neutral curve ω_i = 0")
+    plt.tight_layout()
     plt.show()
 
 
@@ -230,9 +241,17 @@ def runAnalyticalBlasius(
 
 def runSectionsBaseflowDNS(tomlFile: Path, filename_ev: Path) -> None:
     xpositions = np.arange(0, 1001, 50)
+    xpositions = np.insert(xpositions, 0, -25)
+    xpositions = np.insert(xpositions, 0, -50)
+    xpositions = np.insert(xpositions, 0, -70)
+
+    # remove x=50
+    xpositions = xpositions[xpositions != 50]
 
     omegas_r = np.array([])
+    omega_r_xpositions = []
     C = 1.7207876573
+    n_interp_dns = 800  # number of points in the DNS interpolation
 
     for x in xpositions:
         re = 1000 * np.sqrt(1 + x * C**2 / 1000)
@@ -242,7 +261,7 @@ def runSectionsBaseflowDNS(tomlFile: Path, filename_ev: Path) -> None:
             [
                 f"re = {re}",
                 'problem = "Custom"',
-                f'filenameUprofile = "/home/victor/Desktop/PhD/src/flatSurfaceRe1000IncNS/linearSolver_blowingSuction/data/points_x{x}_n800.dat"',
+                f'filenameUprofile = "/home/victor/Desktop/PhD/src/incNSboeingGapRe1000/directLinearSolver/blowingSuction/d1.5_w45/wgn/data/points_x{x}_n{n_interp_dns}.dat"'
             ]
         )
         line_startswith = np.array(["re = ", "problem = ", "filenameUprofile = "])
@@ -256,10 +275,10 @@ def runSectionsBaseflowDNS(tomlFile: Path, filename_ev: Path) -> None:
         o_r = getomega_rNeutralCurve(omega_r, omega_i)
 
         omegas_r = np.append(omegas_r, o_r)
+        omega_r_xpositions.append([int(x), o_r.tolist()])
 
     xpositions = np.repeat(xpositions, 2)  # there are two values of omega_r for each Re
-    print(xpositions)
-    print(omegas_r)
+    print(omega_r_xpositions)
     omegas_r = omegas_r.flatten()
 
     reynolds = 1000 * np.sqrt(1 + xpositions * C**2 / 1000)
@@ -273,7 +292,7 @@ def main():
     alpha_r_max = 0.5
     alpha_r_num = 50
 
-    analyticalBlasius = True
+    analyticalBlasius = False
 
     # if analyticalBlasius = True
     re_vary_bacause_of_deltaStar = True  # in this case (same as in the DNS simulations), we need to propperly rescale Re alpha and the outpu omega_r

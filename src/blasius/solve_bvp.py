@@ -42,7 +42,6 @@ def solve_BVP_comNS(dim_system, x, Pr, muInf, TInf, uInf, vinf, cp):
     TRef = 273.15
     S = 110.4
 
-
     # total enthalpy at infinity
     h0Inf = cp * TInf + 0.5 * (uInf**2 + vinf**2)
 
@@ -59,7 +58,11 @@ def solve_BVP_comNS(dim_system, x, Pr, muInf, TInf, uInf, vinf, cp):
         df1_dx = f2
         df2_dx = -dC / C * f2 - 1 / C * f0 * f2
         dg0_dx = g1
-        dg1_dx = -dC/C *g1 - uInf**2 / h0Inf *(Pr -1) * ( f1 * df2_dx + f2**2 + dC/C * f1 * f2) - 1 / C * Pr *f0*g1
+        dg1_dx = (
+            -dC / C * g1
+            - uInf**2 / h0Inf * Pr / C * f2**2
+            - Pr / C * f0 * g1
+        )
         return np.vstack((df0_dx, df1_dx, df2_dx, dg0_dx, dg1_dx))
 
     # Define the boundary conditions

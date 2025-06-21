@@ -362,7 +362,7 @@ function modifyFile {
   fi
 
   # 4. Compute new timestep
-  newCFL="0.29"
+  newCFL="0.3"
   new_timestep=$(echo "$old_timestep * $mult * $newCFL / ${cfls[0]}" | bc -l)
 
 

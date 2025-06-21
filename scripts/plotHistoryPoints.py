@@ -5,6 +5,7 @@ from typing import List, Dict, Tuple, Optional, Union
 import sys
 from scipy.fft import rfft, irfft, rfftfreq
 from scipy.optimize import curve_fit
+from mpl_toolkits.mplot3d import Axes3D  # needed to enable 3D plotting
 
 
 def read_history_points(file_path: str) -> Tuple[np.ndarray, np.ndarray]:
@@ -108,19 +109,31 @@ def getTimeFrequency(
     freq = rfftfreq(len(signal), d=(time[1] - time[0]))
     omega = 2 * np.pi * freq
 
-    eps = 0.4
+    eps = 0.1
     threshold = eps * np.max(
         np.abs(fft_data[1:])
     )  # we skip the mean value (fft_data[0])
-    print("Threshold:", threshold)
     # fft_data[np.abs(fft_data) < threshold] = 0
 
-    print("Frequencies with significant amplitude for variable:", variable_label)
+    idx_to_print = []
+
+    print(f"Frequencies greater than the {eps*100}% of the highest amplitude (expluding mean mode, thus {threshold:.8f}) for variable {variable_label}")
     for i in range(len(fft_data)):
         if np.abs(fft_data[i]) > threshold:
-            print(
-                f"ω (2 π f): {2 * np.pi * freq[i]:.8f}, Amplitude: {np.abs(fft_data[i]):.8f}"
-            )
+            idx_to_print.append([i, np.abs(fft_data[i])])
+    idx_to_print = np.array(idx_to_print)
+    
+    if len(idx_to_print) == 0:
+        print("No frequencies found above the threshold.")
+        return
+
+    # sort by amplitude
+    idx_to_print = idx_to_print[np.argsort(np.abs(idx_to_print[:, 1]))][::-1]
+
+    for i, A in idx_to_print:
+        print(
+            f"ω (2 π f): {2 * np.pi * freq[int(i)]:.8f}, Amplitude: {A:.8f}"
+        )
 
     # reconstruct the signal from the highest frequencies
     signal_reconstructed = irfft(fft_data, n=len(signal))
@@ -166,6 +179,7 @@ def plot_comparison(
     time_max: Optional[float] = None,
     use_relative: bool = False,
     use_fft: bool = False,
+    dynamical_system: bool = False,
     do_wave_packet: bool = False,
     save: str = "",
 ) -> None:
@@ -236,11 +250,19 @@ def plot_comparison(
                 variables[:, valid_indices],
             )
 
-    if num_variables == 3:
+    if num_variables == 3 and not dynamical_system:
         fig, axes = plt.subplots(1, 3, figsize=(15, 5), sharex=True)
-    else:
+    elif not dynamical_system:
         fig, axes = plt.subplots(2, 2, figsize=(10, 6), sharex=True)
-
+    else:
+        threeD_fig = False
+        if threeD_fig:
+            fig = plt.figure(figsize=(8, 6))
+            axes = fig.add_subplot(111, projection='3d')
+        else:
+            fig, axes = plt.subplots(1, 1, figsize=(8, 6), sharex=True)
+        
+    axes = np.atleast_1d(axes)
     for i, ax in enumerate(axes.flatten()):
         if i >= num_variables:
             break
@@ -276,7 +298,10 @@ def plot_comparison(
                             custom_label
                             + f" point {p}: ({points_loc[p, 0]:.2f}, {points_loc[p, 1]:.2f})"
                         )
-                ax.plot(time[j], plot, label=custom_label)
+                if not dynamical_system:
+                    ax.plot(time[j], plot, label=custom_label)
+                else:
+                    ax.plot(variables[j, :, 0], variables[j, :, 1], variables[j,:, 2], label=custom_label)
                 if use_fft and variable_labels[i] != "p":
                     getTimeFrequency(time[j], plot, ax, variable_labels[i])
                 if do_wave_packet and variable_labels[i] == "v":
@@ -290,13 +315,17 @@ def plot_comparison(
         ax.grid()
         ax.legend()
 
-    if num_variables == 3:
+    if num_variables == 3 and not dynamical_system:
         axes[0].set_xlabel("Time")
         axes[1].set_xlabel("Time")
         axes[2].set_xlabel("Time")
-    else:
+    elif not dynamical_system:
         axes[-1, 0].set_xlabel("Time")
         axes[-1, 1].set_xlabel("Time")
+    else:
+        axes[0].set_xlabel("u")
+        axes[0].set_ylabel("v")
+        # axes[0].set_zlabel("p")
     plt.tight_layout()
     if save == "":
         plt.show()
@@ -357,6 +386,12 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        "--dynamicalSystem",
+        action="store_true",
+        help="Plot the u vs v phase space for dynamical systems (default: False).",
+    )
+
+    parser.add_argument(
         "--wave_packet",
         action="store_true",
         help="Use wave packet fitting for the v variable (default: False).",
@@ -379,6 +414,7 @@ if __name__ == "__main__":
         time_max=args.time_max,
         use_relative=args.use_relative,
         use_fft=args.fft,
+        dynamical_system=args.dynamicalSystem,
         do_wave_packet=args.wave_packet,
         save=args.save,
     )

@@ -15,9 +15,12 @@ RESET="\e[0m"
 # Get user input
 # X=(15 20 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 1000)
 # X=(-70 -50 -25 0 20 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 1000)
-X=(-100)
-ymin=0
-ymax=150
+
+constVar="x"
+constValue=(-70 -50 -25 0 20 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 1000)
+varValueMIN=0
+varValueMAX=150
+
 N=800
 datadir="data"
 
@@ -25,10 +28,10 @@ datadir="data"
 # HOST="typhoon"
 HOST="hpc"
 
-DIR="flatSurfaceRe1000IncNS/linearSolver_blowingSuction"
-MESH_REMOTE="mesh_flat.xml"
+DIR="incNSboeingGapRe1000/directLinearSolver/blowingSuction/d1.5_w45/wgn"
+MESH_REMOTE="mesh_d1.5_w45.xml"
 # FLD_REMOTE="mesh_flat_57.chk"
-CASE="d1_w60"
+# CASE="d1_w60"
 # DIR="boeingGapRe1000IncNS/baseflow/dns/${CASE}"
 # DIR="boeingGapRe1000IncNS/linearSolver_blowingSuction/${CASE}"
 # MESH_REMOTE="mesh_${CASE}.xml"
@@ -50,8 +53,8 @@ overwrite_all=false
 skip_all=false
 
 function genPointsFile {
-    local x=$1
-    local output_file="${datadir}/points_x${x}_n${N}"
+    local varA=$1
+    local output_file="${datadir}/points_${constVar}${varA}_n${N}"
     
     # Check if .dat file already exists
     if [ -f "${DIR_LOCAL}/${output_file}.dat" ]; then
@@ -88,7 +91,7 @@ function genPointsFile {
         fi
     fi
 
-    echo -e "${YELLOW}Generating .pts file for x=$x...${RESET}"
+    echo -e "${YELLOW}Generating .pts file for ${constVar} = $varA...${RESET}"
     mkdir -p "${DIR_LOCAL}/${datadir}"
     
     # Create and write to the .pts file
@@ -98,7 +101,14 @@ function genPointsFile {
         echo '<POINTS DIM="2" FIELDS="">'
         for ((i = 0; i < N; i++)); do
             step=$(echo "scale=6; $i / ($N - 1)" | bc)
-            y=$(echo "scale=6; $ymin + ($ymax - $ymin) * $step * $step" | bc)
+            varB=$(echo "scale=6; $varValueMIN + ($varValueMAX - $varValueMIN) * $step * $step" | bc)
+            if [ "$constVar" = "x" ]; then
+                x=$varA
+                y=$varB
+            else
+                x=$varB
+                y=$varA
+            fi
             printf "%.6f %.6f\n" "$x" "$y"
         done
         echo '</POINTS>'
@@ -111,10 +121,10 @@ function genPointsFile {
 }
 
 function interpolateData {
-    local x=$1
-    local output_file="${datadir}/points_x${x}_n${N}"
+    local varA=$1
+    local output_file="${datadir}/points_${constVar}${varA}_n${N}"
     
-    echo -e "${CYAN}Interpolating field data to points for x=$x...${RESET}"
+    echo -e "${CYAN}Interpolating field data to points for ${constVar}=$varA...${RESET}"
     
     ssh "${USER}@${HOST}" /bin/bash << EOF
         cd "${DIR_REMOTE}"
@@ -133,18 +143,18 @@ EOF
 EOF
     
     scp "${USER}@${HOST}:${DIR_REMOTE}/${output_file}.dat" "${DIR_LOCAL}/$datadir"
-    echo -e "${GREEN}Field data interpolated to points for x=$x successfully!${RESET}"
+    echo -e "${GREEN}Field data interpolated to points for ${constVar} = $varA successfully!${RESET}"
 }
 
 # Create a directory to store all the data
 mkdir -p "${DIR_LOCAL}/${datadir}"
 
 # Process each X value
-for x in "${X[@]}"; do
-    echo -e "${CYAN}Processing x = $x${RESET}"
-    genPointsFile "$x" || continue
-    interpolateData "$x"
-    echo -e "${GREEN}Completed processing for x = $x${RESET}"
+for var in "${constValue[@]}"; do
+    echo -e "${CYAN}Processing ${constVar} = $var${RESET}"
+    genPointsFile "$var" || continue
+    interpolateData "$var"
+    echo -e "${GREEN}Completed processing for ${constVar} = $var${RESET}"
     echo "----------------------------------------"
 done
 

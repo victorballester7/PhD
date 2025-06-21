@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <NEKTAR>  
   <EXPANSIONS>    
-    <E COMPOSITE="C[100,101,102]" NUMMODES="9" FIELDS="u,v" TYPE="MODIFIED" />  
-    <E COMPOSITE="C[100,101,102]" NUMMODES="8" FIELDS="p" TYPE="MODIFIEDQUADPLUS1" />
+    <E COMPOSITE="C[100,101,102]" NUMMODES="7" FIELDS="u,v" TYPE="MODIFIED" />  
+    <E COMPOSITE="C[100,101,102]" NUMMODES="6" FIELDS="p" TYPE="MODIFIEDQUADPLUS1" />
   </EXPANSIONS>
   
   <CONDITIONS>    
@@ -18,7 +18,7 @@
 
     <PARAMETERS>
      <!--General parameters-->
-      <P> TimeStep = .00124311496049653125 </P>
+      <P> TimeStep = .00228636753358102314 </P>
       <P> NumSteps        = 1000e4     </P>
       <P> IO_CheckSteps   = NumSteps/100         </P> 
       <P> IO_InfoSteps    = NumSteps/2000       </P> 
@@ -181,7 +181,7 @@
     </BOUNDARYCONDITIONS>
     
     <FUNCTION NAME="InitialConditions">
-      <F VAR="u,v,p" FILE="mesh_d1.25_w60_68.chk" />
+      <F VAR="u,v,p" FILE="mesh_d1.25_w60_101.chk" />
     </FUNCTION>
 
    <!--  <FUNCTION NAME="InitialConditions"> -->

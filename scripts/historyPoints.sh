@@ -101,14 +101,14 @@ historyPoints+=("0 1 0")
 # points inside the gap
 x=5
 step=5
-while (( $(echo "$x <= $width" | bc -l) )); do
+while (( $(echo "$x < $width" | bc -l) )); do
     historyPoints+=("$x 1 0")
     historyPoints+=("$x $(echo "-$depth / 2" | bc -l) 0")
     x=$(echo "$x + $step" | bc -l)
 done
 
 # downstream points
-for offset in 5 10 15 25 35 50 75 100 125 150 175 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 1000; do
+for offset in 0 5 10 15 25 35 50 75 100 125 150 175 200 225 250 275 300 325 350 375 400 425 450 475 500 525 550 575 600 625 650 675 700 725 750 775 800 825 850 875 900 925 950 975 1000; do
     x=$(echo "$width + $offset" | bc -l)
     historyPoints+=("$x 1 0")
 done

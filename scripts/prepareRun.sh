@@ -84,17 +84,17 @@ function convert_msh2xml {
 }
 
 function editJobs {
-  parent_dir=$(basename "$(dirname "$(realpath $session_file)")")  
+  codename="d${depth%.}_w${width%.}"
 
   # Check if there are any .job files in the current directory
   if ls *.job 1> /dev/null 2>&1; then
     for job_file in *.job; do
       # If the job_file contains the pattern 'pbspro'
       if [[ "$job_file" == *pbspro* ]]; then
-        sed -i "s/^#PBS -N .*/#PBS -N ${parent_dir}/" "${job_file}"
+        sed -i "s/^#PBS -N .*/#PBS -N ${codename}/" "${job_file}"
       # If the job_file contains the pattern 'slurm'
       else 
-        sed -i "s/^#SBATCH --job-name=.*/#SBATCH --job-name=${parent_dir}/" "${job_file}"
+        sed -i "s/^#SBATCH --job-name=.*/#SBATCH --job-name=${codename}/" "${job_file}"
       fi
     done
   else
@@ -109,11 +109,10 @@ source $DIR_SCRIPT/bashFunctions/getMeshSessionFiles.sh
 source $DIR_SCRIPT/bashFunctions/getDepthANDWidth.sh
 
 # Check argument count
-# if [ "$#" -ne 2 ]; then
-#     echo -e "${RED}Usage: $0 depth width${RESET}"
-#     echo -e "${YELLOW}Example: $0 4 15${RESET}"
-#     exit 1
-# fi
+if [ "$#" -ge 1 ]; then
+    echo -e "${YELLOW}A directory argument is provided. Moving to ${1}${RESET}"
+    cd "$1" || { echo -e "${RED}Failed to change directory to $1${RESET}"; exit 1; }
+fi
 
 # Directory to search (current directory)
 directory=$(pwd)

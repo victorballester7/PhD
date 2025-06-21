@@ -200,6 +200,9 @@ def main():
     # xpositions = getDatafromDNS(n_interp_dns, pathCurrentScript)
     xpositions = np.arange(0, 1001, 50)
     xpositions = np.insert(xpositions, 1, 20)
+    xpositions = np.insert(xpositions, 0, -25)
+    xpositions = np.insert(xpositions, 0, -50)
+    xpositions = np.insert(xpositions, 0, -70)
 
     tomlFile = "../../orrSommerfeld/config/input.toml"
     tomlFile = Path(os.path.join(pathCurrentScript, tomlFile))
@@ -220,7 +223,7 @@ def main():
 
             print(f"Computing N-factor for x = {x}")
             # uprof_filename = f'filenameUprofile = "/home/victor/Desktop/PhD/src/boeingGapRe1000IncNS/baseflow/dns/d4_w{widthGap}/data/points_x{x}_n{n_interp_dns}.dat"'
-            uprof_filename = f'filenameUprofile = "/home/victor/Desktop/PhD/src/flatSurfaceRe1000IncNS/directLinearSolver/blowingSuction/data/points_x{x}_n{n_interp_dns}.dat"'
+            uprof_filename = f'filenameUprofile = "/home/victor/Desktop/PhD/src/incNSboeingGapRe1000/directLinearSolver/blowingSuction/d1.5_w45/wgn/data/points_x{x}_n{n_interp_dns}.dat"'
             runOStemporalAnalysis(uprof_filename, tomlFile)
             omega_r, omega_i, alpha_r = readData(filename_ev)
 

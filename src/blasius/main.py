@@ -97,6 +97,10 @@ def main():
     # take first p+1 coefficients to u_fit and last p to v_fit
     # ufit = u_fit(x, *p0)
     # vfit = v_fit(x, *p0)
+    if incNS:
+        print("Using INCOMPRESSIBLE Navier-Stokes equations")
+    else:
+        print("Using COMPRESSIBLE Navier-Stokes equations")
 
     print("delta        = ", delta, "* x / sqrt(Re_x)")
     print("delta*       = ", deltaStar, "* x / sqrt(Re_x)")
