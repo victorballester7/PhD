@@ -42,6 +42,8 @@ def read_history_points(file_path: str) -> Tuple[np.ndarray, np.ndarray]:
 
     new_data = np.array([data[i::num_points] for i in range(num_points)])
 
+    print(f"Read {len(new_data)} points from {file_path}")
+
     return new_data, np.array(points_locations)
 
 

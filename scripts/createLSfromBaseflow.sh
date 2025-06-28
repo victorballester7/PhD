@@ -33,7 +33,7 @@ function readInput {
   width=$2
   codename="d${depth}_w${width}"
   localDIR_LS=$(pwd)
-  localDIR_baseflow="${localDIR_LS}/../baseflow/dns"
+  localDIR_baseflow="/home/victor/Desktop/PhD/src/incNSboeingGapRe1000/baseflow/dns"
   
   localDIRtmp="${localDIR_LS##*/Desktop/}"
   localDIRtmp="Desktop/${localDIRtmp/src/runs}"

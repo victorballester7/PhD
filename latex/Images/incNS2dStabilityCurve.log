@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.16)  21 JUN 2025 19:38
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.16)  28 JUN 2025 14:38
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -347,16 +347,16 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 Package pgfplots notification 'compat/show suggested version=true': document has been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 314.
+(Font)              <7> on input line 325.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 314.
+(Font)              <5> on input line 325.
 
 
 [1
 
 
 Non-PDF special ignored!
-<special> papersize=291.9897pt,237.3773pt
+<special> papersize=291.9897pt,237.37547pt
 {/opt/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (./incNS2dStabilityCurve.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
@@ -364,15 +364,15 @@ L3 programming layer <2025-03-26>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 22849 strings out of 469626
- 610189 string characters out of 5446523
- 1134426 words of memory out of 5000000
- 49335 multiletter control sequences out of 15000+600000
+ 22860 strings out of 469626
+ 610491 string characters out of 5446523
+ 1141986 words of memory out of 5000000
+ 49346 multiletter control sequences out of 15000+600000
  626825 words of font info for 40 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 102i,18n,107p,742b,2190s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 102i,18n,107p,742b,2191s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
-Output written on incNS2dStabilityCurve.pdf (1 page, 45355 bytes).
+Output written on incNS2dStabilityCurve.pdf (1 page, 46512 bytes).
 PDF statistics:
  26 PDF objects out of 1000 (max. 8388607)
  16 compressed objects within 1 object stream

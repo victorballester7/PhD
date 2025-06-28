@@ -8,10 +8,12 @@ import sys
 import os
 
 # Example data
-data = np.array(
+data_dw = np.array(
     [
         [1, 10, -1, True],
+        [1, 15, -1, True],
         [1, 20, -1, True],
+        [1, 25, -1, True],
         [1, 30, -1, True],
         [1, 34, -1, True],
         [1, 38, -1, True],
@@ -23,8 +25,11 @@ data = np.array(
         [1, 110, -1, True],
         [1, 130, -1, True],
         [1.25, 10, -1, True],
+        [1.25, 15, -1, True],
         [1.25, 20, -1, True],
+        [1.25, 25, -1, True],
         [1.25, 30, -1, True],
+        [1.25, 35, -1, True],
         [1.25, 40, -1, True],
         [1.25, 50, -1, True],
         [1.25, 60, -1, True],
@@ -34,8 +39,11 @@ data = np.array(
         [1.25, 110, -1, True],
         [1.25, 130, -1, True],
         [1.5, 10, -1, True],
+        [1.5, 15, -1, True],
         [1.5, 20, -1, True],
+        [1.5, 25, -1, True],
         [1.5, 30, -1, True],
+        [1.5, 35, -1, True],
         [1.5, 45, -1, True],
         [1.5, 50, -1, True],
         [1.5, 55, -1, True],  # I think it starts absolute instability but very slightly
@@ -49,8 +57,11 @@ data = np.array(
         [1.5, 100, 1, True],
         [1.5, 120, 1, True],
         [1.75, 10, -1, True],
+        [1.75, 15, -1, True],
         [1.75, 20, -1, True],
+        [1.75, 25, -1, True],
         [1.75, 30, -1, True],
+        [1.75, 35, -1, True],
         [1.75, 40, -1, True],
         [1.75, 43, -1, True],
         [1.75, 45, -1, True],
@@ -100,12 +111,8 @@ data = np.array(
         [2.25, 40, 0.5, True],
         [2.25, 43, 0.5, True],
         # this one is very interesting. we have an absolute instability that existes a freqeuncy convectively unstable, but then in the middle of the domain that frequency is not small enough, and so it becomes convectively stable (check neutral stability curve for blasius)
-        [
-            2.25,
-            45,
-            1,
-            True,
-        ],  # it's probably a transition point, but I put it already as unstable
+        [2.25, 45, 1, True],
+        # it's probably a transition point, but I put it already as unstable
         [2.25, 47, 1, True],
         [2.25, 50, 1, True],
         [2.25, 55, 1, True],
@@ -207,9 +214,9 @@ jeff_line = np.array(
 )
 
 # Separamos
-depths = data[:, 0]
-widths = data[:, [1, 3]]
-labels = data[:, 2]
+depths = data_dw[:, 0]
+widths = data_dw[:, [1, 3]]
+labels = data_dw[:, 2]
 
 plotargs_array = np.array(
     [
@@ -329,7 +336,6 @@ def plot_lines(ax):
 
 
 def plot_lines_manual(ax):
-   
     lines = [unstable_line1, unstable_line2, hopf]
     labels = [
         "breakdown",
@@ -412,10 +418,10 @@ def doPlot(
 
 def plot(add_images: bool, doMarks: bool, add_lines: bool):
     # Listas donde guardaremos los resultados
-    stable_values = data[data[:, 2] == -1]
-    abs_unstable = data[data[:, 2] == 0.5]
-    abs_conv_unstable = data[data[:, 2] == 0.75]
-    nl_unstable = data[data[:, 2] == 1]
+    stable_values = data_dw[data_dw[:, 2] == -1]
+    abs_unstable = data_dw[data_dw[:, 2] == 0.5]
+    abs_conv_unstable = data_dw[data_dw[:, 2] == 0.75]
+    nl_unstable = data_dw[data_dw[:, 2] == 1]
 
     # plot_array = [stable_values, abs_unstable, abs_conv_unstable, nl_unstable]
     plot_array = [stable_values, abs_unstable, nl_unstable]
@@ -541,6 +547,7 @@ def addImageToPlot(
     )
     ax.add_artist(ab)
 
+
 def copy2Tex(pathTex: str) -> None:
     """
     Updates the TikZ plot inside the .tex file by replacing the coordinates
@@ -549,9 +556,9 @@ def copy2Tex(pathTex: str) -> None:
     import re
 
     # Filter and prepare points
-    stable_points = data[data[:, 2] == -1][:, :2]
-    abs_unstable = data[data[:, 2] == 0.5][:, :2]
-    chaos = data[data[:, 2] == 1][:, :2]
+    stable_points = data_dw[data_dw[:, 2] == -1][:, :2]
+    abs_unstable = data_dw[data_dw[:, 2] == 0.5][:, :2]
+    chaos = data_dw[data_dw[:, 2] == 1][:, :2]
 
     # Convert to TikZ format (x = column 1, y = column 0)
     def format_coords(points):
@@ -593,6 +600,7 @@ def copy2Tex(pathTex: str) -> None:
 
     print(f"{pathTex} updated with new point data.")
 
+
 # def copy2Tex(pathTex: str) -> None:
 #     """
 #     updates the tex file with the current points of this script
@@ -614,7 +622,6 @@ def copy2Tex(pathTex: str) -> None:
 #         for p in cases:
 #             block += f" ({p[1]}, {p[0]}) "
 #         plot_blocks.append(block)
-
 
 
 if __name__ == "__main__":

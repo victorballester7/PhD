@@ -3,3 +3,22 @@ tutorials/
 nektar*/
 **/credentials*.py
 **/__pycache__/
+
+
+#Tex files:
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.synctex(busy)
+*.nav
+*.snm
+*.toc
+*.xml
+*.script
+*.table

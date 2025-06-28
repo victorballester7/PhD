@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <NEKTAR>  
   <EXPANSIONS>    
-    <E COMPOSITE="C[100,101,102]" NUMMODES="9" FIELDS="u,v" TYPE="MODIFIED" />  
-    <E COMPOSITE="C[100,101,102]" NUMMODES="8" FIELDS="p" TYPE="MODIFIEDQUADPLUS1" />
+    <E COMPOSITE="C[100,101,102]" NUMMODES="7" FIELDS="u,v" TYPE="MODIFIED" />  
+    <E COMPOSITE="C[100,101,102]" NUMMODES="6" FIELDS="p" TYPE="MODIFIEDQUADPLUS1" />
   </EXPANSIONS>
   
   <CONDITIONS>    
@@ -18,9 +18,9 @@
     </SOLVERINFO>    
 
     <PARAMETERS>
-    <!--General parameters-->
-      <P> TimeStep        = 0.0025      </P>
-      <P> NumSteps        = 3000e3     </P>
+            <!--General parameters-->
+      <P> TimeStep        = 0.0044      </P>
+      <P> NumSteps        = 4000e3     </P>
       <P> IO_CheckSteps   = NumSteps/100         </P> 
       <P> IO_InfoSteps    = NumSteps/8000        </P> 
       <P> IO_CFLSteps     = IO_InfoSteps         </P>
@@ -34,15 +34,12 @@
       <!-- <P> HomModesZ       = 2                       </P> -->
       <!-- <P> LZ              = 2                     </P> -->
       
-      <!--Disturbance strip parameters-->
-      <P> omega_r         = 0.0461817                     </P> <!-- from Orr-Sommerfeld equation, doing temporal anlaysis varying alpha = (alpha_r, 0) \in (0,1) x {0} and getting the omega_r as the maximum of the curve (omega_r, omega_i) containing all the most unstable eigenvalues (for each alpha) !-->
-      <P> omega           = omega_r          </P> <!-- frequency of the disturbance wave !-->
-      <P> alpha_r         = 0.142857               </P> <!-- from Orr-Sommerfeld equation, respective alpha_r to the omega_r !-->
-      <P> Amplitude       = 0.003                   </P> 
-      <P> weight          = 5                  </P> <!-- weight of the Gaussian function !-->
-      <P> x0        = -70                     </P> <!--[m], left end of strip-->
-      <P> lengthStrip     = PI/alpha_r             </P> <!--[m], span of strip in x-->
       
+      <!--Disturbance strip parameters-->
+      <P> Amplitude       = 0.001                   </P> 
+      <P> x0        = -95                     </P> <!--[m], left end of strip-->
+      <P> weight          = 5                  </P> <!-- weight of the Gaussian function !-->
+
       <!-- Parameters for the simulation -->
       <!-- To understand the formulas in the parameters, please refer to the file docs/20250414_Blasius_formulas.md -->
       <!-- CHANGE THIS BEFORE RUNNING THE SIMULATION -->
@@ -147,13 +144,13 @@
 
       <REGION REF="3">  <!-- bottom = wall no slip !-->  
         <D VAR="u" VALUE="0" />
-        <D VAR="v" USERDEFINEDTYPE="TimeDependent" VALUE="Amplitude*exp(-weight*(x-x0)^2)*sin(omega_r*t)" />    
+        <D VAR="v" USERDEFINEDTYPE="TimeDependent" VALUE="Amplitude*exp(-weight*(x-x0)^2)*awgn(1.0)" />      
         <N VAR="p" USERDEFINEDTYPE="H" VALUE="0" />  
       </REGION>    
       </BOUNDARYCONDITIONS>
 
     <FUNCTION NAME="BaseFlow">
-      <F VAR="u,v,p" FILE="baseflow.fld"   />
+      <F VAR="u,v,p" FILE="../baseflow.fld"   />
     </FUNCTION>
 
     
@@ -180,27 +177,68 @@
       <PARAM NAME="OutputFrequency">HistorySteps</PARAM>
       <PARAM NAME="Points">
     -100 1 0
+    -75 1 0
     -50 1 0
-    -30 1 0
+    -35 1 0
+    -25 1 0
+    -15 1 0
     -10 1 0
+    -5 1 0
     0 1 0
-    3.75000000000000000000 1 0
-    3.75000000000000000000 -1.33333333333333333333 0
-    3.75000000000000000000 -2.66666666666666666666 0
-    7.50000000000000000000 1 0
-    7.50000000000000000000 -1.33333333333333333333 0
-    7.50000000000000000000 -2.66666666666666666666 0
-    11.25000000000000000000 1 0
-    11.25000000000000000000 -1.33333333333333333333 0
-    11.25000000000000000000 -2.66666666666666666666 0
+    5 1 0
+    5 -.62500000000000000000 0
+    10 1 0
+    10 -.62500000000000000000 0
     15 1 0
+    15 -.62500000000000000000 0
+    20 1 0
+    20 -.62500000000000000000 0
+    25 1 0
+    25 -.62500000000000000000 0
+    30 1 0
     35 1 0
-    75 1 0
-    165 1 0
-    315 1 0
-    515 1 0
-    715 1 0
-    915 1 0
+    40 1 0
+    45 1 0
+    55 1 0
+    65 1 0
+    80 1 0
+    105 1 0
+    130 1 0
+    155 1 0
+    180 1 0
+    205 1 0
+    230 1 0
+    255 1 0
+    280 1 0
+    305 1 0
+    330 1 0
+    355 1 0
+    380 1 0
+    405 1 0
+    430 1 0
+    455 1 0
+    480 1 0
+    505 1 0
+    530 1 0
+    555 1 0
+    580 1 0
+    605 1 0
+    630 1 0
+    655 1 0
+    680 1 0
+    705 1 0
+    730 1 0
+    755 1 0
+    780 1 0
+    805 1 0
+    830 1 0
+    855 1 0
+    880 1 0
+    905 1 0
+    930 1 0
+    955 1 0
+    980 1 0
+    1005 1 0
       </PARAM>
     </FILTER>
   </FILTERS>

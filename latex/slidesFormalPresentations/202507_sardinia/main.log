@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.16)  21 JUN 2025 19:42
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.16)  28 JUN 2025 13:39
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -820,116 +820,210 @@ Package pdftex.def Info: Images/wing_closer.jpg  used on input line 55.
 [2
 
  <./Images/wing.jpg> <./Images/wing_closer.jpg>]
+<../../Images/domainBaseflow.pdf, id=42, 620.19803pt x 181.95679pt>
+File: ../../Images/domainBaseflow.pdf Graphic file (type pdf)
+<use ../../Images/domainBaseflow.pdf>
+Package pdftex.def Info: ../../Images/domainBaseflow.pdf  used on input line 71.
+(pdftex.def)             Requested size: 335.74263pt x 98.50229pt.
+
 
 [3
 
-{/opt/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
-<Images/jeffPaper.pdf, id=57, 425.75864pt x 179.1764pt>
-File: Images/jeffPaper.pdf Graphic file (type pdf)
-<use Images/jeffPaper.pdf>
-Package pdftex.def Info: Images/jeffPaper.pdf  used on input line 92.
-(pdftex.def)             Requested size: 166.19095pt x 69.93864pt.
-
-Overfull \hbox (0.79999pt too wide) in paragraph at lines 92--92
- [] 
- []
-
-<Images/jeffHeatMap.pdf, id=58, 228.71246pt x 207.91376pt>
-File: Images/jeffHeatMap.pdf Graphic file (type pdf)
-<use Images/jeffHeatMap.pdf>
-Package pdftex.def Info: Images/jeffHeatMap.pdf  used on input line 92.
-(pdftex.def)             Requested size: 166.19095pt x 151.081pt.
+{/opt/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc} <../../Images/domainBaseflow.pdf>]
+<Images/incNS2dStabilityCurve_equilibria.pdf, id=85, 291.98985pt x 237.37685pt>
+File: Images/incNS2dStabilityCurve_equilibria.pdf Graphic file (type pdf)
+<use Images/incNS2dStabilityCurve_equilibria.pdf>
+Package pdftex.def Info: Images/incNS2dStabilityCurve_equilibria.pdf  used on input line 79.
+(pdftex.def)             Requested size: 167.8713pt x 136.4725pt.
 
 
 [4
 
- <./Images/jeffPaper.pdf> <./Images/jeffHeatMap.pdf>]
+ <./Images/incNS2dStabilityCurve_equilibria.pdf>]
+<Images/stablePoints1.pdf, id=104, 285.32797pt x 115.65608pt>
+File: Images/stablePoints1.pdf Graphic file (type pdf)
+<use Images/stablePoints1.pdf>
+Package pdftex.def Info: Images/stablePoints1.pdf  used on input line 86.
+(pdftex.def)             Requested size: 335.74263pt x 136.09709pt.
+
 
 [5
 
-]
-<Images/incNS2dStabilityCurve_equilibria.pdf, id=183, 291.98985pt x 237.37685pt>
-File: Images/incNS2dStabilityCurve_equilibria.pdf Graphic file (type pdf)
-<use Images/incNS2dStabilityCurve_equilibria.pdf>
-Package pdftex.def Info: Images/incNS2dStabilityCurve_equilibria.pdf  used on input line 110.
-(pdftex.def)             Requested size: 167.8713pt x 136.4725pt.
+ <./Images/stablePoints1.pdf>]
+<Images/stablePoints2.pdf, id=143, 285.32797pt x 115.65608pt>
+File: Images/stablePoints2.pdf Graphic file (type pdf)
+<use Images/stablePoints2.pdf>
+Package pdftex.def Info: Images/stablePoints2.pdf  used on input line 93.
+(pdftex.def)             Requested size: 335.74263pt x 136.09709pt.
 
 
 [6
 
- <./Images/incNS2dStabilityCurve_equilibria.pdf>]
-<Images/stablePoints1.pdf, id=208, 285.32797pt x 115.65608pt>
-File: Images/stablePoints1.pdf Graphic file (type pdf)
-<use Images/stablePoints1.pdf>
-Package pdftex.def Info: Images/stablePoints1.pdf  used on input line 117.
-(pdftex.def)             Requested size: 335.74263pt x 136.09709pt.
+ <./Images/stablePoints2.pdf>]
+<Images/incNS2dStabilityCurve_partial.pdf, id=185, 291.98985pt x 237.37685pt>
+File: Images/incNS2dStabilityCurve_partial.pdf Graphic file (type pdf)
+<use Images/incNS2dStabilityCurve_partial.pdf>
+Package pdftex.def Info: Images/incNS2dStabilityCurve_partial.pdf  used on input line 101.
+(pdftex.def)             Requested size: 167.8713pt x 136.4725pt.
 
 
 [7
 
- <./Images/stablePoints1.pdf>]
-<Images/stablePoints2.pdf, id=249, 285.32797pt x 115.65608pt>
-File: Images/stablePoints2.pdf Graphic file (type pdf)
-<use Images/stablePoints2.pdf>
-Package pdftex.def Info: Images/stablePoints2.pdf  used on input line 124.
+ <./Images/incNS2dStabilityCurve_partial.pdf>]
+<Images/chaos.pdf, id=205, 285.32797pt x 115.65608pt>
+File: Images/chaos.pdf Graphic file (type pdf)
+<use Images/chaos.pdf>
+Package pdftex.def Info: Images/chaos.pdf  used on input line 108.
 (pdftex.def)             Requested size: 335.74263pt x 136.09709pt.
 
 
 [8
 
- <./Images/stablePoints2.pdf>]
-<Images/incNS2dStabilityCurve_partial.pdf, id=290, 291.98985pt x 237.37685pt>
-File: Images/incNS2dStabilityCurve_partial.pdf Graphic file (type pdf)
-<use Images/incNS2dStabilityCurve_partial.pdf>
-Package pdftex.def Info: Images/incNS2dStabilityCurve_partial.pdf  used on input line 132.
+ <./Images/chaos.pdf>]
+<Images/incNS2dStabilityCurve_full.pdf, id=244, 291.98985pt x 237.37685pt>
+File: Images/incNS2dStabilityCurve_full.pdf Graphic file (type pdf)
+<use Images/incNS2dStabilityCurve_full.pdf>
+Package pdftex.def Info: Images/incNS2dStabilityCurve_full.pdf  used on input line 116.
 (pdftex.def)             Requested size: 167.8713pt x 136.4725pt.
 
 
 [9
 
- <./Images/incNS2dStabilityCurve_partial.pdf>]
-<Images/chaos.pdf, id=309, 285.32797pt x 115.65608pt>
-File: Images/chaos.pdf Graphic file (type pdf)
-<use Images/chaos.pdf>
-Package pdftex.def Info: Images/chaos.pdf  used on input line 139.
+ <./Images/incNS2dStabilityCurve_full.pdf>]
+<Images/absUnstable.pdf, id=263, 285.32797pt x 115.65608pt>
+File: Images/absUnstable.pdf Graphic file (type pdf)
+<use Images/absUnstable.pdf>
+Package pdftex.def Info: Images/absUnstable.pdf  used on input line 123.
 (pdftex.def)             Requested size: 335.74263pt x 136.09709pt.
 
 
 [10
 
- <./Images/chaos.pdf>]
-<Images/incNS2dStabilityCurve_full.pdf, id=348, 291.98985pt x 237.37685pt>
-File: Images/incNS2dStabilityCurve_full.pdf Graphic file (type pdf)
-<use Images/incNS2dStabilityCurve_full.pdf>
-Package pdftex.def Info: Images/incNS2dStabilityCurve_full.pdf  used on input line 147.
-(pdftex.def)             Requested size: 167.8713pt x 136.4725pt.
+ <./Images/absUnstable.pdf>]
+
+./main.tex:161: LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.161 \end{frame}
+                 
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 
 
 [11
 
- <./Images/incNS2dStabilityCurve_full.pdf>]
-<Images/absUnstable.pdf, id=368, 285.32797pt x 115.65608pt>
-File: Images/absUnstable.pdf Graphic file (type pdf)
-<use Images/absUnstable.pdf>
-Package pdftex.def Info: Images/absUnstable.pdf  used on input line 154.
-(pdftex.def)             Requested size: 335.74263pt x 136.09709pt.
+]
+
+./main.tex:161: LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.161 \end{frame}
+                 
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 
 
 [12
 
- <./Images/absUnstable.pdf>]
-<Images/nfactor.png, id=407, 794.97pt x 507.8975pt>
-File: Images/nfactor.png Graphic file (type png)
-<use Images/nfactor.png>
-Package pdftex.def Info: Images/nfactor.png  used on input line 162.
-(pdftex.def)             Requested size: 268.59512pt x 171.60564pt.
+]
+
+./main.tex:161: LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.161 \end{frame}
+                 
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 
 
 [13
 
- <./Images/nfactor.png (PNG copy)>]
+]
+
+./main.tex:161: LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.161 \end{frame}
+                 
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
 
 [14
+
+]
+<Images/jeffPaper.pdf, id=330, 425.75864pt x 179.1764pt>
+File: Images/jeffPaper.pdf Graphic file (type pdf)
+<use Images/jeffPaper.pdf>
+Package pdftex.def Info: Images/jeffPaper.pdf  used on input line 183.
+(pdftex.def)             Requested size: 166.19095pt x 69.93864pt.
+
+Overfull \hbox (0.79999pt too wide) in paragraph at lines 183--183
+ [] 
+ []
+
+<Images/jeffHeatMap.pdf, id=331, 228.71246pt x 207.91376pt>
+File: Images/jeffHeatMap.pdf Graphic file (type pdf)
+<use Images/jeffHeatMap.pdf>
+Package pdftex.def Info: Images/jeffHeatMap.pdf  used on input line 183.
+(pdftex.def)             Requested size: 166.19095pt x 151.081pt.
+
+
+[15
+
+ <./Images/jeffPaper.pdf> <./Images/jeffHeatMap.pdf>]
+<../../Images/domainPert.pdf, id=450, 589.27048pt x 181.1518pt>
+File: ../../Images/domainPert.pdf Graphic file (type pdf)
+<use ../../Images/domainPert.pdf>
+Package pdftex.def Info: ../../Images/domainPert.pdf  used on input line 192.
+(pdftex.def)             Requested size: 335.74263pt x 103.21613pt.
+
+
+[16
+
+ <../../Images/domainPert.pdf>]
+<Images/nfactor_countour_plain.pdf, id=469, 357.28581pt x 243.72757pt>
+File: Images/nfactor_countour_plain.pdf Graphic file (type pdf)
+<use Images/nfactor_countour_plain.pdf>
+Package pdftex.def Info: Images/nfactor_countour_plain.pdf  used on input line 200.
+(pdftex.def)             Requested size: 268.59512pt x 183.22661pt.
+
+
+[17
+
+ <./Images/nfactor_countour_plain.pdf>]
+<Images/nfactor_countour.pdf, id=497, 357.28581pt x 243.72757pt>
+File: Images/nfactor_countour.pdf Graphic file (type pdf)
+<use Images/nfactor_countour.pdf>
+Package pdftex.def Info: Images/nfactor_countour.pdf  used on input line 207.
+(pdftex.def)             Requested size: 268.59512pt x 183.22661pt.
+
+
+[18
+
+ <./Images/nfactor_countour.pdf>]
+
+[19
+
+]
+
+[20
 
 ]
 \tf@nav=\write6
@@ -955,21 +1049,22 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 27771 strings out of 469626
- 541131 string characters out of 5446523
- 897143 words of memory out of 5000000
- 54017 multiletter control sequences out of 15000+600000
- 639937 words of font info for 88 fonts, out of 8000000 for 9000
+ 27817 strings out of 469626
+ 542338 string characters out of 5446523
+ 897135 words of memory out of 5000000
+ 54049 multiletter control sequences out of 15000+600000
+ 641482 words of font info for 94 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  128i,20n,123p,411b,856s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</opt/texlive/2025/texmf-dist/fonts/type1/public/newtx/NewTXMI.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/newtx/NewTXMI7.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qtmr.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfss1095.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/newtx/txmiaX.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/newtx/txsys.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/newtx/ztmb.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/newtx/ztmbi.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/newtx/ztmr.pfb
+</opt/texlive/2025/texmf-dist/fonts/type1/public/newtx/NewTXMI.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/newtx/NewTXMI7.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qtmr.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfss1095.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/newtx/txmiaX.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/newtx/txsys.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/newtx/ztmb.pfb></opt/texlive/2025/texmf-
+dist/fonts/type1/public/newtx/ztmbi.pfb></opt/texlive/2025/texmf-dist/fonts/type1/public/newtx/ztmr.pfb
 
 pdfTeX warning: pdflatex (file /opt/texlive/2025/texmf-dist/fonts/type1/public/newtx/ztmr.pfb): glyph `section' undefined
 ></opt/texlive/2025/texmf-dist/fonts/type1/public/newtx/ztmri.pfb>
-Output written on main.pdf (14 pages, 2781644 bytes).
+Output written on main.pdf (20 pages, 2874838 bytes).
 PDF statistics:
- 507 PDF objects out of 1000 (max. 8388607)
- 334 compressed objects within 4 object streams
- 29 named destinations out of 1000 (max. 500000)
- 118 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 638 PDF objects out of 1000 (max. 8388607)
+ 427 compressed objects within 5 object streams
+ 41 named destinations out of 1000 (max. 500000)
+ 133 words of extra memory for PDF output out of 10000 (max. 10000000)
 
