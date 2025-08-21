@@ -19,6 +19,9 @@ nektar*/
 *.nav
 *.snm
 *.toc
-*.xml
 *.script
 *.table
+
+# uv files
+*.venv/**
+

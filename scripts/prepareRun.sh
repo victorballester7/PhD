@@ -110,7 +110,7 @@ source $DIR_SCRIPT/bashFunctions/getDepthANDWidth.sh
 
 # Check argument count
 if [ "$#" -ge 1 ]; then
-    echo -e "${YELLOW}A directory argument is provided. Moving to ${1}${RESET}"
+    echo -e "${CYAN}A directory argument is provided. Moving to ${1}${RESET}"
     cd "$1" || { echo -e "${RED}Failed to change directory to $1${RESET}"; exit 1; }
 fi
 

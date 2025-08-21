@@ -9,9 +9,11 @@
 \newif\ifpartial
 \newif\iftotal
 \newif\ifpartialORtotal
+\newif\ifexperimental
 
 % \partialtrue
 \totaltrue
+% \experimentaltrue
 
 \makeatletter
 \ifpartial
@@ -37,27 +39,57 @@
 			legend style={
 					legend cell align=left,
 				},
+			xmin=0, xmax=140,
+			ymin=0, ymax=4.2,
 			scale only axis,
 		]
 		\def\colorA{Cyan}
 		\def\colorB{YellowOrange}
 		\def\colorC{gray!80!black}
 		\def\colorD{SpringGreen}
-		\def\size{2pt}
+		\def\stablesize{2pt}
+		\def\unstablesize{2pt}
+		\def\chaossize{2.5pt}
 		\def\thickness{very thin}
 		\def\thicknessline{very thick}
-		\def\linestyle{densely dashed}
-		\def\mark{*}
+		\def\hopflinestyle{dotted}
+		\def\stablemark{*}
+		\def\unstablemark{square*}
+		\def\chaosmark{triangle*}
 
 		% Each point has x y and a color
 		\addplot[
-			mark=\mark,
+			mark=\stablemark,
 			only marks,
-			mark size=\size,
+			mark size=\stablesize,
 			draw=\colorA!50!black,
 			\thickness,
 			fill=\colorA,
 		] coordinates {
+    (10.0, 0.25)
+    (20.0, 0.25)
+    (30.0, 0.25)
+    (40.0, 0.25)
+    (50.0, 0.25)
+    (60.0, 0.25)
+    (70.0, 0.25)
+    (80.0, 0.25)
+    (10.0, 0.5)
+    (20.0, 0.5)
+    (30.0, 0.5)
+    (40.0, 0.5)
+    (50.0, 0.5)
+    (60.0, 0.5)
+    (70.0, 0.5)
+    (80.0, 0.5)
+    (10.0, 0.75)
+    (20.0, 0.75)
+    (30.0, 0.75)
+    (40.0, 0.75)
+    (50.0, 0.75)
+    (60.0, 0.75)
+    (70.0, 0.75)
+    (80.0, 0.75)
     (10.0, 1.0)
     (15.0, 1.0)
     (20.0, 1.0)
@@ -65,9 +97,13 @@
     (30.0, 1.0)
     (34.0, 1.0)
     (38.0, 1.0)
+    (45.0, 1.0)
     (50.0, 1.0)
+    (55.0, 1.0)
     (60.0, 1.0)
+    (65.0, 1.0)
     (70.0, 1.0)
+    (75.0, 1.0)
     (80.0, 1.0)
     (90.0, 1.0)
     (110.0, 1.0)
@@ -79,9 +115,13 @@
     (30.0, 1.25)
     (35.0, 1.25)
     (40.0, 1.25)
+    (45.0, 1.25)
     (50.0, 1.25)
+    (55.0, 1.25)
     (60.0, 1.25)
+    (65.0, 1.25)
     (70.0, 1.25)
+    (75.0, 1.25)
     (80.0, 1.25)
     (90.0, 1.25)
     (110.0, 1.25)
@@ -92,6 +132,7 @@
     (25.0, 1.5)
     (30.0, 1.5)
     (35.0, 1.5)
+    (40.0, 1.5)
     (45.0, 1.5)
     (50.0, 1.5)
     (55.0, 1.5)
@@ -106,6 +147,7 @@
     (45.0, 1.75)
     (10.0, 2.0)
     (16.0, 2.0)
+    (20.0, 2.0)
     (24.0, 2.0)
     (28.0, 2.0)
     (32.0, 2.0)
@@ -113,10 +155,12 @@
     (38.0, 2.0)
     (10.0, 2.25)
     (16.0, 2.25)
+    (20.0, 2.25)
     (25.0, 2.25)
     (30.0, 2.25)
     (31.0, 2.25)
     (10.0, 2.5)
+    (15.0, 2.5)
     (20.0, 2.5)
     (10.0, 2.75)
     (15.0, 2.75)
@@ -136,9 +180,9 @@
 		};
 		\iftotal
 			\addplot[
-				mark=\mark,
+				mark=\unstablemark,
 				only marks,
-				mark size=\size,
+				mark size=\unstablesize,
 				draw=\colorB!50!black,
 				\thickness,
 				fill=\colorB,
@@ -165,9 +209,9 @@
 
 		\ifpartialORtotal
 			\addplot[
-				mark=\mark,
+				mark=\chaosmark,
 				only marks,
-				mark size=\size,
+				mark size=\chaossize,
 				draw=\colorC!50!black,
 				\thickness,
 				fill=\colorC,
@@ -242,7 +286,7 @@
 				no marks,
 				draw=\colorB!70!black,
 				\thicknessline,
-				\linestyle,
+				\hopflinestyle,
 			] coordinates {
     (31.5, 2.25)
     (39.0, 2.0)
@@ -257,7 +301,7 @@
 				no marks,
 				draw=\colorC!50!black,
 				\thicknessline,
-				\linestyle,
+				dash pattern={on 6pt off 4pt},
 			] coordinates {
     (16.25, 4.0)
     (15.75, 3.75)
@@ -273,7 +317,7 @@
 				no marks,
 				draw=\colorC!50!black,
 				\thicknessline,
-				\linestyle,
+				dash pattern={on 6pt off 4pt},
 			] coordinates {
     (44.0, 2.25)
     (51.5, 2.0)
@@ -289,6 +333,7 @@
 		};
 		\fi
 
+		\ifexperimental
 		\addplot[
 			draw,
 			no marks,
@@ -301,6 +346,7 @@
     (35.0, 1.8)
     (100.0, 1.8)
 		};
+	\fi
 
 		\ifpartial
 			\legend{
@@ -308,16 +354,16 @@
 				% {Torus - periodic},
 				{Chaos},
 				% {Hopf bifurcation},
-				{Breakdown},,
+				{Transition to chaos},,
 				{Experimental data},
 			}
 		\else
 			\legend{
 				{Equilibrium point},
-				{Torus - periodic},
+				{Periodic/Torus},
 				{Chaos},
 				{Hopf bifurcation},
-				{Breakdown},,
+				{Transition to chaos},,
 				{Experimental data},
 			}
 		\fi

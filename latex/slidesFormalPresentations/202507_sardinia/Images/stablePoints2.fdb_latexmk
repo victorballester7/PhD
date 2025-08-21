@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1750530266.6648 "stablePoints2.tex" "stablePoints2.pdf" "stablePoints2" 1750530267.242 0
+["pdflatex"] 1751210529.92732 "stablePoints2.tex" "stablePoints2.pdf" "stablePoints2" 1751210530.55687 0
   "../../../Images/d1_w60_real.png" 1750522934.733 4820 2420d4dbc1d4d457f5743fb267b14ca7 ""
   "../../../Images/d1_w60_streamlines.png" 1750522909.24103 203528 db92ad0c2b1a3467a26b8fdcaf3e1691 ""
   "/opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb" 1744826413 36299 5f9df58c2139e7edcf37c8fca4bd384d ""
@@ -107,8 +107,8 @@
   "/opt/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1744826413 5521855 9e6d094d269c3e21cdb14e8613effe2d ""
   "/opt/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1744826413 3561635 15922c3671603b312890d25b3e697717 ""
   "/opt/texlive/2025/texmf.cnf" 1744826413 585 81f10441804f05cc9107aafbbb0bcd23 ""
-  "incNS2dStabilityCurve_equilibria.pdf" 1750530176.46171 37160 93902f6704fe235435bac2566134f335 ""
-  "stablePoints2.aux" 1750530267.21406 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "incNS2dStabilityCurve_equilibria.pdf" 1751210515.75956 38336 71dc17ee3e614545d693eebba43fbbef ""
+  "stablePoints2.aux" 1751210530.52931 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
   "stablePoints2.tex" 1750530266.00309 1479 a00182c46ca0b9584ebaa06cbb5d8a61 ""
   (generated)
   "stablePoints2.aux"

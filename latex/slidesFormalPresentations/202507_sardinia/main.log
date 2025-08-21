@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.16)  28 JUN 2025 13:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.16)  29 JUN 2025 16:28
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1061,7 +1061,7 @@ dist/fonts/type1/public/newtx/ztmbi.pfb></opt/texlive/2025/texmf-dist/fonts/type
 
 pdfTeX warning: pdflatex (file /opt/texlive/2025/texmf-dist/fonts/type1/public/newtx/ztmr.pfb): glyph `section' undefined
 ></opt/texlive/2025/texmf-dist/fonts/type1/public/newtx/ztmri.pfb>
-Output written on main.pdf (20 pages, 2874838 bytes).
+Output written on main.pdf (20 pages, 2883115 bytes).
 PDF statistics:
  638 PDF objects out of 1000 (max. 8388607)
  427 compressed objects within 5 object streams

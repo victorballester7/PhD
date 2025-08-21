@@ -1,17 +1,32 @@
+% !TEX program = lualatex
 \documentclass{standalone}
 \usepackage{pgfplots}
 \usepgfplotslibrary{patchplots,fillbetween}
 \pgfplotsset{compat=1.18}
 \usepackage[dvipsnames]{xcolor}
-\usepackage{filecontents}
-
+\usepgfplotslibrary{colormaps}
 \newif\ifexperimental
+\newif\iferror
 
 \experimentaltrue % Set to true to include experimental curves
+\errorfalse % Set to true to include error bars
+
+\pgfplotsset{
+/pgfplots/colormap={blues}{rgb255=(66,106,188) rgb255=(255,255,255)}
+}
+
+\pgfplotsset{
+    contour/every contour label/.style={
+        sloped,
+        transform shape,
+        inner sep=2pt,
+        every node/.style={black,fill=none},
+        /pgf/number format/relative={\pgfplotspointmetarangeexponent},
+    },
+} 
 
 \begin{document}
-\centering
-\begin{tikzpicture}
+\begin{tikzpicture}[scale=1.0, every node/.style={scale=1.2}]
 	\begin{axis}[
 			xlabel={$w/\delta^*$},
 			ylabel={$d/\delta^*$},
@@ -19,18 +34,18 @@
 			% view={0}{90},
 			colorbar,
 			colorbar style={
-					title={$\Delta N$},     % <-- Your label here
+					title={$\Delta n$},     % <-- Your label here
 					title style={at={(1.8,0.5)},anchor=west}, % Shift label down if needed
 				},
-			colormap name=viridis,
+			colormap name=blues,
 			ytick distance=0.5,
-			ylabel style={rotate=-90, at={(-0.1,0.5)}},
+			ylabel style={rotate=-90, at={(-0.08,0.5)}},
 			% unbounded coords=jump,  % This hides values > 5000
 			grid=both,
-			restrict x to domain*=10:80,
-			restrict y to domain*=1:4,
+			restrict x to domain*=0:70,
+			restrict y to domain*=0:4,
 			% point meta min=0.5,
-			% point meta max=7,
+			point meta max=6,
 			legend style={
 					legend cell align=left,
 				},
@@ -38,7 +53,7 @@
 			axis on top,
 			set layers,
 			enlargelimits=false,
-			% scale=1.4,
+			view={0}{90},
 		]
 
 		\def\xmax{\pgfkeysvalueof{/pgfplots/xmax}}
@@ -47,6 +62,7 @@
 		\def\colorB{YellowOrange}
 		\def\colorC{gray!80!black}
 		\def\colorD{Magenta}
+		\def\colorE{Blue}
 		\def\size{2pt}
 		\def\thickness{very thin}
 		\def\thicknessline{very thick}
@@ -59,20 +75,37 @@
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		% Filled contour plot
 		\pgfonlayer{axis background}
-		\addplot [contour filled,
-			patch type=bilinear,
-			shader=interp,
+		\addplot[point meta=explicit,
+			surf,
+			shader=flat,
+			draw=none,
+			% contour filled={
+			% 		% numbers=14,
+			% 		levels={0.5,1,...,6},
+			% 	},
+			contour/labels=true, % enable label drawing
+		]
+		table [ header=false,   x index=0,
+				y index=1,
+				meta index=2] {data/DeltaN.dat};
+		\addplot3[
 			point meta=explicit,
-			contour filled={
-					% numbers=14,
-					levels={0.5,1,...,6},
-				},
+			contour lua={levels={1,2,3,4,5},
+					labels=true,
+					draw color=\colorE,
+					labels over line,
+					label distance=250pt, % change this to ajust numbers
+					every contour label/.append style={
+							every node/.append style={\colorE},
+						},				},
+			thick,
+			restrict x to domain=0:70,
+			restrict y to domain=0:4,
 		]
 		table [ header=false,   x index=0,
 				y index=1,
 				meta index=2] {data/DeltaN.dat};
 		\endpgfonlayer
-
 		\addplot[
 			smooth,
 			draw=none,
@@ -127,6 +160,7 @@
 		] fill between[
 				of=top and bifurcation,
 			];
+
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -134,19 +168,7 @@
 		\addplot[
 			smooth,
 			no marks,
-			draw=\colorB!70!black,
-			\thicknessline,
-			\linestyle,
-		] coordinates {
-				(31.5, 2.25)
-				(39.0, 2.0)
-				(46.0, 1.75)
-				(56.5, 1.5)
-			};
-		\addplot[
-			smooth,
-			no marks,
-			draw=\colorC!50!black,
+			draw=\colorC!70!black,
 			\thicknessline,
 			\linestyle,
 		] coordinates {
@@ -157,15 +179,10 @@
 				(15.25, 3.0)
 				(15.25, 2.75)
 				(20.5, 2.5)
-			};
-
-		\addplot[
-			smooth,
-			no marks,
-			draw=\colorC!50!black,
-			\thicknessline,
-			\linestyle,
-		] coordinates {
+				(31.5, 2.25)
+				(39.0, 2.0)
+				(46.0, 1.75)
+				(56.5, 1.5)
 				(59.0, 1.46)
 				(65.0, 1.375)
 				(70.0, 1.375)
@@ -180,127 +197,104 @@
 		% level sets experimental curves
 		% I fitted the curves by nake eye using geogebra
 		\ifexperimental
-			\addplot+[no marks,
-				draw=\colorD!80!black,
-				\thicknessline,
-				% \linestyle,
-				solid,
-			] table [
-					x index=0,
+			\pgfonlayer{axis background}
+			\addplot3 [
+				contour prepared={labels=true,
+						draw color=\colorD,
+						labels over line,
+						label distance=250pt, % change this to ajust numbers
+						every contour label/.append style={
+								every node/.append style={\colorD},
+							},				},
+				thick,
+				restrict x to domain=0:70,
+				restrict y to domain=0:4,
+				legend image post style={draw=red, thick},
+			] table [header=false,   x index=0,
 					y index=1,
-					header=false,
-				] {data/expData_1.csv} node[pos=0.033,anchor=west,\colorD!80!black]{$1$};
+					meta index=2]{data/expData.csv};
+			\endpgfonlayer
 
-			\addplot[no marks,
-				draw=\colorD!81!black,
-				\thicknessline,
-				error bars/.cd,
-				x dir=both, x explicit,
-				error bar style={\colorD!81!black, thick},
-			] table [
-					x index=0,
-					y index=1,
-					x error minus index=2,
-					x error plus index=3,
-					header=false,
-				] {data/expDataErr_1.csv};
+			\iferror
+				\addplot[no marks,
+					draw=\colorD!81!black,
+					\thicknessline,
+					error bars/.cd,
+					x dir=both, x explicit,
+					error bar style={\colorD!81!black, thick},
+				] table [
+						x index=0,
+						y index=1,
+						x error minus index=2,
+						x error plus index=3,
+						header=false,
+					] {data/expDataErr_1.csv};
 
-			\addplot[no marks,
-				smooth,
-				draw=\colorD!80!black,
-				\thicknessline,
-			] table [
-					x index=0,
-					y index=1,
-					header=false,
-				] {data/expData_2.csv} node[pos=0.024,anchor=west,\colorD!80!black]{$2$};
+				\addplot[no marks,
+					draw=\colorD!81!black,
+					\thicknessline,
+					error bars/.cd,
+					x dir=both, x explicit,
+					error bar style={\colorD!81!black, thick},
+				] table [
+						x index=0,
+						y index=1,
+						x error minus index=2,
+						x error plus index=3,
+						header=false,
+					] {data/expDataErr_2.csv};
+				\addplot[no marks,
+					draw=\colorD!81!black,
+					\thicknessline,
+					error bars/.cd,
+					x dir=both, x explicit,
+					error bar style={\colorD!81!black, thick},
+				] table [
+						x index=0,
+						y index=1,
+						x error minus index=2,
+						x error plus index=3,
+						header=false,
+					] {data/expDataErr_3.csv};
+				\addplot[no marks,
+					draw=\colorD!81!black,
+					\thicknessline,
+					error bars/.cd,
+					x dir=both, x explicit,
+					error bar style={\colorD!81!black, thick},
+				] table [
+						x index=0,
+						y index=1,
+						x error minus index=2,
+						x error plus index=3,
+						header=false,
+					] {data/expDataErr_4.csv};
+			\fi
 
-			\addplot[no marks,
-				draw=\colorD!81!black,
-				\thicknessline,
-				error bars/.cd,
-				x dir=both, x explicit,
-				error bar style={\colorD!81!black, thick},
-			] table [
-					x index=0,
-					y index=1,
-					x error minus index=2,
-					x error plus index=3,
-					header=false,
-				] {data/expDataErr_2.csv};
-
-			\addplot[no marks,
-				smooth,
-				draw=\colorD!80!black,
-				\thicknessline,
-			] table [
-					x index=0,
-					y index=1,
-					header=false,
-				] {data/expData_3.csv} node[pos=0.032,anchor=west,\colorD!80!black]{$3$};
-			\addplot[no marks,
-				draw=\colorD!81!black,
-				\thicknessline,
-				error bars/.cd,
-				x dir=both, x explicit,
-				error bar style={\colorD!81!black, thick},
-			] table [
-					x index=0,
-					y index=1,
-					x error minus index=2,
-					x error plus index=3,
-					header=false,
-				] {data/expDataErr_3.csv};
-
-			\addplot[no marks,
-				smooth,
-				draw=\colorD!80!black,
-				\thicknessline,
-			] table [
-					x index=0,
-					y index=1,
-					header=false,
-				] {data/expData_4.csv} node[pos=0.35,anchor=south,\colorD!80!black]{$4$};
-			\addplot[no marks,
-				draw=\colorD!81!black,
-				\thicknessline,
-				error bars/.cd,
-				x dir=both, x explicit,
-				error bar style={\colorD!81!black, thick},
-			] table [
-					x index=0,
-					y index=1,
-					x error minus index=2,
-					x error plus index=3,
-					header=false,
-				] {data/expDataErr_4.csv};
-
-				% \addplot[no marks,
-				% smooth,
-				% draw=\colorD!80!black,
-				% \thicknessline,
-				% \linestyle,
-				% ] table [
-				% x index=0,
-				% y index=1,
-				% header=false,
-				% ] {data/expData_5.csv} node[pos=0.5,anchor=west,\colorD!80!black]{$5$};
-				% \addplot[no marks,
-				% smooth,
-				% draw=\colorD!80!black,
-				% \thicknessline,
-				% \linestyle,
-				% ] table [
-				% x index=0,
-				% y index=1,
-				% header=false,
-				% ] {data/expData_6.csv} node[pos=0.5,anchor=west,\colorD!80!black]{$6$};
+			% \addplot[no marks,
+			% smooth,
+			% draw=\colorD!80!black,
+			% \thicknessline,
+			% \linestyle,
+			% ] table [
+			% x index=0,
+			% y index=1,
+			% header=false,
+			% ] {data/expData_5.csv} node[pos=0.5,anchor=west,\colorD!80!black]{$5$};
+			% \addplot[no marks,
+			% smooth,
+			% draw=\colorD!80!black,
+			% \thicknessline,
+			% \linestyle,
+			% ] table [
+			% x index=0,
+			% y index=1,
+			% header=false,
+			% ] {data/expData_6.csv} node[pos=0.5,anchor=west,\colorD!80!black]{$6$};
 		\fi
 
-
-		\legend{,,,,
-			{Hopf bifurcation},
-			{Breakdown},,{Experimental data},
+		\legend{,,,,,
+			{Transition boundary},{Crouch et al. (2022)},
 		}
 
 	\end{axis}

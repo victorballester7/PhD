@@ -3,6 +3,7 @@
 \usepackage{amsmath}
 \usetikzlibrary{patterns,decorations.markings,backgrounds}
 \usetikzlibrary{arrows.meta}
+\usepackage{bm}
 
 \def\a{-20}
 \def\d{4}
@@ -57,7 +58,7 @@
 \node[scale=\textscale,anchor=west] at (W.east) {$u=0$};
 \node[scale=\textscale, color=orange] at (-2.2,-0.8) {$v=\text{wgn}(x,t)$};
 \node[scale=\textscale,anchor=north] at (2,\hh) {$u=0$, $v=0$};
-\node[scale=\textscale,text width=1.35cm] at (9.7,2) {$\partial_nu=0$, $\partial_nv=0$};
+\node[scale=\textscale,text width=1.35cm] at (9.7,2) {$\partial_{\bm{n}}u=0$, $\partial_{\bm{n}}v=0$};
 
 \end{tikzpicture}
 % \begin{tikzpicture}[scale=1]

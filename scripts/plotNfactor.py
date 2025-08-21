@@ -11,10 +11,11 @@ from scipy.fft import rfft, irfft, rfftfreq, fft, fftfreq
 from typing import Tuple
 from scipy.signal import hilbert, spectrogram
 from scipy.stats import entropy
-from scipy.interpolate import griddata, NearestNDInterpolator
+from scipy.interpolate import griddata, NearestNDInterpolator,SmoothBivariateSpline
 import os
 from scipy.spatial import Delaunay, ConvexHull
 import plotStabilityCurve_wVSd
+from scipy.ndimage import gaussian_filter
 
 # dictionary of signal types
 signal_types = {
@@ -193,7 +194,7 @@ def get_amplitude(
         # A = 0.5 * (np.mean(A_max) - np.mean(A_min)).astype(np.float64)
 
         # rms error
-        A = np.sqrt(np.mean(data**2)).astype(np.float64)
+        A = np.sqrt(np.mean(u**2 + v**2)).astype(np.float64)
 
     return A
 
@@ -470,7 +471,7 @@ def copy2dat(
     Updates the TikZ plot inside the .tex file by replacing the coordinates
     of the nFactor points with the new data.
     """
-    sizeGrid = 30
+    sizeGrid = 100
     X = np.linspace(np.min(widths), np.max(widths), sizeGrid)
     Y = np.linspace(np.min(depths), np.max(depths), sizeGrid)
     X_grid, Y_grid = np.meshgrid(X, Y)
@@ -496,68 +497,34 @@ def copy2dat(
     borders_d = borders[:, 0]
     borders_w = borders[:, 1]
 
-    # print(f"borders_d: {borders_d}")
-    # print(f"borders_w: {borders_w}")
-
-    # for d in np.unique(plotStabilityCurve_wVSd.depths):
-    #     mask = plotStabilityCurve_wVSd.depths == d
-    #     widths_at_depth = plotStabilityCurve_wVSd.widths[mask, 0]
-    #     labels_at_depth = plotStabilityCurve_wVSd.labels[mask]
-
-    #     # Estables
-    #     stable_widths = widths_at_depth[labels_at_depth == -1]
-    #
-    #     borders_w.append(np.max(stable_widths))
-
-    # borders_w = np.array(borders_w)
-
-    # interpolate nfactor values on the grid, if the position at a certain d has width greather than the respective in borders_w, then set nfactor to a very large value
-
+ 
     # Interpolate/extrapolate over the grid
     points = np.column_stack((widths, depths))
     Nnan = -1
-    # Z_grid = griddata(points, nfactor, (X_grid, Y_grid), method='linear', fill_value=Ninf/2)
     Z_grid = griddata(
-        points, nfactor, (X_grid, Y_grid), method="linear", fill_value=np.nan
+        points, nfactor, (X_grid, Y_grid), method="cubic", fill_value=np.nan
     )
 
     # Step 2: Fill NaNs using nearest neighbor extrapolation
     nearest = NearestNDInterpolator(points, nfactor)
     Z_grid = np.where(np.isnan(Z_grid), nearest(X_grid, Y_grid), Z_grid)
 
-    # # Apply stability mask: for each depth, find the corresponding width threshold
-    # for i in range(len(Y)):
-    #     y = Y[i]
-    #     if y <= max_depth_full_stability:
-    #         continue  # Skip depths below the stability threshold, they need to be interpolated
-
-    #     w_limit_y = np.interp(
-    #         y, borders_d[::-1], borders_w[::-1]
-    #     )  # Interpolate the width limit for the current depth
-    #     # print(f"Depth {y:.2f} has width limit {w_limit_y:.2f}")
-
-    #     # ax.scatter([w_limit_y], [y], color="red", marker="x", label=f"Width limit at depth {y:.2f}")
-
-    #     for j in range(len(X)):
-    #         x = X[j]
-    #         if x > w_limit_y:
-    #             Z_grid[i, j] = np.nan
-
-        # interpolate the width limit for the current depth
-
-        # Find closest border depth index
-        # idx = np.abs(borders_d - y).argmin()
-        # w_limit = borders_w[idx]
-
-        # for j in range(len(X)):
-        #     x = X[j]
-        #     if x > w_limit:
-        #         Z_grid[i, j] = np.nan
+    Z_grid = gaussian_filter(Z_grid, sigma=0.7)
 
     # Write to .dat file
     with open(pathDat, "w") as f:
         for i in range(len(Y)):
+            if i == 0:
+                # Write the border points
+                f.write(f"{0:.6f} {0:.6f} {0:.6f}\n")
+                for j in range(len(X)):
+                    f.write(f"{X[j]:.6f} {0:.6f} {0:.6f}\n")
+                f.write("\n")  # Newline to separate rows
+
             for j in range(len(X)):
+                if j == 0:
+                    # Write the border points
+                    f.write(f"{0:.6f} {Y[i]:.6f} {0:.6f}\n")
                 x = X[j]
                 y = Y[i]
                 z = Z_grid[i, j]
@@ -568,38 +535,43 @@ def copy2dat(
 
     print(f"Data written to {pathDat}.")
 
-    # write the data to a file in the form
-    # x y z
-
-    # Filter and prepare points
-    # triangmesh = triangulate(depths, widths)
-
-    # Convert to TikZ format (x = column 1, y = column 0)
-    # Prepare plot block with triangulated coordinates
-    # plotblock = ""
-    # for tri in triangmesh:
-    #     x1, y1, z1 = widths[tri[0]], depths[tri[0]], nfactor[tri[0]]
-    #     x2, y2, z2 = widths[tri[1]], depths[tri[1]], nfactor[tri[1]]
-    #     x3, y3, z3 = widths[tri[2]], depths[tri[2]], nfactor[tri[2]]
-    #     plotblock += f"    ({x1}, {y1}, {z1}) ({x2}, {y2}, {z2}) ({x3}, {y3}, {z3})\n"
-
-    # # Read original tex content
-    # with open(pathDat, "r") as f:
-    #     tex_content = f.read()
-
-    # updated_tex = re.sub(
-    #     r"coordinates\s*{[^}]*}",
-    #     f"coordinates {{\n{plotblock}\n\t\t}}",
-    #     tex_content,
-    #     count=1,
-    #     flags=re.DOTALL,
-    # )
-
-    # # Write back updated file
-    # with open(pathDat, "w") as f:
-    #     f.write(updated_tex)
-
-    # print(f"{pathDat} updated with new point data.")
+def method_variance_threshold(time, signal, window_size=100, threshold_factor=3.0):
+        """
+        Método 1: Detección basada en varianza móvil
+        
+        Parameters:
+        -----------
+        window_size : int
+            Tamaño de la ventana móvil
+        threshold_factor : float
+            Factor multiplicativo del umbral de varianza
+        
+        Returns:
+        --------
+        filtered_time : np.ndarray
+        filtered_signal : np.ndarray
+        """
+        # Calcular varianza móvil
+        variance = np.array([np.var(signal[max(0, i-window_size):i+1]) 
+                           for i in range(len(signal))])
+        
+        # Varianza base (primeros puntos, asumiendo régimen estacionario)
+        base_variance = np.mean(variance[:window_size])
+        threshold = base_variance * threshold_factor
+        
+        # Encontrar primer punto donde se supera el umbral
+        oscillation_start = np.where(variance > threshold)[0]
+        
+        if len(oscillation_start) > 0:
+            idx_start = oscillation_start[0]
+            t_0 = time[idx_start]
+        else:
+            t_0 = time[0]
+        
+        mask = time >= t_0
+        filtered_time = time[mask]
+        filtered_signal = signal[mask]
+        return filtered_time, filtered_signal
 
 def getCurrentData(pathCurrentData: str) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
@@ -637,13 +609,14 @@ def plot_nFactor(
     """
     heightBL = 1
     XafterGap = -100
-    use_u = False  # otherwise use v
+    use_u = True  # otherwise use v
     # use_DELTA_N = False # if True, use DELTA_N wiwth reference point the first folder
     count = 0
     x_ref = np.array([])
     n_x_ref = np.array([])
     # d_w = []
     time0 = 1200
+    time1 = 4500
     n_x_amplification = []
 
 
@@ -675,6 +648,38 @@ def plot_nFactor(
 
     data_by_folder, variables = read_all_folders(folders, file_name, slice(None))
 
+    # check if data comes from NL runs (in this case we need to read the data from the last dt of the baseflow and substract it from the data)
+    # check if "nonLinear" is in the file_name
+    for folder in folders:
+        if "nonLinear" in folder:
+            print("Data comes from NL runs. Reading the last dt of the baseflow and substracting it from the data.")
+            # substitute path/to/folder/*nonLinear*/codename with path/to/folder/baseflow/dns/codename
+            base_path = re.sub(r'/[^/]*nonLinear[^/]*/', '/baseflow/dns/', folder)
+
+            print("New baseflow path:", base_path)
+            baseflow_data, _ = read_all_folders([base_path], file_name, slice(None))
+
+            points_nlpert , variables_nlpert = data_by_folder[folder][0], data_by_folder[folder][2]
+
+            points_baseflow, variables_baseflow = baseflow_data[base_path][0], baseflow_data[base_path][2]
+
+            #check if points_nlpert and points_baseflow are the same
+            if not np.array_equal(points_nlpert, points_baseflow):
+                raise ValueError(
+                    f"Points in NL perturbed data and baseflow data are not the same for folder {folder}."
+                )
+
+            # substract the baseflow data from the perturbed data
+            # last timestep baseflow data
+            steadystate= variables_baseflow[:, -1, :]
+
+            variables_nlpert -= steadystate[:, np.newaxis, :]
+            data_by_folder[folder] = (points_nlpert, data_by_folder[folder][1], variables_nlpert)
+
+            
+
+
+
 
     fig, ax = plt.subplots(figsize=(8, 5))
 
@@ -694,15 +699,18 @@ def plot_nFactor(
             f"    First point ({p_ref}): x = {points_loc[p_ref, 0]}, y = {points_loc[p_ref, 1]}"
         )
 
-        idx1 = np.where(time[p_ref] < time0)[0][-1]
-        time_ref = time[p_ref, idx1:]
-        data = variables[p_ref, idx1:, 0] if use_u else variables[p_ref, idx1:, 1]
-        # is_wave_packet = is_wave_packet_signal(data)
-        # is_wgn = is_gaussian_noise(data)
+        # idx1 = np.where(time[p_ref] < time0)[0][-1]
+        # time_ref = time[p_ref, idx1:]
+        # data = variables[p_ref, idx1:, 0] if use_u else variables[p_ref, idx1:, 1]
+        # # is_wave_packet = is_wave_packet_signal(data)
+        # # is_wgn = is_gaussian_noise(data)
 
-        idx2 = np.where(time_ref > 4500)[0][0]
-        time_ref = time_ref[:idx2]
-        data = data[:idx2]
+        # idx2 = np.where(time_ref > time1)[0][0]
+        # time_ref = time_ref[:idx2]
+        # data = data[:idx2]
+
+        time_ref = time[p_ref, len(time[p_ref]) // 3 : len(time[p_ref]) * 2 // 3]
+        data = variables[p_ref, len(time[p_ref]) // 3 : len(time[p_ref]) * 2 // 3, 0] if use_u else variables[p_ref, len(time[p_ref]) // 3 : len(time[p_ref]) * 2 // 3, 1]
 
         signal = classify_signal(time_ref, data)
         if signal == signal_types["wave_packet"]:
@@ -732,11 +740,33 @@ def plot_nFactor(
             # var = variables[p, :idx2, :]
             var = variables[p, :, :]
 
+            
+
             print(
                 f"    Point {p}: x = {points_loc[p, 0]:.2f}, y = {points_loc[p, 1]:.2f}, z = {points_loc[p, 2]:.2f}"
             )
             # if p % 100 == 0:
-            A = get_amplitude(t, var[:, 0], var[:, 1], use_u, signal)
+            print(f"    shape of variables: {var.shape}")
+            if p == 3:
+                print(var[:, 0])
+            
+            tfilt1, ufilt = method_variance_threshold(t, var[:, 0])
+
+            tfilt2, vfilt = method_variance_threshold(t, var[:, 1])
+
+            tfilt = np.array([])
+            if len(tfilt1) < len(tfilt2):
+                tfilt = tfilt1
+                vfilt = vfilt[len(tfilt2) - len(tfilt1):]
+            else:
+                tfilt = tfilt2
+                ufilt = ufilt[len(tfilt1) - len(tfilt2):]
+
+            # ufilt = var[:, 0]
+            # vfilt = var[:, 1]
+            # tfilt = t
+            # A = get_amplitude(t, var[:, 0], var[:, 1], use_u, signal)
+            A = get_amplitude(tfilt, ufilt, vfilt, use_u, signal)
 
             X.append(point[0])
             n_x.append(A)
@@ -753,7 +783,16 @@ def plot_nFactor(
         X = X[X_old > x_min]
         n_x = n_x[X_old > x_min]
 
+
+        # mask = X > 1
+        # multiplier = np.ones_like(n_x)
+        # # if depth != 0:
+        # #     multiplier[mask] = 0.5
+        # n_x = n_x / multiplier
+        print("Amplitude at y = 1:", n_x)
+
         n_x = np.log(n_x / baseAmplitude)
+        # use log plot
         # ymax = max(ymax, np.max(n_x))
 
         if use_DELTA_N and count == 0: # flat plate case, e.g. reference value to compute DeltaN = N - Nref
@@ -767,8 +806,10 @@ def plot_nFactor(
             n_x_ref_interp = np.interp(X, x_ref, n_x_ref)
             n_x = n_x - n_x_ref_interp
 
-            x0 = 100
-            x1 = 200
+            lenghtaveraging = 100
+            x0 = width + 60
+            x1 = width + lenghtaveraging
+
 
             idx0 = np.where(X < x0)[0][-1]
             idx1 = np.where(X > x1)[0][0]
@@ -782,7 +823,14 @@ def plot_nFactor(
 
 
         if not use_DELTA_N:
+            # save data to file
+            with open(f"data/n_x_{codename}.dat", "w") as f:
+                for x, n in zip(X, n_x):
+                    f.write(f"{x} {n}\n")
             ax.plot(X, n_x, label=codename)
+            # ax.semilogy(X, n_x, label=codename)
+            # plt.legend()
+            # plt.show()
 
         # if signal == signal_types['gaussian_noise']:
         #     nfactor_wgn(

@@ -292,7 +292,7 @@ def main():
     alpha_r_max = 0.5
     alpha_r_num = 50
 
-    analyticalBlasius = False
+    analyticalBlasius = True
 
     # if analyticalBlasius = True
     re_vary_bacause_of_deltaStar = True  # in this case (same as in the DNS simulations), we need to propperly rescale Re alpha and the outpu omega_r

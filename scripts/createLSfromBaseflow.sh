@@ -23,15 +23,18 @@ fi
 
 function readInput {
   # prompt a message if there are less than 2 arguments
-  if [ "$#" -ne 2 ]; then 
-    echo -e "${RED}Usage: $0 <depth> <width>${RESET}"
-    echo -e "${YELLOW}For example: $0 4 16.5 ${RESET}"
+  if [ "$#" -ne 1 ]; then 
+    echo -e "${RED}Usage: $0 <folderDNS>${RESET}"
+    echo -e "${YELLOW}For example: $0 d4_w15 ${RESET}"
+    echo -e "${YELLOW}             $0 d1.5_w45longInflow ${RESET}"
     exit 1
   fi
 
-  depth=$1
-  width=$2
+  folder=$1
+  
+  getDepthANDWidth "$folder"
   codename="d${depth}_w${width}"
+
   localDIR_LS=$(pwd)
   localDIR_baseflow="/home/victor/Desktop/PhD/src/incNSboeingGapRe1000/baseflow/dns"
   
@@ -44,13 +47,14 @@ function readInput {
   remoteDIR_baseflow="${DIR_REMOTE_PRE}/${localDIRtmp}"
 
 
-  cd "$localDIR_baseflow/$codename" || exit 1
+  cd "$localDIR_baseflow/$folder" || exit 1
 
   getMeshSessionFiles
   
   echo -e "${CYAN}Session file: $session_file${RESET}"
   echo -e "${CYAN}Geo file: $geo_file${RESET}"
-  echo -e "${CYAN}Folder: $codename${RESET}"
+  echo -e "${CYAN}Folder: $folder${RESET}"
+  echo -e "${CYAN}Codename: $codename${RESET}"
   echo -e "${CYAN}Local LS directory: $localDIR_LS${RESET}"
   echo -e "${CYAN}Local baseflow directory: $localDIR_baseflow${RESET}"
   echo -e "${CYAN}Remote LS directory: $remoteDIR_LS${RESET}"
@@ -67,30 +71,30 @@ function readInput {
 function createBaseflowFile {
   # Capture SSH output into local variables
   ssh "${USER}@${HOST}" /bin/bash << EOF
-    cd "${remoteDIR_baseflow}/$codename" || exit 1
+    cd "${remoteDIR_baseflow}/$folder" || exit 1
 
     # Extract last chk number
     chk_number=\$(grep 'Writing: "mesh_${codename}_.*\.chk"' output.txt | tail -n 1 | sed -n 's/.*mesh_${codename}_\\([0-9]\\+\\)\\.chk.*/\\1/p')
 
-    mkdir -p "${remoteDIR_LS}/$codename"
+    mkdir -p "${remoteDIR_LS}/$folder"
 
     # Safely remove if baseflow.fld already exists (whether file or dir)
-    rm -rf "${remoteDIR_LS}/${codename}/baseflow.fld"
+    rm -rf "${remoteDIR_LS}/${folder}/baseflow.fld"
     
-    echo -e "${CYAN}Copying mesh_${codename}_\$chk_number.chk to ${remoteDIR_LS}/$codename/baseflow.fld${RESET}"
-    cp -r mesh_${codename}_\$chk_number.chk ${remoteDIR_LS}/$codename/baseflow.fld
+    echo -e "${CYAN}Copying mesh_${codename}_\$chk_number.chk to ${remoteDIR_LS}/$folder/baseflow.fld${RESET}"
+    cp -r mesh_${codename}_\$chk_number.chk ${remoteDIR_LS}/$folder/baseflow.fld
 EOF
 }
 
 
 function modifyFile {
   cd "$localDIR_LS" || exit 1
-  mkdir -p "$codename"
-  cd "$codename" || exit 1
+  mkdir -p "$folder"
+  cd "$folder" || exit 1
   cp "../$session_file" .
-  cp "$localDIR_baseflow/$codename/$geo_file" .
-  cp "$localDIR_baseflow/$codename/pbspro.job" .
-  cp "$localDIR_baseflow/$codename/slurm.job" .
+  cp "$localDIR_baseflow/$folder/$geo_file" .
+  cp "$localDIR_baseflow/$folder/pbspro.job" .
+  cp "$localDIR_baseflow/$folder/slurm.job" .
 
   # 3. Extract timestep
   timestep=$(awk '/<P> *TimeStep *=/ {
@@ -99,7 +103,7 @@ function modifyFile {
         print $i; exit
       }
     }
-  }' "$localDIR_baseflow/$codename/$session_file")
+  }' "$localDIR_baseflow/$folder/$session_file")
 
   if [[ -z "$timestep" ]]; then
     echo "❌ Could not extract TimeStep from $session_file"
@@ -120,9 +124,10 @@ function modifyFile {
 
 }
 
-echo -e "${YELLOW} THIS SCRIPT SHOULD BE RUN FROM INSIDE THE LINEARSOLVER DIRECTORY (WHICH HAS TO CONTAIN A REFERENCE SESSION FILE, THE .GEO AND PBS FILES ARE TAKEN FROM THE BASEFLOW/DNS DIRERCTORY)\n ${RESET}"
+echo -e "${YELLOW} THIS SCRIPT SHOULD BE RUN FROM INSIDE THE LINEARSOLVER DIRECTORY (WHICH HAS TO CONTAIN A REFERENCE SESSION FILE. THE .GEO AND PBS FILES ARE TAKEN FROM THE BASEFLOW/DNS DIRERCTORY)\n ${RESET}"
 
 source $SCRIPTS_DIR/bashFunctions/getMeshSessionFiles.sh
+source $SCRIPTS_DIR/bashFunctions/getDepthANDWidth.sh
 
 readInput "$@"
 

@@ -20,13 +20,23 @@ SYNC_DIRS=("${LOCAL_DIR}/docs" "${LOCAL_DIR}/scripts")
 SRC_DIR="${LOCAL_DIR}/src"
 RUNS_DIR="${REMOTE_DIR}/runs"
 
+# list of directories to exclude from syncing following the rsync syntax
+EXCLUSIONS=(
+    "--exclude=*.venv*"
+    "--exclude=*.egg-info*"
+    "--exclude=*__pycache__*"
+    "--exclude=*uv.lock*"
+    "--exclude=*dat"
+    "--exclude=*pts"
+)
+
 # Loop through each host and sync the directories
 for HOST in "${HOSTS[@]}"; do
     echo -e "${YELLOW}Syncing with $HOST...${RESET}"
     for DIR in "${SYNC_DIRS[@]}"; do
-        rsync -avz --progress "$DIR" "$REMOTE_USER@$HOST:$REMOTE_DIR/"
+        rsync -avz --progress "${EXCLUSIONS[@]}" "$DIR" "$REMOTE_USER@$HOST:$REMOTE_DIR/"
     done
-    rsync -avz --progress "$SRC_DIR/" "$REMOTE_USER@$HOST:$RUNS_DIR"
+    rsync -avz --progress "${EXCLUSIONS[@]}" "$SRC_DIR/" "$REMOTE_USER@$HOST:$RUNS_DIR"
 
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}Sync with $HOST completed successfully!${RESET}"

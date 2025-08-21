@@ -1,0 +1,23 @@
+[project]
+name = "pp"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Victor Ballester", email = "victor.ballester.ribo@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "matplotlib>=3.10.5",
+    "numpy>=2.3.2",
+    "pandas>=2.3.1",
+    "pyqt6>=6.9.1",
+    "scipy>=1.16.1",
+]
+
+[project.scripts]
+pp = "pp:main"
+
+[build-system]
+requires = ["uv_build>=0.8.6,<0.9.0"]
+build-backend = "uv_build"

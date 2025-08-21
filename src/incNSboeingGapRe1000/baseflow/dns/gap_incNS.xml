@@ -29,7 +29,7 @@
       <P> IO_FiltersInfoSteps = EnergySteps </P>
       <P> D0              = 1                   </P> <!-- the value to 1/D0 is the velocity convection scale on the outflow !-->
       <P> SVVDiffCoeff    = 1.0                    </P>
-      <P> SVVCutoffRatio  = 0.5                    </P>
+      <P> SVVCutoffRatio  = 0.75                    </P>
 
 
       <!-- Parameters for the simulation -->

@@ -9,8 +9,8 @@ function getDepthANDWidth() {
         depth="${BASH_REMATCH[1]}"
         width="${BASH_REMATCH[2]}"
     else
-        echo "Invalid file format"
-        return 1
+        echo "0 0" # Return 0 0 if the pattern does not match
+        return 0
     fi
 
     # removes trailing zeros, if they exist

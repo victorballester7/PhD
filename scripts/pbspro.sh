@@ -1,7 +1,7 @@
 # Paths and solvers
 NEK_PATH=$HOME/nektar++
 INC_SOLVER=$NEK_PATH/build/dist/bin/IncNavierStokesSolver 
-COMP_SOLVER=$NEK_PATH/build/dist/bin/CompressibleFlowSolver 
+COM_SOLVER=$NEK_PATH/build/dist/bin/CompressibleFlowSolver 
 SCRIPTS_DIR=$HOME/Desktop/PhD/scripts
 
 JOB_ID=$PBS_JOBID
@@ -16,6 +16,7 @@ source $SCRIPTS_DIR/bashFunctions/getMeshSessionFiles.sh
 source $SCRIPTS_DIR/bashFunctions/uploadDateFile.sh
 source $SCRIPTS_DIR/bashFunctions/updateHistoryEnergyFiles.sh
 source $SCRIPTS_DIR/bashFunctions/runIncNS.sh
+source $SCRIPTS_DIR/bashFunctions/runComNS.sh
 
 function getTime { 
     # get the time limit
@@ -49,11 +50,26 @@ function setup {
 
     # Load required modules
     # module load tools/eb-dev cmake/3.18.2 HDF5/1.10.7-gompi-2021a SCOTCH/6.1.0-gompi-2021a Boost/1.76.0-GCC-10.3.0 OpenBLAS/0.3.15-GCC-10.3.0 FlexiBLAS/3.0.4-GCC-10.3.0 FFTW/3.3.9-gompi-2021a ScaLAPACK/2.1.0-gompi-2021a-fb
-    module load tools/eb-dev CMake/3.24.3-GCCcore-11.3.0 HDF5/1.13.1-gompi-2022a SCOTCH/7.0.1-gompi-2022a Boost/1.79.0-GCC-11.3.0 OpenBLAS/0.3.20-GCC-11.3.0 FlexiBLAS/3.2.0-GCC-11.3.0 FFTW/3.3.10-GCC-11.3.0 ScaLAPACK/2.2.0-gompi-2022a-fb arpack-ng/3.8.0-foss-2022a 
+    module load tools/eb-dev CMake/3.24.3-GCCcore-11.3.0 SCOTCH/7.0.1-gompi-2022a Boost/1.79.0-GCC-11.3.0 OpenBLAS/0.3.20-GCC-11.3.0 FlexiBLAS/3.2.0-GCC-11.3.0 FFTW/3.3.10-GCC-11.3.0 ScaLAPACK/2.2.0-gompi-2022a-fb 
+    
+    # if we are in cx3 phase 2
+    if [[ "$(hostname)" == login-b.cx3.hpc.ic.ac.uk* ]]; then
+        module load HDF5/1.12.2-gompi-2022a
+        module load arpack-ng/3.8.0-foss-2022b
+    # if we are in cx3 phase 1
+    else
+        module load HDF5/1.13.1-gompi-2022a
+        module load arpack-ng/3.8.0-foss-2022a
+    fi
 }
 
 cd $PBS_O_WORKDIR
 
 setup
-runIncNS
+
+if [[ $session_file == *incNS* ]]; then
+    runIncNS
+else
+    runComNS
+fi
 
