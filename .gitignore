@@ -1,8 +1,8 @@
 runs/
 tutorials/
 nektar*/
-**/credentials*.py
-**/__pycache__/
+**credentials*.py
+**__pycache__
 
 
 #Tex files:
@@ -23,5 +23,8 @@ nektar*/
 *.table
 
 # uv files
-*.venv/**
+*.venv**
+
+# do not sync .dat files
+data/*.dat
 
