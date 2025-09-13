@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1755102843.73016 "incNS2dStabilityCurve.tex" "incNS2dStabilityCurve.pdf" "incNS2dStabilityCurve" 1755102844.27413 0
+["pdflatex"] 1756643769.84522 "incNS2dStabilityCurve.tex" "incNS2dStabilityCurve.pdf" "incNS2dStabilityCurve" 1756643770.41591 0
   "/opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb" 1744826413 36299 5f9df58c2139e7edcf37c8fca4bd384d ""
   "/opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1744826413 35752 024fb6c41858982481f6968b5fc26508 ""
   "/opt/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb" 1744826413 32716 08e384dc442464e7285e891af9f45947 ""
@@ -138,8 +138,8 @@
   "/opt/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1744826413 5521855 9e6d094d269c3e21cdb14e8613effe2d ""
   "/opt/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1744826413 3561635 15922c3671603b312890d25b3e697717 ""
   "/opt/texlive/2025/texmf.cnf" 1744826413 585 81f10441804f05cc9107aafbbb0bcd23 ""
-  "incNS2dStabilityCurve.aux" 1755102844.24782 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
-  "incNS2dStabilityCurve.tex" 1755102841.9868 6231 bdd2af119db9286b6008585cdd8e7a2a ""
+  "incNS2dStabilityCurve.aux" 1756643770.38829 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "incNS2dStabilityCurve.tex" 1756643767.86228 6231 bdd2af119db9286b6008585cdd8e7a2a ""
   (generated)
   "incNS2dStabilityCurve.aux"
   "incNS2dStabilityCurve.log"

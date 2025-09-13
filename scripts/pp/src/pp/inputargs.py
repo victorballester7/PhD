@@ -38,24 +38,25 @@ def parseArgs() -> argparse.Namespace:
     )
 
     parser.add_argument(
-        "--fft",
-        action="store_true",
-        help="Use FFT to get frequency data (default: False).",
-    )
-
-    parser.add_argument(
-        "--dynamicalSystem",
-        action="store_true",
-        help="Plot the u vs v phase space for dynamical systems (default: False).",
-    )
-
-    parser.add_argument(
         "--points",
         metavar="int",
         nargs="+",
         type=int,
         default=[0],
         help="Point number to compare (default: [0]).",
+    )
+
+    # fft and dynamicalSystem are incompatible together
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
+        "--fft",
+        action="store_true",
+        help="Use FFT to get frequency data (default: False).",
+    )
+    group.add_argument(
+        "--dynamicalSystem",
+        action="store_true",
+        help="Plot the u vs v phase space for dynamical systems (default: False).",
     )
 
     return parser.parse_args()

@@ -23,7 +23,7 @@ def createFigure(dynamicalSystem: bool):
         axes = np.array([axes])  # Ensure axes is iterable
         axes[0].set_xlabel("u")
         axes[0].set_ylabel("v")
-        axes[0].set_aspect('equal', adjustable='box')
+        # axes[0].set_aspect('equal', adjustable='box')
     else:
         fig, axes = plt.subplots(1, 3, figsize=(15, 5), sharex=True)
         labels = ["u", "v", "w"]
@@ -33,7 +33,6 @@ def createFigure(dynamicalSystem: bool):
 
     for ax in axes:
         ax.grid(True)
-        ax.legend()
 
 
     return fig, axes
@@ -41,9 +40,13 @@ def createFigure(dynamicalSystem: bool):
 
 
 def main():
+    """
+    Main function to plot history points from one or multiple folders as a function of time or in phase space (u vs v). The points are stored in the historyPoints.dat file in each folder.
+    """
     args = parseArgs()
 
     folders = args.folders
+
 
     data = readDataHistoryPointsMultiple(folders)
 
@@ -57,14 +60,13 @@ def main():
 
         print(f"Processing folder: {f}")
         for i, p in enumerate(points):
-            print(f"Point {i}: x={p[0]}, y={p[1]}")
+            print(f"Point {i}: x = {p[0]}, y = {p[1]}")
 
         for i, p in enumerate(args.points):
-            print(f"Point {p}: x={points[p, 0]}, y={points[p, 1]}")
             label = f"d{depth}_w{width}_x{points[p, 0]}_y{points[p, 1]}"
             for j, ax in enumerate(axes):
                 if args.dynamicalSystem:
-                    ax.plot(fields[p, :, 0], fields[p, :, 1], label=f"u vs v, x={points[p, 0]}, y={points[p, 1]}")
+                    ax.plot(fields[p, :, 0], fields[p, :, 1], label=f"u vs v (x = {points[p, 0]}, y = {points[p, 1]})")
                     ax.set_xlabel("u")
                     ax.set_ylabel("v")
                 else:
@@ -76,12 +78,7 @@ def main():
                     signal_reconstructed = fftFreqs(time, fields[p, :, j], "u" if j == 0 else "v")
                     ax.plot(time, signal_reconstructed, linestyle="--", label=f"IFT∘FT {label}")
 
-
-
-
-
-
-
+    plt.legend()
     plt.show()
 
 

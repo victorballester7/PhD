@@ -1,1 +1,0 @@
-We did so many integrations with different FinTimes in order to prove convergence of the eigenvalues, and actually we observed convergence, for the biggest final times (t=160, 320), in the sense that most dominant eigenvalue is the same in both cases (up to the residual error).

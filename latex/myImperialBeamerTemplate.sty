@@ -71,9 +71,11 @@
         \end{minipage}
       };
       % Conference logo in top-right
-      \node[anchor=north,yshift=-0.25cm] at (current page.north) {
-        \includegraphics[height=2cm]{Images/\logoconference}
-      };
+      \foreach \p/\h/\y in \logoconference {
+         \node[anchor=north,yshift=\y] at (current page.north) {
+           \includegraphics[height=\h]{Images/\p}
+         };
+      }
     \end{tikzpicture}
   \end{centering}
 }

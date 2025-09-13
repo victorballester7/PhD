@@ -9,10 +9,12 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "matplotlib>=3.10.5",
+    "meshio>=5.3.5",
     "numpy>=2.3.2",
     "pandas>=2.3.1",
     "pyqt6>=6.9.1",
     "scipy>=1.16.1",
+    "vtk>=9.5.1",
 ]
 
 [project.scripts]

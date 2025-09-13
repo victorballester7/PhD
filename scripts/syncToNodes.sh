@@ -13,8 +13,9 @@ REMOTE_USER="vb824"
 REMOTE_DIR="~/Desktop/PhD"
 
 # List of remote hosts
-HOSTS=("typhoon" "hpc")
-SYNC_DIRS=("${LOCAL_DIR}/docs" "${LOCAL_DIR}/scripts")
+# HOSTS=("typhoon" "hpc")
+HOSTS=("hpc")
+SYNC_DIRS=("${LOCAL_DIR}/scripts")
 
 # I set the src directory separately as it is synced to the runs directory on the remote hosts (which does not exist locally)
 SRC_DIR="${LOCAL_DIR}/src"
@@ -26,8 +27,12 @@ EXCLUSIONS=(
     "--exclude=*.egg-info*"
     "--exclude=*__pycache__*"
     "--exclude=*uv.lock*"
-    "--exclude=*dat"
-    "--exclude=*pts"
+    "--exclude=*.dat"
+    "--exclude=*.pts"
+    "--exclude=*scripts/pp*" 
+    "--exclude=*scripts/data*" 
+    "--exclude=*scripts/images*" 
+    "--exclude=*scripts/blasius*" 
 )
 
 # Loop through each host and sync the directories

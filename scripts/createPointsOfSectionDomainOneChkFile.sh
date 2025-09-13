@@ -14,17 +14,18 @@ CYAN="\e[36m"
 RESET="\e[0m"
 
 constVar="x"
-constValue=(-50 -25 0 20 40 60 80 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 1000)
+constValue=(-70 -60 -50 -40 -30 -20 -10 0 10 20 30 40 50 60 70 80 90 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 1000)
 varValueMIN=0
 varValueMAX=150
 N=600
 
 datadir="data"
 HOST="hpc"
-CASE="d4_w15"
-DIR="incNSboeingGapRe1000/directLinearSolver/blowingSuction/${CASE}/wgnInsideDomainNektarAveraged"
+CASE="d0.5_w10" #CASE="d4_w15"
+# CASE="flat"
+DIR="incNSboeingGapRe1000/directLinearSolver/blowingSuctionWGNinsideDomain/${CASE}"
 # DIR="incNSboeingGapRe1000/directLinearSolver/blowingSuction/oldSetups/bs_withOmegaFromOrrSommerfeld/${CASE}/expBC_omega0.0465"
-# DIR="flatSurfaceRe1000IncNS/directLinearSolver/blowingSuction/wgn"
+# DIR="flatSurfaceRe1000IncNS/directLinearSolver/blowingSuction/wgnInsideDomainDivFree"
 MESH_REMOTE="mesh_${CASE}.xml"
 CHKFILE="avg"
 EXTENSION=".fld"
@@ -99,6 +100,7 @@ ssh "${USER}@${HOST}" /bin/bash << EOF
     echo "\${FLD}"
     echo "\${output_file}.pts"
     echo "Processing CHKFILE ${CHKFILE}..."
+    rm -f \${output_file}.dat
     FieldConvert -m interppoints:fromxml=${MESH_REMOTE}:fromfld=\${FLD}:topts=\${output_file}.pts \${output_file}.dat
     echo "Completed CHKFILE ${CHKFILE} (case: ${CASE})"
 EOF

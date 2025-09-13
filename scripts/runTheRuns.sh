@@ -27,36 +27,18 @@ function inputRead() {
     
     mode=$(determineJobType)
 
-    echo -e "${CYAN}Execution mode: $mode${NC}"
-
-    # Validate user input
-    if [[ "$mode" != "n" && "$mode" != "p" && "$mode" != "s" ]]; then
-        echo -e "${RED}Invalid option. Please choose 'n' for nodes, 'p' for PBS, or 's' for Slurm.${NC}"
+    if [[ "$mode" == "n" ]]; then
+        echo -e "${RED}No job scheduler detected. Exiting.${NC}"
         exit 1
     fi
 
-    # If running on nodes, prompt for the number of cores and check arguments
-    if [[ "$mode" == "n" ]]; then
-        read -p "Enter the number of cores to use: " num_cores
+    echo -e "${CYAN}Execution mode: $mode${NC}"
 
-        if [[ "$#" -lt 2 ]]; then
-            echo -e "${YELLOW}Usage: $0 <mesh_file> <session_file> <folder1> <folder2> ...${NC}"
-            echo -e "${YELLOW}Example: $0 mesh.xml gap_IncNS.xml NumSteps500 NumSteps1000 NumSteps2000${NC}"
-            exit 1
-        fi
-
-        mesh_file=$1
-        session_file=$2
-        echo -e "${CYAN}Mesh file: $mesh_file${NC}"
-        echo -e "${CYAN}Session file: $session_file${NC}"
-        shift 2  # Remove first two arguments
-    else
-        # Cluster mode (PBS/Slurm) should not expect mesh/session files, just folders
-        if [[ "$#" -lt 1 ]]; then
-            echo -e "${YELLOW}Usage: $0 <folder1> <folder2> ...${NC}"
-            echo -e "${YELLOW}Example: $0 NumSteps500 NumSteps1000 NumSteps2000${NC}"
-            exit 1
-        fi
+    # Cluster mode (PBS/Slurm) should not expect mesh/session files, just folders
+    if [[ "$#" -lt 1 ]]; then
+        echo -e "${YELLOW}Usage: $0 <folder1> <folder2> ...${NC}"
+        echo -e "${YELLOW}Example: $0 NumSteps500 NumSteps1000 NumSteps2000${NC}"
+        exit 1
     fi
 }
 
@@ -75,12 +57,7 @@ function runJobs() {
     folder0="$(pwd)"
     for folder in "${folders[@]}"; do
         if [ -d "$folder" ]; then
-            if [[ "$mode" == "n" ]]; then
-                echo -e "${GREEN}Executing run.sh locally in $folder${NC}"
-                cd "$folder"
-                runLocally.sh "$num_cores" "$mesh_file" "$session_file" & disown
-                cd "$folder0"
-            elif [[ "$mode" == "p" ]]; then
+            if [[ "$mode" == "p" ]]; then
                 if [[ -f "$folder/pbspro.job" ]]; then
                     echo -e "${GREEN}Submitting PBS job in $folder${NC}"
                     cd "$folder"

@@ -62,8 +62,6 @@ def readDataHistoryPoints(folder: str) -> Tuple[np.ndarray, np.ndarray, np.ndarr
     oldPath = os.path.join(folder, old_file_nameHistoryPoints)
     newPath = os.path.join(folder, file_nameHistoryPoints)
 
-    points_old, data_old = np.array([]), np.array([])
-
     points_new, time_new, fields_new = _readDataHistoryPoints(newPath)
     
     if os.path.exists(oldPath):
@@ -123,3 +121,52 @@ def _readDataHistoryPoints(path: str) -> Tuple[np.ndarray, np.ndarray, np.ndarra
     variables = new_data[:, :, 1:]  # we take all columns except the first one (time)
 
     return np.array(points_locations), time, variables
+
+def editFile(pathFile: str, replacement_line: np.ndarray, line_startswith: np.ndarray) -> None: 
+    """
+        This function edits a file by replacing the lines that start with specified strings with new lines, specified in replacement_line.
+    """
+    # Read the file and replace the specified line
+    with open(pathFile, "r") as file:
+        lines = file.readlines()
+
+    with open(pathFile, "w") as file:
+        for line in lines:
+            linechanged = False
+            # loop in the i,j in (replacement_line, line_startswith)
+            for rep_line, line_start in zip(replacement_line, line_startswith):
+                if line.strip().startswith(line_start):
+                    # take the last part of the line (starting with # ) and add it to rep_line
+                    rep_line = rep_line + " #" + line.split("#")[-1]
+                    file.write(rep_line)
+                    linechanged = True
+                    break
+            if not linechanged:
+                file.write(line)
+
+def readAvgDataPoints(dataFile: str) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Reads averaged data (containing reynolds stresses) from a file and three arrays:
+        1. the array corresponding to the xvalues
+        2. the array corresponding to the yvalues
+        3. numpy array containing three indices, first corresponding to the x location, second to the y location and third to the field (u, v, p, uu, uv, vv).
+    """
+    data = []
+    xvals = np.array([])
+    yvals = np.array([])
+
+    data_dF = np.loadtxt(dataFile, skiprows=3)
+    data_tmp = []
+    if len(xvals) == 0:
+        xvals = np.unique(data_dF[:, 0])
+    if len(yvals) == 0:
+        yvals = np.unique(data_dF[:, 1])
+        yvals.sort()
+    for x in xvals:
+        tmp = data_dF[data_dF[:, 0] == x]
+        data_tmp.append(tmp)  # we only store u and v
+    data = np.array(data_tmp)
+
+    return xvals, yvals, data
+
+    

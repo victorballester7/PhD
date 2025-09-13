@@ -5,7 +5,7 @@ nektar*/
 **__pycache__
 
 
-#Tex files:
+# Tex files:
 *.aux
 *.bbl
 *.bcf

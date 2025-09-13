@@ -29,3 +29,15 @@ def timeFilter(
     filtered_fields = fields[:, mask, :]
 
     return filtered_time, filtered_fields
+
+def getRMS(data: np.ndarray) -> np.ndarray:
+    """
+    Computes the RMS of the fields array along the time axis.
+    """
+    u = data[:, :, 2]
+    v = data[:, :, 3]
+    uu = data[:, :, 5]
+    vv = data[:, :, 7]
+    rms = np.sqrt(np.abs(u**2 + v**2 + uu + vv))
+    return rms
+

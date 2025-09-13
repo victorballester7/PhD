@@ -29,8 +29,8 @@
     <PARAMETERS>
      <!--General parameters-->
       <P> TimeStep = 0.0001 </P>
-      <P> NumSteps        = 1e3      </P>
-      <P> IO_CheckSteps   = NumSteps/100         </P> 
+      <P> NumSteps        = 10      </P>
+      <P> IO_CheckSteps   = 1         </P> 
       <P> IO_InfoSteps    = 1       </P> 
       <P> IO_CFLSteps     = IO_InfoSteps         </P>
       <P> HistorySteps    = IO_InfoSteps </P>
@@ -72,6 +72,7 @@
       <P> pInf                  = rhoInf*GasConstant*TInf   </P>
       <P> mu                    = rhoInf*uInf*deltaStar_le/Re_deltaStar_le </P>
       <P> Twall                 = TInf                      </P>
+      <P> Tref                  = 288.15                   </P> <!-- [K], reference temperature for Sutherland's law !-->
 
 
       <P> rhouInf              = rhoInf*uInf                </P>
@@ -281,82 +282,86 @@
     </BOUNDARYCONDITIONS>
 
     <FUNCTION NAME="InitialConditions">
-      <E VAR="rho"  VALUE="0.0"   />
-      <E VAR="rhou" VALUE="0.0"   />
-      <E VAR="rhov" VALUE="0.0"   />
-      <E VAR="E"    VALUE="0.0"   />
+      <!-- <E VAR="rho"  VALUE="0.0"   /> -->
+      <!-- <E VAR="rhou" VALUE="0.0"   /> -->
+      <!-- <E VAR="rhov" VALUE="0.0"   /> -->
+      <!-- <E VAR="E"    VALUE="0.0"   /> -->
+      <E VAR="rho"    VALUE="rhoInf"     />
+      <E VAR="rhou"   VALUE="rhoInf * uInf"   />
+      <E VAR="rhov"   VALUE="0"   />
+      <E VAR="E"      VALUE="pInf / (Gamma - 1) + 0.5 * rhoInf * (uInf * uInf)"/>
     </FUNCTION> 
      </CONDITIONS>
-  <FILTERS>
+<!--   <FILTERS> -->
 
-    <FILTER TYPE="ModalEnergy">
-      <PARAM NAME="OutputFile">EnergyFile</PARAM>
-      <PARAM NAME="OutputFrequency">EnergySteps</PARAM>
-    </FILTER>
+<!--     <FILTER TYPE="ModalEnergy"> -->
+<!--       <PARAM NAME="OutputFile">EnergyFile</PARAM> -->
+<!--       <PARAM NAME="OutputFrequency">EnergySteps</PARAM> -->
+<!--     </FILTER> -->
 
-    <FILTER TYPE="HistoryPoints">
-      <PARAM NAME="OutputFile">HistoryPoints</PARAM>
-      <PARAM NAME="OutputFrequency">HistorySteps</PARAM>
-      <PARAM NAME="Points">
-    -100 1 0
-    -75 1 0
-    -50 1 0
-    -35 1 0
-    -25 1 0
-    -15 1 0
-    -10 1 0
-    -5 1 0
-    0 1 0
-    5 1 0
-    5 -2.00000000000000000000 0
-    10 1 0
-    15 1 0
-    20 1 0
-    25 1 0
-    35 1 0
-    45 1 0
-    60 1 0
-    85 1 0
-    110 1 0
-    135 1 0
-    160 1 0
-    185 1 0
-    210 1 0
-    235 1 0
-    260 1 0
-    285 1 0
-    310 1 0
-    335 1 0
-    360 1 0
-    385 1 0
-    410 1 0
-    435 1 0
-    460 1 0
-    485 1 0
-    510 1 0
-    535 1 0
-    560 1 0
-    585 1 0
-    610 1 0
-    635 1 0
-    660 1 0
-    685 1 0
-    710 1 0
-    735 1 0
-    760 1 0
-    785 1 0
-    810 1 0
-    835 1 0
-    860 1 0
-    885 1 0
-    910 1 0
-    935 1 0
-    960 1 0
-    985 1 0
-    1010 1 0
-      </PARAM>
-    </FILTER>
-  </FILTERS>
+<!--     <FILTER TYPE="HistoryPoints"> -->
+<!--       <PARAM NAME="OutputFile">HistoryPoints</PARAM> -->
+<!--       <PARAM NAME="OutputFrequency">HistorySteps</PARAM> -->
+<!--       <PARAM NAME="Points"> -->
+<!--     -100 1 0 -->
+<!--     -75 1 0 -->
+<!--     -50 1 0 -->
+<!--     -35 1 0 -->
+<!--     -25 1 0 -->
+<!--     -15 1 0 -->
+<!--     -10 1 0 -->
+<!--     -5 1 0 -->
+<!--     0 1 0 -->
+<!--     5 1 0 -->
+<!--     5 -2.00000000000000000000 0 -->
+<!--     10 1 0 -->
+<!--     15 1 0 -->
+<!--     20 1 0 -->
+<!--     25 1 0 -->
+<!--     35 1 0 -->
+<!--     45 1 0 -->
+<!--     60 1 0 -->
+<!--     85 1 0 -->
+<!--     110 1 0 -->
+<!--     135 1 0 -->
+<!--     160 1 0 -->
+<!--     185 1 0 -->
+<!--     210 1 0 -->
+<!--     235 1 0 -->
+<!--     260 1 0 -->
+<!--     285 1 0 -->
+<!--     310 1 0 -->
+<!--     335 1 0 -->
+<!--     360 1 0 -->
+<!--     385 1 0 -->
+<!--     410 1 0 -->
+<!--     435 1 0 -->
+<!--     460 1 0 -->
+<!--     485 1 0 -->
+<!--     510 1 0 -->
+<!--     535 1 0 -->
+<!--     560 1 0 -->
+<!--     585 1 0 -->
+<!--     610 1 0 -->
+<!--     635 1 0 -->
+<!--     660 1 0 -->
+<!--     685 1 0 -->
+<!--     710 1 0 -->
+<!--     735 1 0 -->
+<!--     760 1 0 -->
+<!--     785 1 0 -->
+<!--     810 1 0 -->
+<!--     835 1 0 -->
+<!--     860 1 0 -->
+<!--     885 1 0 -->
+<!--     910 1 0 -->
+<!--     935 1 0 -->
+<!--     960 1 0 -->
+<!--     985 1 0 -->
+<!--     1010 1 0 -->
+<!--       </PARAM> -->
+<!--     </FILTER> -->
+<!--   </FILTERS> -->
 
 </NEKTAR>
 

@@ -16,9 +16,7 @@
 	\fboxsep=0pt % Remove extra padding inside the frame
 	% fbox color
 	\node[anchor=west,inner sep=0, outer sep=0] (img2) at ([xshift=0.0cm]img1.east)
-	{\fcolorbox{Cyan}{White}{\includegraphics[width=5cm]{../../../Images/d1_w60_streamlines.png}}};
-
-	\node[anchor=north,inner sep=0, outer sep=0] (img3) at ([yshift=-0.05cm]img2.north){\fcolorbox{black}{white}{\includegraphics[width=1.5cm]{../../../Images/d1_w60_real.png}}};
+	{\fcolorbox{Cyan}{White}{\includegraphics[width=4cm]{../../../Images/gapd1_w60.pdf}}};
 
 	\node[anchor=south,inner sep=0, outer sep=0] at ([yshift=0.4cm]img2.north) {$d/\delta^* = 1,\quad w/\delta^* = 60$};
 
@@ -27,13 +25,13 @@
 	  line width=0.5pt,       % thin line
 	  Cyan,
 	] 
-	(2.52,-1.22) -- ([xshift=0.01cm,yshift=-0.01cm]img2.north west);
+	(2.5,-0.67) -- ([xshift=0.01cm,yshift=-0.01cm]img2.north west);
 
 	\draw[
 	  line width=0.5pt,       % thin line
 	  Cyan,
 	] 
-	(2.52,-1.23) -- ([xshift=0.01cm,yshift=0.01cm]img2.south west);
+	(2.5,-0.68) -- ([xshift=0.01cm,yshift=0.01cm]img2.south west);
 
 
 \end{tikzpicture}
